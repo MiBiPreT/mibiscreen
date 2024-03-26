@@ -1,7 +1,7 @@
 # mibipret
 
 A Python package for prediction and analysis in Microbiome based Remediation. Developed as part of the [MiBiRem](https://www.mibirem.eu/) toolbox for Bioremediation.
-\
+
 # Badges
 
 (Customize these badges with your own links, and check https://shields.io/ or https://badgen.net/ to see which other badges are available.)
