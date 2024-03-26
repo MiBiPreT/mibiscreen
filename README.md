@@ -15,9 +15,9 @@ A Python package for prediction and analysis in Microbiome based Remediation. De
 | (5/5) checklist                    | [![workflow cii badge](https://bestpractices.coreinfrastructure.org/projects/8711/badge)](https://bestpractices.coreinfrastructure.org/projects/8711) |
 | howfairis                          | [![fair-software badge](https://img.shields.io/badge/fair--software.eu-%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8B-yellow)](https://fair-software.eu) |
 | **Other best practices**           | &nbsp; |
-| Static analysis                    | [![workflow scq badge](https://sonarcloud.io/api/project_badges/measure?project=MiBiPreT_mibipret&metric=alert_status)](https://sonarcloud.io/dashboard?id=MiBiPreT_mibipret) |
-| Coverage                           | [![workflow scc badge](https://sonarcloud.io/api/project_badges/measure?project=MiBiPreT_mibipret&metric=coverage)](https://sonarcloud.io/dashboard?id=MiBiPreT_mibipret) |
-| Documentation                      | [![Documentation Status](https://readthedocs.org/projects/mibipret/badge/?version=latest)](https://mibipret.readthedocs.io/en/latest/?badge=latest) |
+| Static analysis                    | [![workflow scq badge](https://sonarcloud.io/api/project_badges/measure?project=MiBiPreT_MiBiPreT&metric=alert_status)](https://sonarcloud.io/dashboard?id=MiBiPreT_MiBiPreT) |
+| Coverage                           | [![workflow scc badge](https://sonarcloud.io/api/project_badges/measure?project=MiBiPreT_MiBiPreT&metric=coverage)](https://sonarcloud.io/dashboard?id=MiBiPreT_MiBiPreT) |
+| Documentation                      | [![documentation](https://github.com/MiBiPreT/mibipret/actions/workflows/documentation.yml/badge.svg)](https://mibipret.github.io/mibipret) |
 | **GitHub Actions**                 | &nbsp; |
 | Build                              | [![build](https://github.com/MiBiPreT/mibipret/actions/workflows/build.yml/badge.svg)](https://github.com/MiBiPreT/mibipret/actions/workflows/build.yml) |
 | Citation data consistency          | [![cffconvert](https://github.com/MiBiPreT/mibipret/actions/workflows/cffconvert.yml/badge.svg)](https://github.com/MiBiPreT/mibipret/actions/workflows/cffconvert.yml) |
