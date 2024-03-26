@@ -7,12 +7,26 @@ authors:
     family-names: Zech
     given-names: Alraune
     orcid: "https://orcid.org/0000-0002-8783-6198"
-date-released: 20??-MM-DD
-doi: <insert your DOI here>
+  -
+    family-names: Aseyednezhad
+    given-names: Sona
+    orcid: "https://orcid.org/0000-0001-7324-2009"
+  -
+    family-names: Richardson
+    given-names: Robin
+    orcid: "https://orcid.org/0000-0002-9984-2720"
+  -
+    family-names: Camphuijsen
+    given-names: Jaro
+    orcid: "https://orcid.org/0000-0002-8928-7831"
+date-released: 2024-03-D26
+doi: 10.0000/FIXME
 version: "0.1.0"
 repository-code: "https://github.com/MiBiPreT/mibipret"
 keywords:
-  - groundwater
-  - contaminant transport
+  - bioremediation
+  - contaminant data analysis
+  - contaminant transport modelling
+  - bio-geo-chemical modelling
 message: "If you use this software, please cite it using these metadata."
 license: Apache-2.0
