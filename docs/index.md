@@ -5,10 +5,10 @@ A Python package for prediction and analysis in Microbiome based Remediation. De
 
 ## Installation
 
-To install anatrans from GitHub repository, do:
+To install mibipret from GitHub repository, do:
 
 ```console
-git clone git@github.com:MiBiPreT/anatrans.git
-cd anatrans
-python -m pip install .
+git clone git@github.com:MiBiPreT/mibipret.git
+cd mibipret
+python -m pip mibipret .
 ```
