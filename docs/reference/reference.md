@@ -1,0 +1,3 @@
+# `mibipret` API reference
+
+::: mibipret
