@@ -7,6 +7,13 @@ repo_url: https://github.com/MiBiPreT/mibipret
 edit_uri: "edit/main/docs/"
 copyright: Copyright &copy; 2024 Alraune Zech, Sona Aseyednezhad, Robin Richardson, Jaro Camphuijsen
 
+nav:
+  - Getting started:
+    - Getting started: index.md
+    - Development: getting-started/development.md
+  - API Reference:
+    - Reference: reference/reference.md
+
 theme:
   name: "material"
   favicon: assets/icon.png
@@ -53,9 +60,8 @@ plugins:
       python:
         rendering:
           show_source: true
-    watch:
-      - mibipret
-
+        options:
+          show_submodules: true
 
 # Styled blocks: https://squidfunk.github.io/mkdocs-material/reference/admonitions/#supported-types
 markdown_extensions:
@@ -81,11 +87,5 @@ extra_javascript:
 
 extra:
   social:
-#    - icon: fontawesome/brands/python
-#      link: https://pypi.org/project/nanopub
     - icon: fontawesome/brands/github
-      link: https://github.com/mibipret
-    # - icon: fontawesome/brands/docker
-    #   link: https://github.com/orgs/fair-workflows/packages
-    # - icon: fontawesome/brands/twitter
-    #   link: https://twitter.com/
+      link: https://github.com/MiBiPreT/mibipret

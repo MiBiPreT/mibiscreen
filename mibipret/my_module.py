@@ -1,4 +1,4 @@
-"""Documentation about the anatrans module."""
+"""Documentation about the mibipret module."""
 
 
 # FIXME: put actual code here
@@ -19,7 +19,7 @@ def hello(name):
     Example:
         This function can be called with `Jane Smith` as argument using
 
-        >>> from anatrans.my_module import hello
+        >>> from mibipret.my_module import hello
         >>> hello('Jane Smith')
         'Hello Jane Smith!'
 
