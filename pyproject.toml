@@ -19,7 +19,7 @@ classifiers = [
     "Natural Language :: English",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Py	thon :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -97,7 +97,7 @@ extras = dev
 
 [tool.ruff]
 # Enable Pyflakes `E` and `F` codes by default.
-select = [
+lint.select = [
     "F",  # Pyflakes
     "E",  # pycodestyle (error)
     "W",    # pycodestyle (warning)
@@ -111,14 +111,13 @@ select = [
     # "PLW",  # Warning
 
 ]
-ignore = [
+lint.ignore = [
     'D100',  # Missing module docstring
     'D104',  # Missing public package docstring
     # The following list excludes rules irrelevant to the Google style
     'D203',
     'D204',
     'D213',
-    'D215',
     'D400',
     'D401',
     'D404',
@@ -130,8 +129,8 @@ ignore = [
 ]
 
 # Allow autofix for all enabled rules (when `--fix`) is provided.
-fixable = ["A", "B", "C", "D", "E", "F", "I"]
-unfixable = []
+lint.fixable = ["A", "B", "C", "D", "E", "F", "I"]
+lint.unfixable = []
 
 exclude = [
     ".bzr",
@@ -156,11 +155,11 @@ exclude = [
     ".venv",
     "scripts",
 ]
-per-file-ignores = {}
+lint.per-file-ignores = {}
 
 
 # Allow unused variables when underscore-prefixed.
-dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+lint.dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 
 target-version = "py39"
 line-length = 120

@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-File containing name specifications of quantities and parameters measured in 
-groundwater samples useful for biodegredation and bioremediation analysis 
+"""Name specifications of data!
+
+File containing name specifications of quantities and parameters measured in
+groundwater samples useful for biodegredation and bioremediation analysis
 
 @author: A. Zech
 """
@@ -12,15 +13,17 @@ name_observation_well = "obs_well"
 name_well_type = "well_type"
 name_sample_depth = "depth"
 
-setting_data = [name_sample,name_observation_well,name_well_type,name_sample_depth]
+setting_data = [name_sample,
+                name_observation_well,
+                name_well_type,
+                name_sample_depth]
 
 name_redox = "redoxpot"
 environmental_conditions = [name_redox,"pH","EC","pE","NOPC"]
 
-
 name_oxygen = 'oxygen' #o2
 name_nitrite = 'nitrite' #no2
-name_nitrate = 'nitrite' #no3
+name_nitrate = 'nitrate' #no3
 name_sulfate = 'sulfate' #"so4"
 name_sulfide = 'sulfide' #"s2min"
 name_ammonium = 'ammonium' #"nh4+"
@@ -29,9 +32,18 @@ name_manganese = 'manganese' #"mn_II"
 name_ironII = "ironII" #"fe_II"
 name_phosphate = 'phosphate' # "po4"
 
-electron_acceptors = [name_oxygen,name_nitrite,name_nitrate,name_sulfate,name_sulfide,name_ammonium,name_methane,name_ironII,name_manganese,name_phosphate]
-#electron_acceptors = ["o2","no2","no3","so4","s2min","nh4+","ch4","mn_II","fe_II","po4","NPOC"]
-                      
+electron_acceptors = [name_oxygen,
+                      name_nitrite,
+                      name_nitrate,
+                      name_sulfate,
+                      name_sulfide,
+                      name_ammonium,
+                      name_methane,
+                      name_ironII,
+                      name_manganese,
+                      name_phosphate
+                      ]
+
 name_benzene = 'benzene'
 name_toluene = 'toluene'
 name_ethylbenzene = 'ethylbenzene'
@@ -43,8 +55,16 @@ name_indene = 'indene'
 name_naphthalene = 'naphthalene'
 
 ### todo: complete and potentially choose other names
-contaminants = [name_benzene,name_toluene,name_ethylbenzene,name_pm_xylene,name_o_xylene,name_xylene,name_indane,name_indene,name_naphthalene]
-
+contaminants = [name_benzene,
+                name_toluene,
+                name_ethylbenzene,
+                name_pm_xylene,
+                name_o_xylene,
+                name_xylene,
+                name_indane,
+                name_indene,
+                name_naphthalene
+                ]
 
 col_dict = {
     "sample": name_sample,
@@ -64,15 +84,13 @@ col_dict = {
     "well type" :name_well_type,
     "Well Type" : name_well_type,
     "Well type" : name_well_type,
-    "Depth":name_sample_depth, 
+    "Depth":name_sample_depth,
     "depth":name_sample_depth,
-
     "Redox": name_redox,
     "redox": name_redox,
     "Redox potential": name_redox,
     "redox potential": name_redox,
     "redoxpot": name_redox,
-
     "oxygen": name_oxygen,
     "o2":name_oxygen,
     "O2": name_oxygen,
@@ -106,7 +124,7 @@ col_dict = {
     "Mn": name_manganese,
     "mn": name_manganese,
     "mn_II": name_manganese,
-    "Mn_II": name_manganese,       
+    "Mn_II": name_manganese,
     "Manganese": name_manganese,
     "manganese": name_manganese,
     "Iron": name_ironII,
@@ -131,13 +149,12 @@ col_dict = {
     "iron 2+": name_ironII,
     "Iron II": name_ironII,
     "iron II": name_ironII,
-    "Iron II": name_ironII,
-    "iron II": name_ironII ,
+    "Iron II+": name_ironII,
+    "iron II+": name_ironII ,
     "phosphate": name_phosphate,
     "Phosphate": name_phosphate,
     "PO4": name_phosphate,
     "po4": name_phosphate,
-
     "Benzene": name_benzene,
     "benzene": name_benzene,
     "C6H6": name_benzene,
@@ -173,5 +190,5 @@ col_dict = {
     "Indane": name_indane,
     "c9h10": name_indane,
     "Naphthalene": name_naphthalene,
-    "c10h8": name_naphthalene,
-}
+    "c10h8": name_naphthalene
+    }

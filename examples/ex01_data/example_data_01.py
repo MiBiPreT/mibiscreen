@@ -1,13 +1,11 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Example of data analysis of contaminant data from Griftpark, Utrecht
-using mibipret 
+"""Example of data analysis of contaminant data from Griftpark, Utrecht.
 
 @author: Alraune Zech
 """
 
-from mibipret.data.data import load_csv, check_columns, check_units #, example_data #, check_values
+from mibipret.data.data import check_columns  #, example_data #, check_values
+from mibipret.data.data import check_units  #, example_data #, check_values
+from mibipret.data.data import load_csv  #, example_data #, check_values
 
 file_path = './grift_BTEXNII.csv'
 

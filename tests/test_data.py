@@ -1,8 +1,11 @@
 """Tests for the mibipret.data module."""
 
 import pandas as pd
-import pytest
-from mibipret.data.data import example_data, load_csv, load_excel,check_columns , check_units #, check_values 
+from mibipret.data.data import check_columns  #, check_values 
+from mibipret.data.data import check_units  #, check_values 
+from mibipret.data.data import example_data  #, check_values 
+from mibipret.data.data import load_csv  #, check_values 
+from mibipret.data.data import load_excel  #, check_values 
 
 path_data = "./mibipret/data"
 
@@ -23,7 +26,6 @@ class TestData:
         assert isinstance(self.data_01, pd.DataFrame) == True
 
     def test_load_csv(self):
-
         """Testing correct loading of example data from csv file."""
         print("{}/example_data.csv".format(path_data))
         data_t1 = load_csv("{}/example_data.csv".format(path_data))[0]
@@ -32,23 +34,18 @@ class TestData:
         assert data_t1.shape == self.data_01.shape
 
     def test_load_excel(self):
-
         """Testing correct loading of example data from excel file."""
         data_t2= load_excel("{}/example_data.xlsx".format(path_data),sheet_name= 'contaminants')[0]
         assert data_t2.shape == self.data_02.shape
 
     def test_check_columns(self):
-
-        """Testing check and renaming of column names on sample information, environmental conditions, and contaminnants """
-
+        """Testing check and renaming of column names on sample information, environmental conditions, and contaminnants"""
         data4check = pd.DataFrame([self.units,self.s01],columns = self.columns_mod)
         data_t3 = check_columns(data4check)
         assert data_t3.columns.tolist() == self.columns
         
     def test_check_units(self):
-
         """Testing check of units of given sample information on environmental conditions and contaminnants"""
-
         data4units = pd.DataFrame([self.units_mod,self.s01],columns = self.columns)
         col_check_list = check_units(data4units)
         check_list = ['sulfate', 'ironII', 'benzene', 'redoxpot']

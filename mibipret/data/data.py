@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Created on Fri May 24 09:31:00 2024
+"""Functions for data I/O handling.
+
 @author: Alraune Zech
 """
 
-import pandas as pd
 import os.path
-from .names import electron_acceptors,contaminants,col_dict
+import pandas as pd
+from .names import col_dict
+from .names import contaminants
+from .names import electron_acceptors
+
 
 #print(electron_acceptors)
 def load_excel(
@@ -15,20 +18,20 @@ def load_excel(
         sheet_name = 'Sheet1',
         verbose = False,
         store_provenance = False,
-        **kwargs
+        **kwargs,
         ):
-    """
-    Function to load data from excel file.
+    """Function to load data from excel file.
     
     Args:
     -------
         file_path (str): Name of the path to the file
-        sheet (int): Number of the sheet in the excel file to load
+        sheet_name (int): Number of the sheet in the excel file to load
         verbose (bool): flag 
         store_provenance (bool): ...
-        **kwargs - optional keyword arguments to pass to pandas' routine read_excel()
+        **kwargs - optional keyword arguments to pass to pandas' routine 
+            read_excel()
 
-    Returns
+    Returns:
     -------
         pandas.DataFrame: Tabular data
         
@@ -36,28 +39,28 @@ def load_excel(
     -------
         ValueError: If `file_path` is not a valid file location
 
-
-    Example
+    Example:
     -------
-       This function can be called with the file path of the example data as argument using
+       This function can be called with the file path of the example data as 
+       argument using:
 
         >>> from mibipret.data import load_excel
         >>> load_excel(example_data.xlsx)
         
-
     """
-    # if file_path == 'nobody':
-    #     raise ValueError('Can not say hello to nobody')
-    # return f'Hello {file_path}!' 
-
     if file_path is None:
         raise ValueError('Specify file path and file name!')
     if not os.path.isfile(file_path):
         raise ValueError('Specified file does not exist: ',file_path)
     
-    data = pd.read_excel(file_path, sheet_name = sheet_name,**kwargs)
+    data = pd.read_excel(file_path, 
+                         sheet_name = sheet_name,
+                         **kwargs)
     if ";" in data.iloc[1][0]:
-        data = pd.read_excel(file_path, sep=";", sheet_name = sheet_name,**kwargs)
+        data = pd.read_excel(file_path, 
+                             sep=";", 
+                             sheet_name = sheet_name,
+                             **kwargs)
     units = data.iloc[0]
 
     return data, units
@@ -67,8 +70,7 @@ def load_csv(
         verbose = False,
         store_provenance = False,
         ):
-    """
-    Function to load data from csv file.
+    """Function to load data from csv file.
     
     Args:
     -------
@@ -76,7 +78,7 @@ def load_csv(
         verbose (bool): flag 
         store_provenance (bool): ...
 
-    Returns
+    Returns:
     -------
         pandas.DataFrame: Tabular data
         
@@ -85,9 +87,10 @@ def load_csv(
         ValueError: If `file_path` is not a valid file location
 
 
-    Example
+    Example:
     -------
-       This function can be called with the file path of the example data as argument using
+       This function can be called with the file path of the example data as 
+       argument using:
 
         >>> from mibipret.data import load_excel
         >>> load_excel(example_data.csv)
@@ -110,15 +113,15 @@ def load_csv(
     return data, units
 
 def check_columns(data, verbose = True):
-    """
-    Function that looks at the column names and renames the columns to the standard names of the model
+    """Function that looks at the column names and renames the columns to
+        the standard names of the model
     
     Args:
     -------
         data (df): dataframe with the measurements
     
     
-    Returns
+    Returns:
     -------
         pandas.DataFrame: Tabular data with standard column names
     
@@ -126,19 +129,17 @@ def check_columns(data, verbose = True):
     Raises:
     -------
     
-    Example
+    Example:
     -------
-    
     Todo's:
         - complete list of potential contaminants, environmental factors
         - add name check for metabolites?
         - return column names that have not been identified
         - option to return only columns identified
-        - add key-word to specify which data to extract (i.e. data columns to return)
+        - add key-word to specify which data to extract
+            (i.e. data columns to return)
     
     """
-  
-    
     data.columns = [col_dict.get(x, x) for x in data.columns]
     # Todo: modify to first only report renaming of column names 
     data = data.fillna(0)
@@ -149,16 +150,14 @@ def check_columns(data, verbose = True):
     return data
    
 def check_units(data):
- 
-    """
-    Function to check the units of the measurements
+    """Function to check the units of the measurements
 
     Args:
     -------
         data (df): dataframe with the measurements
 
 
-    Returns
+    Returns:
     -------
         None
 
@@ -166,10 +165,9 @@ def check_units(data):
     Raises:
     -------
 
-    Example
+    Example:
     -------
     """
-
     mgperl = ["mg/L", "mg/l", "MG/L"]
     microgperl = [
         "ug/l",
@@ -188,20 +186,24 @@ def check_units(data):
     for quantity in electron_acceptors:
         if quantity in cols:
             if data[quantity][0] not in mgperl:
-                print("Warning: Check unit of {}!\n Given in {}, but must be mg/L.".format(quantity,data[quantity][0]))
-                # raise ValueError("Check unit of {} - it must be mg/L.".format(quantity))
+                print("Warning: Check unit of {}!\n Given in {}, \
+                      but must be mg/L.".format(quantity,data[quantity][0]))
+                # raise ValueError("Check unit of {} - 
+                # it must be mg/L.".format(quantity))
                 col_check_list.append(quantity)
 
     for quantity in contaminants:
         if quantity in cols:
             if data[quantity][0] not in microgperl:
-                print("Warning: Check unit of {}!\n Given in {}, but must be microgramm/L.".format(quantity,data[quantity][0]))
+                print("Warning: Check unit of {}!\n Given in {}, but must \
+                      be microgramm/L.".format(quantity,data[quantity][0]))
                 # raise ValueError(r"Check unit of {} - it must be $\mu$g/L.".format(quantity))
                 col_check_list.append(quantity)
 
     if "redoxpot" in data.columns:
         if data["redoxpot"][0] != "mV":
-            print("Warning: Check unit of {}!\n Given in {}, but must be mV.".format("redoxpot",data[quantity][0]))
+            print("Warning: Check unit of {}!\n Given in {}, but must be \
+                  mV.".format("redoxpot",data[quantity][0]))
             col_check_list.append("redoxpot")
 
     if len(col_check_list) == 0:
@@ -213,16 +215,14 @@ def check_values(
         data,
         replace = 0,
         ):
-       
-    """
-    Function that checks on value types (numeric values) and replaces non-measured values 
+    """Function that checks on value types and replaces non-measured values.
     
     Args:
     -------
         data (df): dataframe with the measurements
         replace (float,nan): value to replace missing entries with (default 0)
     
-    Returns
+    Returns:
     -------
         pandas.DataFrame: Tabular data with standard column names
     
@@ -230,11 +230,10 @@ def check_values(
     Raises:
     -------
     
-    Example
+    Example:
     -------
     
     """
-
     if "redoxpot" in data.columns:
         data["redoxpot"].iloc[1:] = data["redoxpot"].iloc[1:].astype(float)
     data.iloc[:,1:] = data.iloc[:,1:].apply(
@@ -250,9 +249,7 @@ def check_values(
        
 def example_data(
         data_type = 'all'):
-
-    """
-    Function provinging test data for mibipret data analysis
+    """Function provinging test data for mibipret data analysis
     
     Args:
     -------
@@ -260,22 +257,21 @@ def example_data(
                             -- "all": all types of data available
                             -- "setting": well setting data only
                             -- "contaminants": data on contaminants
-                            -- "environment": data on environmental/geochemicals
+                            -- "environment": data on environmental
                             -- "metabolites": data on metabolites
                             -- "hydro": data on hydrogeolocial conditions
     
-    Returns
+    Returns:
     -------
         pandas.DataFrame: Tabular data with standard column names    
     
     Raises:
     -------
     
-    Example
+    Example:
     -------
     
     """
-
     setting = ["sample_nr","obs_well","depth"]
     setting_units = [' ',' ','m']
     setting_s01 = ['2000-001', 'B-MLS1-3-12', -12]
@@ -283,15 +279,19 @@ def example_data(
     setting_s03 = ['2000-003', 'B-MLS1-6-17', -17]
     setting_s04 = ['2000-004', 'B-MLS1-7-19', -19]
     
-    environment = ['pH', 'redox', 'sulfate', 'ammonium', 'sulfide', 'methane', 'ironII', 'manganese']
-    environment_units = [' ','mV', 'mg/L', 'mg/L', 'mg/L', 'mg/L', 'mg/L', 'mg/L']
+    environment = ['pH', 'redox', 'sulfate', 'ammonium', 'sulfide', 
+                   'methane', 'ironII', 'manganese']
+    environment_units = [' ','mV', 'mg/L', 'mg/L', 'mg/L', 
+                         'mg/L', 'mg/L', 'mg/L']
     environment_s01 = [7.23, -208, 23, 5, 0, 748, 3, 1]
     environment_s02 = [7.67, -231, 0, 6, 0, 2022, 1, 0]
     environment_s03 = [7.75, -252, 1, 13, 0, 200, 1, 0]
     environment_s04 = [7.53, -317, 9, 15, 6, 122, 0, 0]
     
-    contaminants = ['benzene', 'toluene', 'ethylbenzene', 'pm_xylene', 'o_xylene', 'indane', 'indene', 'naphthalene']
-    contaminants_units = ['ug/L', 'ug/L', 'ug/L', 'ug/L', 'ug/L', 'ug/L', 'ug/L', 'ug/L']
+    contaminants = ['benzene', 'toluene', 'ethylbenzene', 'pm_xylene', 
+                    'o_xylene', 'indane', 'indene', 'naphthalene']
+    contaminants_units = ['ug/L', 'ug/L', 'ug/L', 'ug/L', 
+                          'ug/L', 'ug/L', 'ug/L', 'ug/L']
     contaminants_s01 = [263, 2, 269, 14, 51, 1254, 41, 2207]
     contaminants_s02 = [179, 7, 1690, 751, 253, 1352, 15, 5410]
     contaminants_s03 = [853, 17, 1286, 528, 214, 1031, 31, 3879]
@@ -305,10 +305,12 @@ def example_data(
         sample_03 = setting_s03+environment_s03+contaminants_s03
         sample_04 = setting_s04+environment_s04+contaminants_s04
         
-        data = pd.DataFrame([units,sample_01,sample_02,sample_03,sample_04],columns = columns)
+        data = pd.DataFrame([units,sample_01,sample_02,sample_03,sample_04],
+                            columns = columns)
  
     elif  data_type == 'setting':
-        data = pd.DataFrame([setting_units,setting_s01,setting_s02,setting_s03,setting_s04],columns = setting)
+        data = pd.DataFrame([setting_units,setting_s01,setting_s02,setting_s03,
+                             setting_s04],columns = setting)
 
     elif  data_type == 'environment':
         units = setting_units+environment_units
@@ -318,7 +320,8 @@ def example_data(
         sample_03 = setting_s03+environment_s03
         sample_04 = setting_s04+environment_s04
         
-        data = pd.DataFrame([units,sample_01,sample_02,sample_03,sample_04],columns = columns)
+        data = pd.DataFrame([units,sample_01,sample_02,sample_03,sample_04],
+                            columns = columns)
 
     elif  data_type == 'contaminants':
         units = setting_units+contaminants_units
@@ -328,9 +331,9 @@ def example_data(
         sample_03 = setting_s03+contaminants_s03
         sample_04 = setting_s04+contaminants_s04
         
-        data = pd.DataFrame([units,sample_01,sample_02,sample_03,sample_04],columns = columns)
+        data = pd.DataFrame([units,sample_01,sample_02,sample_03,sample_04],
+                            columns = columns)
 
-    
     # columns = ['sample nr','well','depth',	'pH', 'redox', 'sulfate', 'ammonium', 'sulfide', 'methane', 'iron II', 'manganese', 'benzene', 'toluene', 'ethylbenzene', 'pm_xylene', 'o_xylene', 'indane', 'indene', 'naphthalene']
     # units = [' ',' ','m',' ','mV', 'mg/L', 'mg/L', 'mg/L', 'mg/L', 'mg/L', 'mg/L', 'ug/L', 'ug/L', 'ug/L', 'ug/L', 'ug/L', 'ug/L', 'ug/L', 'ug/L']
     # sample_01 = ['2000-001', 'B-MLS1-3-12', -12, 7.23, -208, 23, 5, 0, 748, 3, 1, 263, 2, 269, 14, 51, 1254, 41, 2207]
