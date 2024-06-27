@@ -7,14 +7,6 @@ using mibipret
 @author: Alraune Zech
 """
 
-import sys
-# import numpy as np
-# import pandas as pd
-# import os
-
-path = '/home/alraune/GitHub/MiBiPreT/mibipret'
-
-sys.path.append(path) # append the path to module
 from mibipret.data.data import load_csv, check_columns, check_units #, example_data #, check_values
 
 file_path = './grift_BTEXNII.csv'

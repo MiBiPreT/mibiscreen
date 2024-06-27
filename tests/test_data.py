@@ -1,16 +1,10 @@
 """Tests for the mibipret.data module."""
 
-# importing module
-path_package = '/home/alraune/GitHub/MiBiPreT/mibipret'
-path_data = "{}/mibipret/data".format(path_package)
-
 import pandas as pd
 import pytest
-import sys
-
-sys.path.append(path_package) # appending a path
 from mibipret.data.data import example_data, load_csv, load_excel,check_columns , check_units #, check_values 
 
+path_data = "./mibipret/data"
 
 class TestData:
     data_01 = example_data()   
@@ -31,6 +25,7 @@ class TestData:
     def test_load_csv(self):
 
         """Testing correct loading of example data from csv file."""
+        print("{}/example_data.csv".format(path_data))
         data_t1 = load_csv("{}/example_data.csv".format(path_data))[0]
         # y = pd.load_csv('{}/example_data.csv'.format(path_data))
         # check = np.all(y.columns == all_test_data.columns)
