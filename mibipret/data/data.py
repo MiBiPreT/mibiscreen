@@ -11,8 +11,6 @@ from .names import col_dict
 from .names import contaminants
 from .names import electron_acceptors
 
-
-#print(electron_acceptors)
 def load_excel(
         file_path = None,
         sheet_name = 'Sheet1',
@@ -86,7 +84,6 @@ def load_csv(
     -------
         ValueError: If `file_path` is not a valid file location
 
-
     Example:
     -------
        This function can be called with the file path of the example data as 
@@ -94,7 +91,6 @@ def load_csv(
 
         >>> from mibipret.data import load_excel
         >>> load_excel(example_data.csv)
-
 
     """
     if file_path is None:
@@ -118,14 +114,12 @@ def check_columns(data, verbose = True):
     
     Args:
     -------
-        data (df): dataframe with the measurements
-    
+        data (df): dataframe with the measurements  
     
     Returns:
     -------
         pandas.DataFrame: Tabular data with standard column names
-    
-        
+       
     Raises:
     -------
     
@@ -180,7 +174,6 @@ def check_units(data):
     ]
     
     cols = data.columns
-    # print(cols)
     col_check_list= []
 
     for quantity in electron_acceptors:
@@ -343,15 +336,3 @@ def example_data(
     # data = pd.DataFrame([units,sample_01,sample_02,sample_03,sample_04],columns = columns)
 
     return data    
- 
-# def validate():
-
-# def standardize(data):
-#     data = check_columns(data)
-#     check_units(data)
-#     data = check_format(data)
-# # standardize runs check_units, check_columns and/or validation under the hood
-# # validation is similar to standardize, it combines various checks, but it does not create a new standardized dataset as standardize does
-# # st_sample_data = mibipret.data.standardize(data=[contaminants, metabolites], data_type="sample", store_csv=True, verbose=True, store_provenance=True)
-    
-# def preprocess():

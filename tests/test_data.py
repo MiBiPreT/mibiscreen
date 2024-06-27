@@ -12,6 +12,8 @@ path_data = "./mibipret/data"
 class TestData:
     data_01 = example_data()   
     data_02 = example_data(data_type = 'contaminants')   
+    data_03 = example_data(data_type = 'setting')   
+    data_04 = example_data(data_type = 'environment')   
 
     columns = ['sample_nr', 'obs_well', 'depth', 'pH', 'redoxpot', 'sulfate', 'methane', 'ironII', 'benzene', 'naphthalene']
     columns_mod = ["sample","well","Depth",'pH', 'redox' , 'Sulfate', 'CH4','iron','c6h6', 'Naphthalene']
@@ -21,9 +23,25 @@ class TestData:
     
     s01 = ['2000-001', 'B-MLS1-3-12',-12, 7.23, -208, 23, 748, 3,263,2207]
 
-    def test_example_data(self):
+    def test_example_data_01(self):
         """Testing correct loading of example data as pandas data frame."""
-        assert isinstance(self.data_01, pd.DataFrame) == True
+#        assert isinstance(self.data_01, pd.DataFrame) == True
+        assert self.data_01.shape == (5,19)
+ 
+    def test_example_data_02(self):
+        """Testing correct loading of example data as pandas data frame."""
+        # assert isinstance(self.data_02, pd.DataFrame) == True
+        assert self.data_02.shape == (5,11)
+
+    def test_example_data_03(self):
+        """Testing correct loading of example data as pandas data frame."""
+        # assert isinstance(self.data_03, pd.DataFrame) == True
+        assert self.data_03.shape == (5,3)
+
+    def test_example_data_04(self):
+        """Testing correct loading of example data as pandas data frame."""
+        # assert isinstance(self.data_04, pd.DataFrame) == True
+        assert self.data_04.shape == (5,11)
 
     def test_load_csv(self):
         """Testing correct loading of example data from csv file."""
