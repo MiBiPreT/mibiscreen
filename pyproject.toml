@@ -24,7 +24,10 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
 ]
-dependencies = ["pandas"]
+dependencies = [
+	"pandas",
+	"openpyxl"
+]
 description = "A collection of analytical and semi-semianalytical solutions for hydrogeological transport phenomena"
 keywords = [
     "groundwater",
