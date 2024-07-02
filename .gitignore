@@ -1,7 +1,7 @@
 *.py[cod]
 *.egg-info
 *.eggs
-*.ipynb_checkpoint/
+*.ipynb_checkpoints/
 
 dist
 .cache
