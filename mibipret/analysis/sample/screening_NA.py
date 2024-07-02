@@ -6,8 +6,8 @@
 """
 
 import pandas as pd
-from .properties import properties
 import mibipret.data.names as ean
+from .properties import properties
 
 
 def reductors(
