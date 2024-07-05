@@ -114,7 +114,7 @@ def load_csv(
     if file_path is None:
         raise ValueError('Specify file path and file name!')
     if not os.path.isfile(file_path):
-        raise ValueError('Specified file does not exist!',file_path)
+        raise OSError('Cannot access file at : ',file_path)
 
     data = pd.read_csv(file_path, encoding="unicode_escape")
     if ";" in data.iloc[1].iloc[0]:
