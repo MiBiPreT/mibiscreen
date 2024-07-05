@@ -85,7 +85,6 @@ class TestData:
         with pytest.raises(OSError):
             load_excel("ThisFileDoesNotExist.xlsx")
 
-
     def test_check_columns_01(self):
         """Testing check of column names.
 
@@ -104,6 +103,16 @@ class TestData:
         """
         column_names_known,column_names_unknown,column_names_standard = check_columns(self.data_05)
         assert column_names_unknown[0] == 'unknown_contaminant'
+
+    def test_check_columns_03(self,capsys):
+        """Testing check of column names.
+
+        Testing verbose flag.
+        """
+        check_columns(self.data_05,verbose=True)
+        out,err=capsys.readouterr()
+
+        assert len(out)>0
 
     def test_check_units_01(self):
         """Testing check of units.
@@ -149,6 +158,16 @@ class TestData:
             data4units = pd.DataFrame([self.s01],columns = self.columns)
             check_units(data4units)
 
+    def test_check_units_05(self,capsys):
+        """Testing routine check of units.
+
+        Testing verbose flag.
+        """
+        check_units(self.data_01,verbose=True)
+        out,err=capsys.readouterr()
+
+        assert len(out)>0
+
     def test_check_values_01(self):
         """Testing routine check_values().
 
@@ -158,7 +177,6 @@ class TestData:
 
         # assert isinstance(data_pure.iloc[-1,-1], np.int64)
         assert isinstance(data_pure.iloc[-1,-1], np.float64)
-
 
     def test_check_values_02(self):
         """Testing routine check_values().
@@ -177,6 +195,16 @@ class TestData:
         with pytest.raises(ValueError, match="Provided data is not a data frame."):
             check_values(self.s01)
 
+    def test_check_values_04(self,capsys):
+        """Testing routine check_values().
+
+        Testing verbose flag.
+        """
+        check_values(self.data_01,verbose=True)
+        out,err=capsys.readouterr()
+
+        assert len(out)>0
+
     def test_standardize_01(self):
         """Testing routine standardize().
 
@@ -186,3 +214,36 @@ class TestData:
         data_standard,units = standardize(self.data_05,reduce = True, store_csv=False,  verbose=False)
 
         assert data_standard.shape[1] == self.data_01.shape[1]
+
+    def test_standardize_02(self):
+        """Testing routine standardize().
+
+        Testing that data has been properly standardies,
+        here without reducing to know quantities.
+        """
+        data_standard,units = standardize(self.data_05,reduce = False, store_csv=False,  verbose=False)
+
+        assert data_standard.shape == (4,20)
+
+    def test_standardize_03(self,capsys):
+        """Testing routine standardize().
+
+        Testing verbose flag.
+        """
+        standardize(self.data_05,reduce = True, store_csv=False,  verbose=True)
+        out,err=capsys.readouterr()
+
+        assert len(out)>0
+
+    def test_standardize_04(self,capsys):
+        """Testing routine standardize().
+
+        Testing Error message that given file path does not match for writing
+        standarized data to file.
+        """
+        file_name = '../dir_does_not_exist/file.csv'
+        out_text = "WARNING: data could not be saved. Check provided file path and name: {}\n".format(file_name)
+        standardize(self.data_05,reduce = True, store_csv=file_name,  verbose=False)
+        out,err=capsys.readouterr()
+
+        assert out==out_text

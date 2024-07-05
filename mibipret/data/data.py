@@ -416,9 +416,7 @@ def standardize(data,
                     print('==============================================================')
                     print("Save standardized dataframe to file:\n", store_csv)
             except OSError:
-                print('==============================================================')
-                print("WARNING: data could not be saved. Check provided file path and name:", store_csv)
-
+                print("WARNING: data could not be saved. Check provided file path and name: {}".format(store_csv))
 
     return data_numeric, units
 
