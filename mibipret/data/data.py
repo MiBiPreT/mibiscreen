@@ -39,16 +39,23 @@ def load_excel(
 
     Args:
     -------
-        file_path (str): Name of the path to the file
-        sheet_name (int): Number of the sheet in the excel file to load
-        verbose (bool): flag
-        store_provenance (bool): ...
+        file_path: str
+            Name of the path to the file
+        sheet_name: int
+            Number of the sheet in the excel file to load
+        verbose: Boolean
+            verbose flag
+        store_provenance: Boolean
+            To add!
         **kwargs: optional keyword arguments to pass to pandas' routine
             read_excel()
 
     Returns:
     -------
-        pandas.DataFrame: Tabular data
+        data: pd.DataFrame
+            Tabular data
+        units: pd.DataFrame
+            Tabular data on units
 
     Raises:
     -------
@@ -90,13 +97,19 @@ def load_csv(
 
     Args:
     -------
-        file_path (str): Name of the path to the file
-        verbose (bool): verbose flag
-        store_provenance (bool): ...
+        file_path: str
+            Name of the path to the file
+        verbose: Boolean
+            verbose flag
+        store_provenance: Boolean
+            To add!
 
     Returns:
     -------
-        pandas.DataFrame: Tabular data
+        data: pd.DataFrame
+            Tabular data
+        units: pd.DataFrame
+            Tabular data on units
 
     Raises:
     -------
@@ -141,8 +154,10 @@ def check_columns(data, verbose = True):
 
     Args:
     -------
-        data (df): dataframe with the measurements
-        verbose (Boolean): verbose statement (default True)
+        data: pd.DataFrame (df)
+            dataframe with the measurements
+        verbose: Boolean
+            verbose statement (default True)
 
     Returns:
     -------
@@ -235,7 +250,7 @@ def check_units(data,
     cols = units.columns
     col_check_list= []
 
-    for quantity in electron_acceptors:
+    for quantity in electron_acceptors['all_ea']:
         if quantity in cols:
             if units[quantity][0] not in standard_units['mgperl']:
                 col_check_list.append(quantity)
@@ -243,7 +258,7 @@ def check_units(data,
                     print("Warning: Check unit of {}!\n Given in {}, but must be milligramm per liter (e.g. {})."
                               .format(quantity,data[quantity][0],standard_units['mgperl'][0]))
 
-    for quantity in contaminants:
+    for quantity in contaminants['all_cont']:
         if quantity in cols:
             if units[quantity][0] not in standard_units['microgperl']:
                 col_check_list.append(quantity)
@@ -276,6 +291,7 @@ def check_units(data,
 def check_values(
         data,
         verbose = True,
+        contaminant_group = "all_cont",
         ):
     """Function that checks on value types and replaces non-measured values.
 
@@ -314,7 +330,9 @@ def check_values(
 
     # transform data to numeric values
     quantities_transformed = []
-    for quantity in [name_sample_depth]+environmental_conditions+electron_acceptors+contaminants:
+    cont_list = contaminants[contaminant_group]
+    ea_list = electron_acceptors['all_ea']
+    for quantity in [name_sample_depth]+environmental_conditions+ea_list+cont_list:
         if quantity in data_pure.columns:
             try:
                 data_pure[quantity] = pd.to_numeric(data_pure[quantity])

@@ -38,17 +38,11 @@ name_manganese = 'manganese' #"mn_II"
 name_ironII = "ironII" #"fe_II"
 name_phosphate = 'phosphate' # "po4"
 
-electron_acceptors = [name_oxygen,
-                      name_nitrite,
-                      name_nitrate,
-                      name_sulfate,
-                      name_sulfide,
-                      name_ammonium,
-                      name_methane,
-                      name_ironII,
-                      name_manganese,
-                      name_phosphate
-                      ]
+electron_acceptors = dict(
+    ONSFe = [name_oxygen, name_nitrate, name_sulfate, name_ironII],   
+    all_ea = [name_oxygen, name_nitrite, name_nitrate, name_sulfate, name_sulfide,
+                name_ammonium, name_methane, name_ironII, name_manganese, name_phosphate]
+)
 
 name_benzene = 'benzene'
 name_toluene = 'toluene'
@@ -61,29 +55,36 @@ name_indene = 'indene'
 name_naphthalene = 'naphthalene'
 
 ### todo: complete and potentially choose other names
-contaminants = [name_benzene,
-                name_toluene,
-                name_ethylbenzene,
-                name_pm_xylene,
-                name_o_xylene,
-                name_xylene,
-                name_indane,
-                name_indene,
-                name_naphthalene
-                ]
+contaminants = dict(
+    BTEX = [name_benzene,name_toluene,name_ethylbenzene, name_pm_xylene,
+                name_o_xylene, name_xylene],
+    BTEXIIN = [name_benzene,name_toluene,name_ethylbenzene, name_pm_xylene,
+                name_o_xylene, name_xylene, name_indane,name_indene, name_naphthalene],
+    all_cont = [name_benzene,name_toluene,name_ethylbenzene, name_pm_xylene,
+                name_o_xylene, name_xylene, name_indane,name_indene, name_naphthalene],
+)
 
 col_dict = {
     "sample": name_sample,
     "Sample":name_sample,
     "sample number": name_sample,
     "Sample Number": name_sample,
-    "Sample number": name_sample,
+    "Sample_number": name_sample,
+    "sample_number": name_sample,
+    "Sample_Number": name_sample,
+    "Sample_number": name_sample,
     "sample nr": name_sample,
     "Sample Nr": name_sample,
     "Sample nr": name_sample,
     "sample_nr": name_sample,
     "Sample_nr": name_sample,
     "Sample_Nr": name_sample,
+    "sample name": name_sample,
+    "Sample name": name_sample,
+    "Sample Name": name_sample,
+    "sample_name": name_sample,
+    "Sample_name": name_sample,
+    "Sample_Name": name_sample,
     "well": name_observation_well,
     "Well": name_observation_well,
     "observation well": name_observation_well,
@@ -249,6 +250,8 @@ col_dict = {
     "indane": name_indane,
     "Indane": name_indane,
     "c9h10": name_indane,
+    "naphtalene": name_naphthalene,
+    "Naphtalene": name_naphthalene,
     "naphthalene": name_naphthalene,
     "Naphthalene": name_naphthalene,
     "c10h8": name_naphthalene
