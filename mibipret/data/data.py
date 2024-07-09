@@ -22,6 +22,7 @@ except ImportError:
     from .names import contaminants
     from .names import electron_acceptors
     from .names import environmental_conditions
+    from .names import name_EC
     from .names import name_redox
     from .names import name_sample_depth
     from .names import standard_units
@@ -145,7 +146,6 @@ def load_csv(
         print(data)
     return data, units
 
-
 def check_columns(data, verbose = True):
     """Function checking names of columns of data frame.
 
@@ -154,7 +154,7 @@ def check_columns(data, verbose = True):
 
     Args:
     -------
-        data: pd.DataFrame (df)
+        data: pd.DataFrame
             dataframe with the measurements
         verbose: Boolean
             verbose statement (default True)
@@ -210,13 +210,16 @@ def check_units(data,
 
     Args:
     -------
-        data (df): dataframe with the measurements where first row contains
-                   the units or a dataframe with only the column names and units
-        verbose (Boolean): verbose statement (default True)
+        data: pandas.DataFrames
+            dataframe with the measurements where first row contains
+            the units or a dataframe with only the column names and units
+        verbose: Boolean
+            verbose statement (default True)
 
     Returns:
     -------
-        col_check_list (list): quantities whose units need checking/correction
+        col_check_list: list
+            quantities whose units need checking/correction
 
     Raises:
     -------
@@ -267,6 +270,20 @@ def check_units(data,
                               .format(quantity,data[quantity][0],standard_units['microgperl'][0]))
 
     #environmental_conditions:
+    if name_sample_depth in units.columns:
+        if units[name_sample_depth][0] not in standard_units['meter']:
+            col_check_list.append(name_sample_depth)
+            if verbose:
+                print("Warning: Check unit of {}!\n Given in {}, but must be in meter (e.g. {}).".format(
+                        name_sample_depth,data[quantity][0], standard_units['meter'][0]))
+
+    if name_EC in units.columns:
+        if units[name_EC][0] not in standard_units['microsimpercm']:
+            col_check_list.append(name_redox)
+            if verbose:
+                print("Warning: Check unit of {}!\n Given in {}, but must be in microSiemens per cm (e.g. {}).".format(
+                        name_EC,data[quantity][0],standard_units['microsimpercm'][0]))
+
     if name_redox in units.columns:
         if units[name_redox][0] not in standard_units['millivolt']:
             col_check_list.append(name_redox)
@@ -274,13 +291,6 @@ def check_units(data,
                 print("Warning: Check unit of {}!\n Given in {}, but must be in millivolt (e.g. {}).".format(
                         name_redox,data[quantity][0],standard_units['millivolt'][0]))
 
-    #environmental_conditions:
-    if name_sample_depth in units.columns:
-        if units[name_sample_depth][0] not in standard_units['meter']:
-            col_check_list.append(name_sample_depth)
-            if verbose:
-                print("Warning: Check unit of {}!\n Given in {}, but must be in meter (e.g. {}).".format(
-                        name_sample_depth,data[quantity][0], standard_units['meter'][0]))
 
     if len(col_check_list) == 0 and verbose:
         print('==============================================================')
@@ -290,19 +300,28 @@ def check_units(data,
 
 def check_values(
         data,
-        verbose = True,
         contaminant_group = "all_cont",
+        verbose = True,
         ):
     """Function that checks on value types and replaces non-measured values.
 
     Args:
     -------
-        data (df): dataframe with the measurements (without first row of units)
-        verbose (Boolean): verbose statement (default True)
+        data: pandas.DataFrames
+            dataframe with the measurements (without first row of units)
+        contaminant_group: string
+            shortcut string specifying group of contaminant to check on:
+                -- "all_cont": all contaminants listed and specified in names
+                -- "BTEX": benzene, toluene, ethylbenzene, xylene
+                -- "BTEXIIN": benzene, toluene, ethylbenzene, xylene, indene, indane, naphthalene
+            default: "all_cont"
+        verbose: Boolean
+            verbose statement (default True)
 
     Returns:
     -------
-        pandas.DataFrame: Tabular data with standard column names
+        data_pure: pandas.DataFrame
+            Tabular data with standard column names and without units
 
     Raises:
     -------
@@ -332,6 +351,7 @@ def check_values(
     quantities_transformed = []
     cont_list = contaminants[contaminant_group]
     ea_list = electron_acceptors['all_ea']
+
     for quantity in [name_sample_depth]+environmental_conditions+ea_list+cont_list:
         if quantity in data_pure.columns:
             try:
@@ -368,27 +388,31 @@ def standardize(data,
 
     Args:
     -------
-        data (df): dataframe with the measurements
-        verbose (Boolean): verbose statement (default True)
-        reduce (Boolean): flag to reduce data to known quantities (default True),
-                            otherwise full dataframe with renamed columns is returned
-        store_csv (Boolean): flag to save dataframe in standard format to csv-file
+        data: pandas.DataFrames
+            dataframe with the measurements
+        verbose: Boolean
+            verbose statement (default True)
+        reduce: Boolean
+            flag to reduce data to known quantities (default True),
+            otherwise full dataframe with renamed columns is returned
+        store_csv: Boolean
+            flag to save dataframe in standard format to csv-file
 
     Returns:
     -------
-        pandas.DataFrame: Tabular data with standard column names
+        data_numeric, units: pandas.DataFrames
+            Tabular data with standardized column names, values in numerics etc
+            and table with units for standardized column names
 
     Raises:
     -------
-    None (yet).
+        None (yet).
 
     Example:
     -------
     Todo's:
         - complete list of potential contaminants, environmental factors
         - add name check for metabolites?
-        - return column names that have not been identified
-        - option to return only columns identified
         - add key-word to specify which data to extract
             (i.e. data columns to return)
 
@@ -439,20 +463,26 @@ def standardize(data,
     return data_numeric, units
 
 def example_data(data_type = 'all',
-                 units = True,
+                 with_units = False,
+                 standardize = True,
                  ):
     """Function provinging test data for mibipret data analysis.
 
     Args:
     -------
-        data_type (str): type of data to return:
-                        -- "all": all types of data available
-                        -- "setting": well setting data only
-                        -- "contaminants": data on contaminants
-                        -- "environment": data on environmental
-                        -- "metabolites": data on metabolites
-                        -- "hydro": data on hydrogeolocial conditions
-        units (boolean): flag to provide first row with units (default: True)
+        data_type: string
+            Type of data to return:
+                -- "all": all types of data available
+                -- "setting": well setting data only
+                -- "contaminants": data on contaminants
+                -- "environment": data on environmental
+                -- "metabolites": data on metabolites
+                -- "hydro": data on hydrogeolocial conditions
+        with_units: Boolean
+            flag to provide first row with units (default: True)
+        standardize: Boolean
+            flag to run check_values on data to transform into numerical value
+            only applicable when with_units is False
 
     Returns:
     -------
@@ -460,11 +490,11 @@ def example_data(data_type = 'all',
 
     Raises:
     -------
-    None
+        None
 
     Example:
     -------
-    To be added!
+        To be added!
     """
     setting = ["sample_nr","obs_well","depth"]
     setting_units = [' ',' ','m']
@@ -473,14 +503,14 @@ def example_data(data_type = 'all',
     setting_s03 = ['2000-003', 'B-MLS1-6-17', -17.]
     setting_s04 = ['2000-004', 'B-MLS1-7-19', -19.]
 
-    environment = ['pH', 'redox', 'sulfate', 'ammonium', 'sulfide',
-                   'methane', 'ironII', 'manganese']
-    environment_units = [' ','mV', 'mg/L', 'mg/L', 'mg/L',
-                         'mg/L', 'mg/L', 'mg/L']
-    environment_s01 = [7.23, -208., 23., 5., 0., 748., 3., 1.]
-    environment_s02 = [7.67, -231., 0., 6., 0., 2022., 1., 0.]
-    environment_s03 = [7.75, -252., 1., 13., 0., 200., 1., 0.]
-    environment_s04 = [7.53, -317., 9., 15., 6., 122., 0., 0.]
+    environment = ['pH','EC', 'redox','oxygen','nitrate','nitrite', 'sulfate', 'ammonium', 'sulfide',
+                   'methane', 'ironII', 'manganese','phosphate']
+    environment_units = [' ','uS/cm','mV', 'mg/L', 'mg/L', 'mg/L', 'mg/L',
+                         'mg/L', 'mg/L', 'mg/L', 'mg/L', 'mg/L', 'mg/L']
+    environment_s01 = [7.23, 322., -208.,0.3,122.,0.58, 23., 5., 0., 748., 3., 1.,1.6]
+    environment_s02 = [7.67, 405., -231.,0.9,5.,0.0, 0., 6., 0., 2022., 1., 0.,0]
+    environment_s03 = [7.75, 223., -252.,0.1,3.,0.03, 1., 13., 0., 200., 1., 0.,0.8]
+    environment_s04 = [7.53, 58., -317.,0., 180.,1., 9., 15., 6., 122., 0., 0.,0.1]
 
     contaminants = ['benzene', 'toluene', 'ethylbenzene', 'pm_xylene',
                     'o_xylene', 'indane', 'indene', 'naphthalene']
@@ -528,7 +558,8 @@ def example_data(data_type = 'all',
         data = pd.DataFrame([units,sample_01,sample_02,sample_03,sample_04],
                             columns = columns)
 
-    if not units:
-        data.drop(0)
-
+    if not with_units:
+        data.drop(0,inplace = True)
+        if standardize:
+            data = check_values(data,verbose = False)
     return data

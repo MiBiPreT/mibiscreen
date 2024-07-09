@@ -1,6 +1,6 @@
-sample_nr,obs_well,depth,pH,redox,sulfate,ammonium,sulfide,methane,ironII,manganese,benzene,toluene,ethylbenzene,pm_xylene,o_xylene,indane,indene,naphthalene
- , ,m, ,mV,mg/L,mg/L,mg/L,mg/L,mg/L,mg/L,ug/L,ug/L,ug/L,ug/L,ug/L,ug/L,ug/L,ug/L
-2000-001,B-MLS1-3-12,-12,7.23,-208,23,5,0,748,3,1,263,2,269,14,51,1254,41,2207
-2000-002,B-MLS1-5-15,-15.5,7.67,-231,0,6,0,2022,1,0,179,7,1690,751,253,1352,15,5410
-2000-003,B-MLS1-6-17,-17,7.75,-252,1,13,0,200,1,0,853,17,1286,528,214,1031,31,3879
-2000-004,B-MLS1-7-19,-19,7.53,-317,9,15,6,122,0,0,1254,10,1202,79,61,814,59,1970
+sample_nr,obs_well,depth,pH,EC,redox,oxygen,nitrate,nitrite,sulfate,ammonium,sulfide,methane,ironII,manganese,phosphate,benzene,toluene,ethylbenzene,pm_xylene,o_xylene,indane,indene,naphthalene
+ , ,m, ,uS/cm,mV,mg/L,mg/L,mg/L,mg/L,mg/L,mg/L,mg/L,mg/L,mg/L,mg/L,ug/L,ug/L,ug/L,ug/L,ug/L,ug/L,ug/L,ug/L
+2000-001,B-MLS1-3-12,-12.0,7.23,322.0,-208.0,0.3,122.0,0.58,23.0,5.0,0.0,748.0,3.0,1.0,1.6,263.0,2.0,269.0,14.0,51.0,1254.0,41.0,2207.0
+2000-002,B-MLS1-5-15,-15.5,7.67,405.0,-231.0,0.9,5.0,0.0,0.0,6.0,0.0,2022.0,1.0,0.0,0,179.0,7.0,1690.0,751.0,253.0,1352.0,15.0,5410.0
+2000-003,B-MLS1-6-17,-17.0,7.75,223.0,-252.0,0.1,3.0,0.03,1.0,13.0,0.0,200.0,1.0,0.0,0.8,853.0,17.0,1286.0,528.0,214.0,1031.0,31.0,3879.0
+2000-004,B-MLS1-7-19,-19.0,7.53,58.0,-317.0,0.0,180.0,1.0,9.0,15.0,6.0,122.0,0.0,0.0,0.1,1254.0,10.0,1202.0,79.0,61.0,814.0,59.0,1970.0
