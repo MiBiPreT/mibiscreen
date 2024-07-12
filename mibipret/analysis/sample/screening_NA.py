@@ -59,7 +59,7 @@ def reductors(
     except TypeError:
         raise ValueError("Data not in standardized format. Run 'standardize()' first.")
 
-    if isinstance(tot_reduct, float) and tot_reduct == 0.:
+    if isinstance(tot_reduct, float) and tot_reduct <= 0.:
         print("\nWARNING: No data on electron acceptor concentrations given.")
         tot_reduct = False
     elif isinstance(tot_reduct, pd.Series):
