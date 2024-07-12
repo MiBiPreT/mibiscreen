@@ -14,6 +14,7 @@ try:
     from names import contaminants
     from names import electron_acceptors
     from names import environmental_conditions
+    from names import name_EC
     from names import name_redox
     from names import name_sample_depth
     from names import standard_units
@@ -87,6 +88,19 @@ def load_excel(
 
     units = data.drop(labels = np.arange(1,data.shape[0]))
 
+    if verbose:
+        print('==============================================================')
+        print(" Running function 'load_excel()' on data file ", file_path)        
+        print('==============================================================')
+        print("Unit of quantities:")
+        print('-------------------')
+        print(units)
+        print('________________________________________________________________')
+        print("Loaded data as pandas DataFrame:")
+        print('--------------------------------')
+        print(data)
+        print('================================================================')
+
     return data, units
 
 def load_csv(
@@ -136,14 +150,17 @@ def load_csv(
     units = data.drop(labels = np.arange(1,data.shape[0]))
 
     if verbose:
-        print('==============================================================')
-        print("Unit of quantities:")
+        print('================================================================')
+        print(" Running function 'load_csv()' on data file ", file_path)        
+        print('================================================================')
+        print("Units of quantities:")
         print('-------------------')
         print(units)
-        print('==============================================================')
+        print('________________________________________________________________')
         print("Loaded data as pandas DataFrame:")
         print('--------------------------------')
         print(data)
+        print('================================================================')
     return data, units
 
 def check_columns(data, verbose = True):
@@ -188,19 +205,23 @@ def check_columns(data, verbose = True):
             column_names_known.append(x)
             column_names_standard.append(y)
     if verbose:
-        print('==============================================================')
+        print('================================================================')
+        print(" Running function 'check_columns()' on data")        
+        print('================================================================')
         print("{} quantities identified in provided data.".format(len(column_names_known)))
-        print("These need to be renamed to standard names:")
-        print('-------------------------------------------')
+        print("List of names with standard names:")
+        print('----------------------------------')
         for i,name in enumerate(column_names_known):
             print(name," --> ",column_names_standard[i])
-        print("\nRenaming of column names by running standardize().")
+        print('----------------------------------')
+        print("\nRenaming can be done by running standardize().\n")
 
-        print('==============================================================')
+        print('________________________________________________________________')
         print("{} quantities have not bee identified in provided data:".format(len(column_names_unknown)))
         print('-------------------------------------------------------')
         for i,name in enumerate(column_names_unknown):
             print(name)
+        print('================================================================')
 
     return (column_names_known,column_names_unknown,column_names_standard)
 
@@ -229,6 +250,11 @@ def check_units(data,
     -------
         To be added.
     """
+    if verbose:
+        print('================================================================')
+        print(" Running function 'check_units()' on data")        
+        print('================================================================')
+
     if not isinstance(data, pd.DataFrame):
         raise ValueError("Provided data is not a data frame.")
     elif data.shape[0]>1:
@@ -250,11 +276,10 @@ def check_units(data,
     # standardize column names (as it might not has happened for data yet)
     units.columns = [col_dict.get(x, x) for x in units.columns]
 
-    cols = units.columns
     col_check_list= []
 
     for quantity in electron_acceptors['all_ea']:
-        if quantity in cols:
+        if quantity in units.columns:
             if units[quantity][0] not in standard_units['mgperl']:
                 col_check_list.append(quantity)
                 if verbose:
@@ -262,7 +287,7 @@ def check_units(data,
                               .format(quantity,data[quantity][0],standard_units['mgperl'][0]))
 
     for quantity in contaminants['all_cont']:
-        if quantity in cols:
+        if quantity in units.columns:
             if units[quantity][0] not in standard_units['microgperl']:
                 col_check_list.append(quantity)
                 if verbose:
@@ -270,31 +295,47 @@ def check_units(data,
                               .format(quantity,data[quantity][0],standard_units['microgperl'][0]))
 
     #environmental_conditions:
-    if name_sample_depth in units.columns:
-        if units[name_sample_depth][0] not in standard_units['meter']:
-            col_check_list.append(name_sample_depth)
-            if verbose:
-                print("Warning: Check unit of {}!\n Given in {}, but must be in meter (e.g. {}).".format(
-                        name_sample_depth,data[quantity][0], standard_units['meter'][0]))
+    env_cond = [name_sample_depth,name_EC,name_redox]
+    unit_types = ['meter','microsimpercm','millivolt']
 
-    if name_EC in units.columns:
-        if units[name_EC][0] not in standard_units['microsimpercm']:
-            col_check_list.append(name_redox)
-            if verbose:
-                print("Warning: Check unit of {}!\n Given in {}, but must be in microSiemens per cm (e.g. {}).".format(
-                        name_EC,data[quantity][0],standard_units['microsimpercm'][0]))
+    for quantity,units_type in zip(env_cond,unit_types):
+        if quantity in units.columns:
+            if units[quantity][0] not in standard_units[units_type]:
+                col_check_list.append(quantity)
+                if verbose:
+                    print("Warning: Check unit of {}!\n Given in {}, but must be in {} (e.g. {}).".format(
+                            quantity,data[quantity][0],units_type,standard_units[units_type][0]))
 
-    if name_redox in units.columns:
-        if units[name_redox][0] not in standard_units['millivolt']:
-            col_check_list.append(name_redox)
-            if verbose:
-                print("Warning: Check unit of {}!\n Given in {}, but must be in millivolt (e.g. {}).".format(
-                        name_redox,data[quantity][0],standard_units['millivolt'][0]))
+    # if name_sample_depth in units.columns:
+    #     if units[name_sample_depth][0] not in standard_units['meter']:
+    #         col_check_list.append(name_sample_depth)
+    #         if verbose:
+    #             print("Warning: Check unit of {}!\n Given in {}, but must be in meter (e.g. {}).".format(
+    #                     name_sample_depth,data[name_sample_depth][0], standard_units['meter'][0]))
+
+    # if name_EC in units.columns:
+    #     if units[name_EC][0] not in standard_units['microsimpercm']:
+    #         col_check_list.append(name_EC)
+    #         if verbose:
+    #             print("Warning: Check unit of {}!\n Given in {}, but must be in 
+    #                microSiemens per cm (e.g. {}).".format(
+    #                     name_EC,data[name_EC][0],standard_units['microsimpercm'][0]))
+
+    # if name_redox in units.columns:
+    #     if units[name_redox][0] not in standard_units['millivolt']:
+    #         col_check_list.append(name_redox)
+    #         if verbose:
+    #             print("Warning: Check unit of {}!\n Given in {}, but must be in millivolt (e.g. {}).".format(
+    #                     name_redox,data[name_redox][0],standard_units['millivolt'][0]))
 
 
-    if len(col_check_list) == 0 and verbose:
-        print('==============================================================')
-        print("All identified quantities given in requested units.")
+    if verbose:
+        print('________________________________________________________________')
+        if len(col_check_list) == 0:
+            print(" All identified quantities given in requested units.")
+        else:
+            print(" All other identified quantities given in requested units.")
+        print('================================================================')
 
     return col_check_list
 
@@ -331,6 +372,11 @@ def check_values(
     -------
         To be added.
     """
+    if verbose:
+        print('================================================================')
+        print(" Running function 'check_values()' on data")        
+        print('================================================================')
+
     if not isinstance(data, pd.DataFrame):
         raise ValueError("Provided data is not a data frame.")
 
@@ -339,8 +385,8 @@ def check_values(
     ### testing if provided data frame contains first row with units
     for u in data_pure.iloc[0].to_list():
         if u in all_units:
-            print('==============================================================')
             print("WARNING: First row identified as units, has been removed for value check")
+            print('________________________________________________________________')
             data_pure.drop(labels = 0,inplace = True)
             break
 
@@ -358,15 +404,14 @@ def check_values(
                 data_pure[quantity] = pd.to_numeric(data_pure[quantity])
                 quantities_transformed.append(quantity)
             except ValueError:
-                print('==============================================================')
                 print("WARNING: Cound not transform '{}' to numerical values".format(quantity))
-
+                print('________________________________________________________________')
     if verbose:
-        print('==============================================================')
         print("Quantities with values transformed to numerical(int/float):")
         print('-----------------------------------------------------------')
         for name in quantities_transformed:
             print(name)
+        print('================================================================')
 
     # data_pure.iloc[:,:] = data_pure.iloc[:,:].replace(to_replace="-", value=replace)
 
@@ -427,15 +472,17 @@ def standardize(data,
         data_standard = data_standard.drop(labels = column_names_unknown,axis = 1)
 
     if verbose:
-        print('==============================================================')
+        print('================================================================')
+        print(" Running function 'standardize()' on data")
+        print('================================================================')
         print("{} quantities identified and renamed:".format(len(column_names_known)))
         print('-------------------------------------')
         for i,name in enumerate(column_names_known):
             print(name," --> ",column_names_standard[i])
 
-        print('==============================================================')
-        print("{} quantities not identified (and removed) from data:".format(len(column_names_unknown)))
-        print('-----------------------------------------------------')
+        print('________________________________________________________________')
+        print("{} quantities not identified (and removed) from standard data:".format(len(column_names_unknown)))
+        print('--------------------------------------------------------------')
         for i,name in enumerate(column_names_unknown):
             print(name)
 
@@ -449,16 +496,18 @@ def standardize(data,
     # store standard data to file
     if store_csv:
         if len(col_check_list) != 0:
-            print('==============================================================')
+            print('________________________________________________________________')
             print("Data could not be saved because not all identified \nquantities are given in requested units.")
         else:
             try:
                 data_standard.to_csv(store_csv,index=False)
                 if verbose:
-                    print('==============================================================')
+                    print('________________________________________________________________')
                     print("Save standardized dataframe to file:\n", store_csv)
             except OSError:
                 print("WARNING: data could not be saved. Check provided file path and name: {}".format(store_csv))
+    if verbose:
+        print('================================================================')
 
     return data_numeric, units
 

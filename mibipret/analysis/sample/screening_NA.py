@@ -10,7 +10,6 @@ import pandas as pd
 import mibipret.data.names as ean
 from .properties import properties
 
-
 def reductors(
     data,
     ea_group = 'ONSFe',
@@ -36,29 +35,37 @@ def reductors(
         tot_reduct: pd.Series
         Total amount of electrons needed for reduction in [mmol e-/l]
     """
+    if verbose:
+        print('==============================================================')
+        print(" Running function 'reductors()' on data")        
+        print('==============================================================')
+
     tot_reduct = 0.
     cols= check_data(data)
 
     try:
         for ea in ean.electron_acceptors[ea_group]:
             if ea in cols:
-                tot_reduct += properties[ea]['factor_stoichiometry']* \
-                    data[ea] / properties[ea]['molecular_mass']
+                tot_reduct += properties[ea]['factor_stoichiometry']* data[ea]/properties[ea]['molecular_mass']
                 #     pd.to_numeric(data[ea]) / properties[ea]['molecular_mass']
             else:
                 print("WARNING: No data on {} given, zero concentration assumed.".format(ea))
+                print('________________________________________________________________')
     except KeyError:
         print("WARNING: group of electron acceptors ('ea_group') not defined: '{}'".format(ea_group))
+        print('________________________________________________________________')
         tot_reduct = False
+    except TypeError:
+        raise ValueError("Data not in standardized format. Run 'standardize()' first.")
 
-
-    if isinstance(tot_reduct, float):
+    if isinstance(tot_reduct, float) and tot_reduct == 0.:
         print("\nWARNING: No data on electron acceptor concentrations given.")
         tot_reduct = False
     elif isinstance(tot_reduct, pd.Series):
         tot_reduct.rename("total_reductors",inplace = True)
         if verbose:
             print("Total amount of electron reductors per column in [mmol e-/l] is:\n{}".format(tot_reduct))
+            print('----------------------------------------------------------------')
     return tot_reduct
 
 def oxidators(
@@ -127,6 +134,8 @@ def oxidators(
     except KeyError:
         print("WARNING: group of contaminant ('contaminant_group') not defined: '{}'".format(contaminant_group))
         tot_oxi = False
+    except TypeError:
+        raise ValueError("Data not in standardized format. Run 'standardize()' first.")
 
     if isinstance(tot_oxi, float):
         print("\nWARNING: No data on contaminant concentrations given.")
@@ -319,6 +328,8 @@ def total_contaminant_concentration(
     except KeyError:
         print("WARNING: group of contaminant ('contaminant_group') not defined: '{}'".format(contaminant_group))
         tot_conc = False
+    except TypeError:
+        raise ValueError("Data not in standardized format. Run 'standardize()' first.")
 
     if isinstance(tot_conc, float):
         print("\nWARNING: No data on contaminant concentrations given.")
@@ -397,6 +408,8 @@ def thresholds_for_intervention(
     except KeyError:
         print("WARNING: group of contaminant ('contaminant_group') not defined: '{}'".format(contaminant_group))
         na_intervention = False
+    except TypeError:
+        raise ValueError("Data not in standardized format. Run 'standardize()' first.")
 
     return na_intervention
 
