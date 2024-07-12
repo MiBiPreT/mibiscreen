@@ -14,6 +14,7 @@ try:
     from names import contaminants
     from names import electron_acceptors
     from names import environmental_conditions
+    from names import metabolites
     from names import name_EC
     from names import name_redox
     from names import name_sample_depth
@@ -23,6 +24,7 @@ except ImportError:
     from .names import contaminants
     from .names import electron_acceptors
     from .names import environmental_conditions
+    from .names import metabolites
     from .names import name_EC
     from .names import name_redox
     from .names import name_sample_depth
@@ -306,28 +308,14 @@ def check_units(data,
                     print("Warning: Check unit of {}!\n Given in {}, but must be in {} (e.g. {}).".format(
                             quantity,data[quantity][0],units_type,standard_units[units_type][0]))
 
-    # if name_sample_depth in units.columns:
-    #     if units[name_sample_depth][0] not in standard_units['meter']:
-    #         col_check_list.append(name_sample_depth)
-    #         if verbose:
-    #             print("Warning: Check unit of {}!\n Given in {}, but must be in meter (e.g. {}).".format(
-    #                     name_sample_depth,data[name_sample_depth][0], standard_units['meter'][0]))
 
-    # if name_EC in units.columns:
-    #     if units[name_EC][0] not in standard_units['microsimpercm']:
-    #         col_check_list.append(name_EC)
-    #         if verbose:
-    #             print("Warning: Check unit of {}!\n Given in {}, but must be in
-    #                microSiemens per cm (e.g. {}).".format(
-    #                     name_EC,data[name_EC][0],standard_units['microsimpercm'][0]))
-
-    # if name_redox in units.columns:
-    #     if units[name_redox][0] not in standard_units['millivolt']:
-    #         col_check_list.append(name_redox)
-    #         if verbose:
-    #             print("Warning: Check unit of {}!\n Given in {}, but must be in millivolt (e.g. {}).".format(
-    #                     name_redox,data[name_redox][0],standard_units['millivolt'][0]))
-
+    for quantity in metabolites['all_meta']:
+        if quantity in units.columns:
+            if units[quantity][0] not in standard_units['microgperl']:
+                col_check_list.append(quantity)
+                if verbose:
+                    print("Warning: Check unit of {}!\n Given in {}, but must be microgramm per liter (e.g. {})."
+                              .format(quantity,data[quantity][0],standard_units['microgperl'][0]))
 
     if verbose:
         print('________________________________________________________________')
@@ -397,8 +385,9 @@ def check_values(
     quantities_transformed = []
     cont_list = contaminants[contaminant_group]
     ea_list = electron_acceptors['all_ea']
+    metabolites_list = metabolites['all_meta']
 
-    for quantity in [name_sample_depth]+environmental_conditions+ea_list+cont_list:
+    for quantity in [name_sample_depth]+environmental_conditions+ea_list+cont_list+metabolites_list:
         if quantity in data_pure.columns:
             try:
                 data_pure[quantity] = pd.to_numeric(data_pure[quantity])

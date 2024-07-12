@@ -8,6 +8,7 @@ groundwater samples useful for biodegredation and bioremediation analysis
 @author: A. Zech
 """
 
+### Standard names for settings
 name_sample = "sample_nr"
 name_observation_well = "obs_well"
 name_well_type = "well_type"
@@ -18,6 +19,7 @@ setting_data = [name_sample,
                 name_well_type,
                 name_sample_depth]
 
+### Standard names for environmental parameters
 name_redox = "redoxpot"
 name_pH = "pH"
 name_EC = "EC"
@@ -43,6 +45,7 @@ electron_acceptors = dict(
                 name_ammonium, name_methane, name_ironII, name_manganese, name_phosphate]
 )
 
+### Standard names for contaminants
 name_benzene = 'benzene'
 name_toluene = 'toluene'
 name_ethylbenzene = 'ethylbenzene'
@@ -63,7 +66,29 @@ contaminants = dict(
                 name_o_xylene, name_xylene, name_indane,name_indene, name_naphthalene],
 )
 
-col_dict = {
+
+### Standard names for metabolites and metabolite related quantities
+name_metabolites_conc = "metabolites_concentration"
+name_metabolites_variety = 'metabolites_variety'
+
+metabolites = dict(
+    all_meta = [name_metabolites_conc],
+)
+
+### Standard names for NA screening related quantities
+name_total_oxidators = "total_oxidators"
+name_total_reductors = "total_reductors"
+name_NP_avail = "NP_avail"
+name_e_balance = 'e_balance'
+name_na_traffic_light = 'na_traffic_light'
+name_total_contaminants = "total_contaminants"
+name_intervention_traffic = 'intervention_traffic'
+name_intervention_number = 'intervention_number'
+name_intervention_contaminants = 'intervention_contaminants'
+
+
+### Dictionary with potential names of quantities to be replaced by standard name
+names_settings = {
     "sample": name_sample,
     "Sample":name_sample,
     "sample number": name_sample,
@@ -103,6 +128,9 @@ col_dict = {
     "Well_type" : name_well_type,
     "Depth":name_sample_depth,
     "depth":name_sample_depth,
+}
+
+names_environment = {
     "Redox": name_redox,
     "redox": name_redox,
     "Redox potential": name_redox,
@@ -243,6 +271,9 @@ col_dict = {
     "PO43-": name_phosphate,
     "po4_3-": name_phosphate,
     "PO4_3-": name_phosphate,
+}
+
+names_contaminants = {
     "Benzene": name_benzene,
     "benzene": name_benzene,
     "C6H6": name_benzene,
@@ -288,6 +319,40 @@ col_dict = {
     "Naphthalene": name_naphthalene,
     "c10h8": name_naphthalene
     }
+names_metabolites = {
+    "metabolite_concentration": name_metabolites_conc,
+    "Metabolite_concentration": name_metabolites_conc,
+    "Metabolite_Concentration": name_metabolites_conc,
+    "metabolite concentration": name_metabolites_conc,
+    "Metabolite concentration": name_metabolites_conc,
+    "Metabolite Concentration": name_metabolites_conc,
+    "metabolites_concentration": name_metabolites_conc,
+    "Metabolites_concentration": name_metabolites_conc,
+    "Metabolites_Concentration": name_metabolites_conc,
+    "metabolites concentration": name_metabolites_conc,
+    "Metabolites concentration": name_metabolites_conc,
+    "Metabolites Concentration": name_metabolites_conc,
+    'metabolite_variety': name_metabolites_variety,
+    'Metabolite_variety': name_metabolites_variety,
+    'Metabolite_Variety': name_metabolites_variety,
+    'metabolite variety': name_metabolites_variety,
+    'Metabolite variety': name_metabolites_variety,
+    'Metabolite Variety': name_metabolites_variety,
+    'metabolites_variety': name_metabolites_variety,
+    'Metabolites_variety': name_metabolites_variety,
+    'Metabolites_Variety': name_metabolites_variety,
+    'metabolites variety': name_metabolites_variety,
+    'Metabolites variety': name_metabolites_variety,
+    'Metabolites Variety': name_metabolites_variety,
+    "Number of detected metabolites":  name_metabolites_variety,
+    }
+
+col_dict = {
+    **names_settings,
+    **names_environment,
+    **names_contaminants,
+    **names_metabolites,
+}
 
 ### potential units
 standard_units = dict(

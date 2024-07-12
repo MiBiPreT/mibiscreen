@@ -3,14 +3,17 @@
 @author: Alraune Zech
 """
 
-# import sys
-# path = '/home/alraune/GitHub/MiBiPreT/mibipret/mibipret/'
-# sys.path.append(path) # append the path to module
-# import analysis.sample.screening_NA as na
-# import data.data as md
+import sys
 
-import mibipret.analysis.sample.screening_NA as na
-import mibipret.data.data as md
+path = '/home/alraune/GitHub/MiBiPreT/mibipret/mibipret/'
+sys.path.append(path) # append the path to module
+import analysis.sample.screening_NA as na
+import data.data as md
+from visualize.activity import activity
+
+# import mibipret.analysis.sample.screening_NA as na
+# import mibipret.data.data as md
+# from mibipret.visualize.activity import activity
 
 ###------------------------------------------------------------------------###
 ### Script settings
@@ -57,4 +60,14 @@ na_intervention = na.thresholds_for_intervention(data,verbose = verbose,contamin
 ###------------------------------------------------------------------------###
 ### NA screening and evaluation of intervention threshold exceedance in one go
 
+### run full NA screening with results in separate DataFrame
 data_na = na.screening_NA(data,verbose = verbose)
+
+### run full NA screening with results added to data
+na.screening_NA(data,inplace = True,verbose = verbose)
+
+###------------------------------------------------------------------------###
+### Create activity plot linking contaminant concentration to metabolite occurence
+### and NA screening
+
+fig, ax = activity(data)
