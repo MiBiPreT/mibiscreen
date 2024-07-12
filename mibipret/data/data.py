@@ -90,7 +90,7 @@ def load_excel(
 
     if verbose:
         print('==============================================================')
-        print(" Running function 'load_excel()' on data file ", file_path)        
+        print(" Running function 'load_excel()' on data file ", file_path)
         print('==============================================================')
         print("Unit of quantities:")
         print('-------------------')
@@ -151,7 +151,7 @@ def load_csv(
 
     if verbose:
         print('================================================================')
-        print(" Running function 'load_csv()' on data file ", file_path)        
+        print(" Running function 'load_csv()' on data file ", file_path)
         print('================================================================')
         print("Units of quantities:")
         print('-------------------')
@@ -206,7 +206,7 @@ def check_columns(data, verbose = True):
             column_names_standard.append(y)
     if verbose:
         print('================================================================')
-        print(" Running function 'check_columns()' on data")        
+        print(" Running function 'check_columns()' on data")
         print('================================================================')
         print("{} quantities identified in provided data.".format(len(column_names_known)))
         print("List of names with standard names:")
@@ -252,7 +252,7 @@ def check_units(data,
     """
     if verbose:
         print('================================================================')
-        print(" Running function 'check_units()' on data")        
+        print(" Running function 'check_units()' on data")
         print('================================================================')
 
     if not isinstance(data, pd.DataFrame):
@@ -317,7 +317,7 @@ def check_units(data,
     #     if units[name_EC][0] not in standard_units['microsimpercm']:
     #         col_check_list.append(name_EC)
     #         if verbose:
-    #             print("Warning: Check unit of {}!\n Given in {}, but must be in 
+    #             print("Warning: Check unit of {}!\n Given in {}, but must be in
     #                microSiemens per cm (e.g. {}).".format(
     #                     name_EC,data[name_EC][0],standard_units['microsimpercm'][0]))
 
@@ -374,7 +374,7 @@ def check_values(
     """
     if verbose:
         print('================================================================')
-        print(" Running function 'check_values()' on data")        
+        print(" Running function 'check_values()' on data")
         print('================================================================')
 
     if not isinstance(data, pd.DataFrame):
@@ -407,7 +407,7 @@ def check_values(
                 print("WARNING: Cound not transform '{}' to numerical values".format(quantity))
                 print('________________________________________________________________')
     if verbose:
-        print("Quantities with values transformed to numerical(int/float):")
+        print("Quantities with values transformed to numerical s(int/float):")
         print('-----------------------------------------------------------')
         for name in quantities_transformed:
             print(name)

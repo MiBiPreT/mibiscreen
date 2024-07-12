@@ -10,6 +10,7 @@ import pandas as pd
 import mibipret.data.names as ean
 from .properties import properties
 
+
 def reductors(
     data,
     ea_group = 'ONSFe',
@@ -37,7 +38,7 @@ def reductors(
     """
     if verbose:
         print('==============================================================')
-        print(" Running function 'reductors()' on data")        
+        print(" Running function 'reductors()' on data")
         print('==============================================================')
 
     tot_reduct = 0.
@@ -64,7 +65,7 @@ def reductors(
     elif isinstance(tot_reduct, pd.Series):
         tot_reduct.rename("total_reductors",inplace = True)
         if verbose:
-            print("Total amount of electron reductors per column in [mmol e-/l] is:\n{}".format(tot_reduct))
+            print("Total amount of electron reductors per well in [mmol e-/l] is:\n{}".format(tot_reduct))
             print('----------------------------------------------------------------')
     return tot_reduct
 
@@ -104,6 +105,11 @@ def oxidators(
         tot_oxi: pd.Series
             Total amount of electrons oxidators in [mmol e-/l]
     """
+    if verbose:
+        print('==============================================================')
+        print(" Running function 'oxidators()' on data")
+        print('==============================================================')
+
     tot_oxi = 0.
     cols = check_data(data)
 
@@ -131,19 +137,23 @@ def oxidators(
                 tot_oxi += cm_cont *  properties[cont]['factor_stoichiometry']
             else:
                 print("WARNING: No data on {} given, zero concentration assumed.".format(cont))
+                print('________________________________________________________________')
     except KeyError:
         print("WARNING: group of contaminant ('contaminant_group') not defined: '{}'".format(contaminant_group))
+        print('________________________________________________________________')
         tot_oxi = False
     except TypeError:
         raise ValueError("Data not in standardized format. Run 'standardize()' first.")
 
     if isinstance(tot_oxi, float):
         print("\nWARNING: No data on contaminant concentrations given.")
+        print('________________________________________________________________')
         tot_oxi = False
     elif isinstance(tot_oxi, pd.Series):
         tot_oxi.rename("total_oxidators",inplace = True)
         if verbose:
-            print("Total amount of oxidators per column in [mmol e-/l] is:\n{}".format(tot_oxi))
+            print("Total amount of oxidators per well in [mmol e-/l] is:\n{}".format(tot_oxi))
+            print('-----------------------------------------------------')
 
     return tot_oxi
 
@@ -170,6 +180,11 @@ def available_NP(
             The amount of nutrients for degrading contaminants
 
     """
+    if verbose:
+        print('==============================================================')
+        print(" Running function 'available_NP()' on data")
+        print('==============================================================')
+
     cols = check_data(data)
 
     nutrient_list = [ean.name_nitrate, ean.name_nitrite, ean.name_phosphate]
@@ -188,9 +203,9 @@ def available_NP(
 
     if verbose:
         print("Total NP available is:\n{}".format(NP_avail))
+        print('----------------------')
 
     return NP_avail
-
 
 def electron_balance(
         data,
@@ -218,6 +233,11 @@ def electron_balance(
             devided by electrons needed for oxidation
 
     """
+    if verbose:
+        print('==============================================================')
+        print(" Running function 'electron_balance()' on data")
+        print('==============================================================')
+
     cols = check_data(data)
 
     if 'total_reductors' in cols:
@@ -237,6 +257,7 @@ def electron_balance(
 
     if verbose:
         print("Electron balance e_red/e_cont is:\n{}".format(e_bal))
+        print('---------------------------------')
 
     return e_bal #,decision
 
@@ -263,6 +284,11 @@ def NA_traffic(
             Traffic light (decision) based on ratio of electron availability
 
     """
+    if verbose:
+        print('==============================================================')
+        print(" Running function 'NA_traffic()' on data")
+        print('==============================================================')
+
     cols = check_data(data)
 
     if 'e_balance' in cols:
@@ -278,14 +304,15 @@ def NA_traffic(
     NA_traffic = pd.Series(name ='na_traffic_light',data = traffic,index = e_balance.index)
 
     if verbose:
-        print("===============================================================")
-        print("Evaluation if natural attenuation (NA) is ongoing:\n")#" for {}".format(contaminant_group))
+        print("Evaluation if natural attenuation (NA) is ongoing:")#" for {}".format(contaminant_group))
+        print('--------------------------------------------------')
         print("Red light: Reduction is limited at {} out of {} locations".format(
             np.sum(traffic == "red"),len(e_bal)))
         print("Green light: Reduction is limited at {} out of {} locations".format(
             np.sum(traffic == "green"),len(e_bal)))
         print("Yellow light: No decision possible at {} out of {} locations".format(
             np.sum(np.isnan(e_bal)),len(e_bal)))
+        print('________________________________________________________________')
 
     return NA_traffic
 
@@ -314,6 +341,11 @@ def total_contaminant_concentration(
             Total concentration of contaminants in [ug/l]
 
     """
+    if verbose:
+        print('==============================================================')
+        print(" Running function 'total_contaminant_concentration()' on data")
+        print('==============================================================')
+
     tot_conc = 0.
     cols = check_data(data)
     try:
@@ -325,6 +357,7 @@ def total_contaminant_concentration(
                 tot_conc += data[cont] # mass concentration in ug/l
             else:
                 print("WARNING: No data on {} given, zero concentration assumed.".format(cont))
+                print('________________________________________________________________')
     except KeyError:
         print("WARNING: group of contaminant ('contaminant_group') not defined: '{}'".format(contaminant_group))
         tot_conc = False
@@ -333,12 +366,13 @@ def total_contaminant_concentration(
 
     if isinstance(tot_conc, float):
         print("\nWARNING: No data on contaminant concentrations given.")
+        print('________________________________________________________________')
         tot_conc = False
     elif isinstance(tot_conc, pd.Series):
         tot_conc.rename("total_contaminants",inplace = True)
         if verbose:
             print("Total concentration of {} in [ug/l] is:\n{}".format(contaminant_group,tot_conc))
-
+            print('--------------------------------------------------')
     return tot_conc
 
 def thresholds_for_intervention(
@@ -347,7 +381,10 @@ def thresholds_for_intervention(
         verbose = False,
         **kwargs,
         ):
-    """Function to evalute the threshold set by the Dutch government.
+    """Function to evalute intervention threshold exceedance.
+
+        Determines which contaminants exceed concentration thresholds set by
+        the Dutch government for intervention.
 
     Input
     -----
@@ -364,14 +401,21 @@ def thresholds_for_intervention(
 
     Output
     ------
-        intervention: list
-        List of contaminants above the threshold of intervention, including
-        ratio of exceeding the threshold
-
+        intervention: pd.DataFrame
+        DataFrame of similar format as input data with well specification and
+        three columns on intervention threshold exceedance analysis:
+            - traffic light if well requires intervention
+            - number of contaminant exceeding the intervention value
+            - list of contaminants above the threshold of intervention
     """
+    if verbose:
+        print('==============================================================')
+        print(" Running function 'thresholds_for_intervention()' on data")
+        print('==============================================================')
+
     cols= check_data(data)
     na_intervention= pd.DataFrame(data, columns=[ean.name_sample,ean.name_observation_well])
-    traffic = np.zeros(data.shape[0])
+    traffic = np.zeros(data.shape[0],dtype=int)
     intervention = [[] for i in range(data.shape[0])]
 
     try:
@@ -387,6 +431,7 @@ def thresholds_for_intervention(
                         intervention[i].append(cont)
             else:
                 print("WARNING: No data on {} given, zero concentration assumed.".format(cont))
+                print('________________________________________________________________')
 
         traffic_light = np.where(traffic>0,"red","green")
         traffic_light[np.isnan(traffic)] = 'yellow'
@@ -396,17 +441,19 @@ def thresholds_for_intervention(
         na_intervention['intervention_contaminants'] = intervention
 
         if verbose:
-            print("===============================================================")
-            print("Evaluation of contaminant concentrations exceeding intervention values for {}:\n".format(
+            print("Evaluation of contaminant concentrations exceeding intervention values for {}:".format(
                 contaminant_group))
+            print('------------------------------------------------------------------------------------')
             print("Red light: Intervention values exceeded for {} out of {} locations".format(
                 np.sum(traffic >0),data.shape[0]))
             print("green light: Concentrations below intervention values at {} out of {} locations".format(
                 np.sum(traffic == 0),data.shape[0]))
             print("Yellow light: No decision possible at {} out of {} locations".format(
                 np.sum(np.isnan(traffic)),data.shape[0]))
+            print('________________________________________________________________')
     except KeyError:
         print("WARNING: group of contaminant ('contaminant_group') not defined: '{}'".format(contaminant_group))
+        print('________________________________________________________________')
         na_intervention = False
     except TypeError:
         raise ValueError("Data not in standardized format. Run 'standardize()' first.")
@@ -450,14 +497,20 @@ def screening_NA(
         na_data: pd.DataFrame
             Tabular data with all quantities of NA screening listed per sample
     """
+    if verbose:
+        print('==============================================================')
+        print(" Running function 'screening_NA()' on data")
+        print(" Runs all checks on data: column names, units and values")
+        print('==============================================================')
+
     check_data(data)
 
-    na_data = thresholds_for_intervention(data,
-                                          contaminant_group = contaminant_group,
-                                          verbose = verbose)
     tot_cont = total_contaminant_concentration(data,
                                                contaminant_group = contaminant_group,
                                                verbose = verbose)
+    na_data = thresholds_for_intervention(data,
+                                          contaminant_group = contaminant_group,
+                                          verbose = verbose)
     tot_reduct = reductors(data,
                             ea_group = ea_group,
                             verbose = verbose)
