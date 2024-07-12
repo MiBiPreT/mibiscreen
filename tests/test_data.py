@@ -16,10 +16,10 @@ path_data = "./mibipret/data"
 class TestData:
     """Class for testing data module of mibipret."""
 
-    data_01 = example_data()
-    data_02 = example_data(data_type = 'contaminants')
-    data_03 = example_data(data_type = 'setting')
-    data_04 = example_data(data_type = 'environment')
+    data_01 = example_data(with_units = True)
+    data_02 = example_data(data_type = 'contaminants',with_units = True)
+    data_03 = example_data(data_type = 'setting',with_units = True)
+    data_04 = example_data(data_type = 'environment',with_units = True)
 
     columns = ['sample_nr', 'obs_well', 'depth', 'pH', 'redoxpot', 'sulfate',\
                'methane', 'ironII', 'benzene', 'naphthalene']
@@ -36,7 +36,7 @@ class TestData:
     def test_example_data_01(self):
         """Testing correct loading of example data as pandas data frame."""
 #        assert isinstance(self.data_01, pd.DataFrame) == True
-        assert self.data_01.shape == (5,19)
+        assert self.data_01.shape == (5,24)
 
     def test_example_data_02(self):
         """Testing correct loading of example data as pandas data frame."""
@@ -51,7 +51,7 @@ class TestData:
     def test_example_data_04(self):
         """Testing correct loading of example data as pandas data frame."""
         # assert isinstance(self.data_04, pd.DataFrame) == True
-        assert self.data_04.shape == (5,11)
+        assert self.data_04.shape == (5,16)
 
     def test_load_csv_01(self):
         """Testing correct loading of example data from csv file."""
@@ -124,7 +124,7 @@ class TestData:
         """
         data4units = pd.DataFrame([self.units_mod,self.s01],columns = self.columns)
         col_check_list = check_units(data4units)
-        check_list = ['sulfate', 'benzene', 'redoxpot','depth']
+        check_list = ['sulfate', 'benzene','depth', 'redoxpot']
 
         assert col_check_list == check_list
 
@@ -137,7 +137,7 @@ class TestData:
         """
         data4units = pd.DataFrame([self.units_mod],columns = self.columns)
         col_check_list = check_units(data4units)
-        check_list = ['sulfate', 'benzene', 'redoxpot','depth']
+        check_list = ['sulfate', 'benzene','depth', 'redoxpot']
 
         assert col_check_list == check_list
 
@@ -223,7 +223,7 @@ class TestData:
         """
         data_standard,units = standardize(self.data_05,reduce = False, store_csv=False,  verbose=False)
 
-        assert data_standard.shape == (4,20)
+        assert data_standard.shape == (4,25)
 
     def test_standardize_03(self,capsys):
         """Testing routine standardize().

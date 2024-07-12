@@ -14,6 +14,7 @@ try:
     from names import contaminants
     from names import electron_acceptors
     from names import environmental_conditions
+    from names import name_EC
     from names import name_redox
     from names import name_sample_depth
     from names import standard_units
@@ -22,6 +23,7 @@ except ImportError:
     from .names import contaminants
     from .names import electron_acceptors
     from .names import environmental_conditions
+    from .names import name_EC
     from .names import name_redox
     from .names import name_sample_depth
     from .names import standard_units
@@ -39,16 +41,23 @@ def load_excel(
 
     Args:
     -------
-        file_path (str): Name of the path to the file
-        sheet_name (int): Number of the sheet in the excel file to load
-        verbose (bool): flag
-        store_provenance (bool): ...
+        file_path: str
+            Name of the path to the file
+        sheet_name: int
+            Number of the sheet in the excel file to load
+        verbose: Boolean
+            verbose flag
+        store_provenance: Boolean
+            To add!
         **kwargs: optional keyword arguments to pass to pandas' routine
             read_excel()
 
     Returns:
     -------
-        pandas.DataFrame: Tabular data
+        data: pd.DataFrame
+            Tabular data
+        units: pd.DataFrame
+            Tabular data on units
 
     Raises:
     -------
@@ -79,6 +88,19 @@ def load_excel(
 
     units = data.drop(labels = np.arange(1,data.shape[0]))
 
+    if verbose:
+        print('==============================================================')
+        print(" Running function 'load_excel()' on data file ", file_path)
+        print('==============================================================')
+        print("Unit of quantities:")
+        print('-------------------')
+        print(units)
+        print('________________________________________________________________')
+        print("Loaded data as pandas DataFrame:")
+        print('--------------------------------')
+        print(data)
+        print('================================================================')
+
     return data, units
 
 def load_csv(
@@ -90,13 +112,19 @@ def load_csv(
 
     Args:
     -------
-        file_path (str): Name of the path to the file
-        verbose (bool): verbose flag
-        store_provenance (bool): ...
+        file_path: str
+            Name of the path to the file
+        verbose: Boolean
+            verbose flag
+        store_provenance: Boolean
+            To add!
 
     Returns:
     -------
-        pandas.DataFrame: Tabular data
+        data: pd.DataFrame
+            Tabular data
+        units: pd.DataFrame
+            Tabular data on units
 
     Raises:
     -------
@@ -122,16 +150,18 @@ def load_csv(
     units = data.drop(labels = np.arange(1,data.shape[0]))
 
     if verbose:
-        print('==============================================================')
-        print("Unit of quantities:")
+        print('================================================================')
+        print(" Running function 'load_csv()' on data file ", file_path)
+        print('================================================================')
+        print("Units of quantities:")
         print('-------------------')
         print(units)
-        print('==============================================================')
+        print('________________________________________________________________')
         print("Loaded data as pandas DataFrame:")
         print('--------------------------------')
         print(data)
+        print('================================================================')
     return data, units
-
 
 def check_columns(data, verbose = True):
     """Function checking names of columns of data frame.
@@ -141,8 +171,10 @@ def check_columns(data, verbose = True):
 
     Args:
     -------
-        data (df): dataframe with the measurements
-        verbose (Boolean): verbose statement (default True)
+        data: pd.DataFrame
+            dataframe with the measurements
+        verbose: Boolean
+            verbose statement (default True)
 
     Returns:
     -------
@@ -173,19 +205,23 @@ def check_columns(data, verbose = True):
             column_names_known.append(x)
             column_names_standard.append(y)
     if verbose:
-        print('==============================================================')
+        print('================================================================')
+        print(" Running function 'check_columns()' on data")
+        print('================================================================')
         print("{} quantities identified in provided data.".format(len(column_names_known)))
-        print("These need to be renamed to standard names:")
-        print('-------------------------------------------')
+        print("List of names with standard names:")
+        print('----------------------------------')
         for i,name in enumerate(column_names_known):
             print(name," --> ",column_names_standard[i])
-        print("\nRenaming of column names by running standardize().")
+        print('----------------------------------')
+        print("\nRenaming can be done by running standardize().\n")
 
-        print('==============================================================')
+        print('________________________________________________________________')
         print("{} quantities have not bee identified in provided data:".format(len(column_names_unknown)))
         print('-------------------------------------------------------')
         for i,name in enumerate(column_names_unknown):
             print(name)
+        print('================================================================')
 
     return (column_names_known,column_names_unknown,column_names_standard)
 
@@ -195,13 +231,16 @@ def check_units(data,
 
     Args:
     -------
-        data (df): dataframe with the measurements where first row contains
-                   the units or a dataframe with only the column names and units
-        verbose (Boolean): verbose statement (default True)
+        data: pandas.DataFrames
+            dataframe with the measurements where first row contains
+            the units or a dataframe with only the column names and units
+        verbose: Boolean
+            verbose statement (default True)
 
     Returns:
     -------
-        col_check_list (list): quantities whose units need checking/correction
+        col_check_list: list
+            quantities whose units need checking/correction
 
     Raises:
     -------
@@ -211,6 +250,11 @@ def check_units(data,
     -------
         To be added.
     """
+    if verbose:
+        print('================================================================')
+        print(" Running function 'check_units()' on data")
+        print('================================================================')
+
     if not isinstance(data, pd.DataFrame):
         raise ValueError("Provided data is not a data frame.")
     elif data.shape[0]>1:
@@ -232,19 +276,18 @@ def check_units(data,
     # standardize column names (as it might not has happened for data yet)
     units.columns = [col_dict.get(x, x) for x in units.columns]
 
-    cols = units.columns
     col_check_list= []
 
-    for quantity in electron_acceptors:
-        if quantity in cols:
+    for quantity in electron_acceptors['all_ea']:
+        if quantity in units.columns:
             if units[quantity][0] not in standard_units['mgperl']:
                 col_check_list.append(quantity)
                 if verbose:
                     print("Warning: Check unit of {}!\n Given in {}, but must be milligramm per liter (e.g. {})."
                               .format(quantity,data[quantity][0],standard_units['mgperl'][0]))
 
-    for quantity in contaminants:
-        if quantity in cols:
+    for quantity in contaminants['all_cont']:
+        if quantity in units.columns:
             if units[quantity][0] not in standard_units['microgperl']:
                 col_check_list.append(quantity)
                 if verbose:
@@ -252,41 +295,74 @@ def check_units(data,
                               .format(quantity,data[quantity][0],standard_units['microgperl'][0]))
 
     #environmental_conditions:
-    if name_redox in units.columns:
-        if units[name_redox][0] not in standard_units['millivolt']:
-            col_check_list.append(name_redox)
-            if verbose:
-                print("Warning: Check unit of {}!\n Given in {}, but must be in millivolt (e.g. {}).".format(
-                        name_redox,data[quantity][0],standard_units['millivolt'][0]))
+    env_cond = [name_sample_depth,name_EC,name_redox]
+    unit_types = ['meter','microsimpercm','millivolt']
 
-    #environmental_conditions:
-    if name_sample_depth in units.columns:
-        if units[name_sample_depth][0] not in standard_units['meter']:
-            col_check_list.append(name_sample_depth)
-            if verbose:
-                print("Warning: Check unit of {}!\n Given in {}, but must be in meter (e.g. {}).".format(
-                        name_sample_depth,data[quantity][0], standard_units['meter'][0]))
+    for quantity,units_type in zip(env_cond,unit_types):
+        if quantity in units.columns:
+            if units[quantity][0] not in standard_units[units_type]:
+                col_check_list.append(quantity)
+                if verbose:
+                    print("Warning: Check unit of {}!\n Given in {}, but must be in {} (e.g. {}).".format(
+                            quantity,data[quantity][0],units_type,standard_units[units_type][0]))
 
-    if len(col_check_list) == 0 and verbose:
-        print('==============================================================')
-        print("All identified quantities given in requested units.")
+    # if name_sample_depth in units.columns:
+    #     if units[name_sample_depth][0] not in standard_units['meter']:
+    #         col_check_list.append(name_sample_depth)
+    #         if verbose:
+    #             print("Warning: Check unit of {}!\n Given in {}, but must be in meter (e.g. {}).".format(
+    #                     name_sample_depth,data[name_sample_depth][0], standard_units['meter'][0]))
+
+    # if name_EC in units.columns:
+    #     if units[name_EC][0] not in standard_units['microsimpercm']:
+    #         col_check_list.append(name_EC)
+    #         if verbose:
+    #             print("Warning: Check unit of {}!\n Given in {}, but must be in
+    #                microSiemens per cm (e.g. {}).".format(
+    #                     name_EC,data[name_EC][0],standard_units['microsimpercm'][0]))
+
+    # if name_redox in units.columns:
+    #     if units[name_redox][0] not in standard_units['millivolt']:
+    #         col_check_list.append(name_redox)
+    #         if verbose:
+    #             print("Warning: Check unit of {}!\n Given in {}, but must be in millivolt (e.g. {}).".format(
+    #                     name_redox,data[name_redox][0],standard_units['millivolt'][0]))
+
+
+    if verbose:
+        print('________________________________________________________________')
+        if len(col_check_list) == 0:
+            print(" All identified quantities given in requested units.")
+        else:
+            print(" All other identified quantities given in requested units.")
+        print('================================================================')
 
     return col_check_list
 
 def check_values(
         data,
+        contaminant_group = "all_cont",
         verbose = True,
         ):
     """Function that checks on value types and replaces non-measured values.
 
     Args:
     -------
-        data (df): dataframe with the measurements (without first row of units)
-        verbose (Boolean): verbose statement (default True)
+        data: pandas.DataFrames
+            dataframe with the measurements (without first row of units)
+        contaminant_group: string
+            shortcut string specifying group of contaminant to check on:
+                -- "all_cont": all contaminants listed and specified in names
+                -- "BTEX": benzene, toluene, ethylbenzene, xylene
+                -- "BTEXIIN": benzene, toluene, ethylbenzene, xylene, indene, indane, naphthalene
+            default: "all_cont"
+        verbose: Boolean
+            verbose statement (default True)
 
     Returns:
     -------
-        pandas.DataFrame: Tabular data with standard column names
+        data_pure: pandas.DataFrame
+            Tabular data with standard column names and without units
 
     Raises:
     -------
@@ -296,6 +372,11 @@ def check_values(
     -------
         To be added.
     """
+    if verbose:
+        print('================================================================')
+        print(" Running function 'check_values()' on data")
+        print('================================================================')
+
     if not isinstance(data, pd.DataFrame):
         raise ValueError("Provided data is not a data frame.")
 
@@ -304,8 +385,8 @@ def check_values(
     ### testing if provided data frame contains first row with units
     for u in data_pure.iloc[0].to_list():
         if u in all_units:
-            print('==============================================================')
             print("WARNING: First row identified as units, has been removed for value check")
+            print('________________________________________________________________')
             data_pure.drop(labels = 0,inplace = True)
             break
 
@@ -314,21 +395,23 @@ def check_values(
 
     # transform data to numeric values
     quantities_transformed = []
-    for quantity in [name_sample_depth]+environmental_conditions+electron_acceptors+contaminants:
+    cont_list = contaminants[contaminant_group]
+    ea_list = electron_acceptors['all_ea']
+
+    for quantity in [name_sample_depth]+environmental_conditions+ea_list+cont_list:
         if quantity in data_pure.columns:
             try:
                 data_pure[quantity] = pd.to_numeric(data_pure[quantity])
                 quantities_transformed.append(quantity)
             except ValueError:
-                print('==============================================================')
                 print("WARNING: Cound not transform '{}' to numerical values".format(quantity))
-
+                print('________________________________________________________________')
     if verbose:
-        print('==============================================================')
-        print("Quantities with values transformed to numerical(int/float):")
+        print("Quantities with values transformed to numerical s(int/float):")
         print('-----------------------------------------------------------')
         for name in quantities_transformed:
             print(name)
+        print('================================================================')
 
     # data_pure.iloc[:,:] = data_pure.iloc[:,:].replace(to_replace="-", value=replace)
 
@@ -350,27 +433,31 @@ def standardize(data,
 
     Args:
     -------
-        data (df): dataframe with the measurements
-        verbose (Boolean): verbose statement (default True)
-        reduce (Boolean): flag to reduce data to known quantities (default True),
-                            otherwise full dataframe with renamed columns is returned
-        store_csv (Boolean): flag to save dataframe in standard format to csv-file
+        data: pandas.DataFrames
+            dataframe with the measurements
+        verbose: Boolean
+            verbose statement (default True)
+        reduce: Boolean
+            flag to reduce data to known quantities (default True),
+            otherwise full dataframe with renamed columns is returned
+        store_csv: Boolean
+            flag to save dataframe in standard format to csv-file
 
     Returns:
     -------
-        pandas.DataFrame: Tabular data with standard column names
+        data_numeric, units: pandas.DataFrames
+            Tabular data with standardized column names, values in numerics etc
+            and table with units for standardized column names
 
     Raises:
     -------
-    None (yet).
+        None (yet).
 
     Example:
     -------
     Todo's:
         - complete list of potential contaminants, environmental factors
         - add name check for metabolites?
-        - return column names that have not been identified
-        - option to return only columns identified
         - add key-word to specify which data to extract
             (i.e. data columns to return)
 
@@ -385,15 +472,17 @@ def standardize(data,
         data_standard = data_standard.drop(labels = column_names_unknown,axis = 1)
 
     if verbose:
-        print('==============================================================')
+        print('================================================================')
+        print(" Running function 'standardize()' on data")
+        print('================================================================')
         print("{} quantities identified and renamed:".format(len(column_names_known)))
         print('-------------------------------------')
         for i,name in enumerate(column_names_known):
             print(name," --> ",column_names_standard[i])
 
-        print('==============================================================')
-        print("{} quantities not identified (and removed) from data:".format(len(column_names_unknown)))
-        print('-----------------------------------------------------')
+        print('________________________________________________________________')
+        print("{} quantities not identified (and removed) from standard data:".format(len(column_names_unknown)))
+        print('--------------------------------------------------------------')
         for i,name in enumerate(column_names_unknown):
             print(name)
 
@@ -407,34 +496,42 @@ def standardize(data,
     # store standard data to file
     if store_csv:
         if len(col_check_list) != 0:
-            print('==============================================================')
+            print('________________________________________________________________')
             print("Data could not be saved because not all identified \nquantities are given in requested units.")
         else:
             try:
                 data_standard.to_csv(store_csv,index=False)
                 if verbose:
-                    print('==============================================================')
+                    print('________________________________________________________________')
                     print("Save standardized dataframe to file:\n", store_csv)
             except OSError:
                 print("WARNING: data could not be saved. Check provided file path and name: {}".format(store_csv))
+    if verbose:
+        print('================================================================')
 
     return data_numeric, units
 
 def example_data(data_type = 'all',
-                 units = True,
+                 with_units = False,
+                 standardize = True,
                  ):
     """Function provinging test data for mibipret data analysis.
 
     Args:
     -------
-        data_type (str): type of data to return:
-                        -- "all": all types of data available
-                        -- "setting": well setting data only
-                        -- "contaminants": data on contaminants
-                        -- "environment": data on environmental
-                        -- "metabolites": data on metabolites
-                        -- "hydro": data on hydrogeolocial conditions
-        units (boolean): flag to provide first row with units (default: True)
+        data_type: string
+            Type of data to return:
+                -- "all": all types of data available
+                -- "setting": well setting data only
+                -- "contaminants": data on contaminants
+                -- "environment": data on environmental
+                -- "metabolites": data on metabolites
+                -- "hydro": data on hydrogeolocial conditions
+        with_units: Boolean
+            flag to provide first row with units (default: True)
+        standardize: Boolean
+            flag to run check_values on data to transform into numerical value
+            only applicable when with_units is False
 
     Returns:
     -------
@@ -442,11 +539,11 @@ def example_data(data_type = 'all',
 
     Raises:
     -------
-    None
+        None
 
     Example:
     -------
-    To be added!
+        To be added!
     """
     setting = ["sample_nr","obs_well","depth"]
     setting_units = [' ',' ','m']
@@ -455,14 +552,14 @@ def example_data(data_type = 'all',
     setting_s03 = ['2000-003', 'B-MLS1-6-17', -17.]
     setting_s04 = ['2000-004', 'B-MLS1-7-19', -19.]
 
-    environment = ['pH', 'redox', 'sulfate', 'ammonium', 'sulfide',
-                   'methane', 'ironII', 'manganese']
-    environment_units = [' ','mV', 'mg/L', 'mg/L', 'mg/L',
-                         'mg/L', 'mg/L', 'mg/L']
-    environment_s01 = [7.23, -208., 23., 5., 0., 748., 3., 1.]
-    environment_s02 = [7.67, -231., 0., 6., 0., 2022., 1., 0.]
-    environment_s03 = [7.75, -252., 1., 13., 0., 200., 1., 0.]
-    environment_s04 = [7.53, -317., 9., 15., 6., 122., 0., 0.]
+    environment = ['pH','EC', 'redox','oxygen','nitrate','nitrite', 'sulfate', 'ammonium', 'sulfide',
+                   'methane', 'ironII', 'manganese','phosphate']
+    environment_units = [' ','uS/cm','mV', 'mg/L', 'mg/L', 'mg/L', 'mg/L',
+                         'mg/L', 'mg/L', 'mg/L', 'mg/L', 'mg/L', 'mg/L']
+    environment_s01 = [7.23, 322., -208.,0.3,122.,0.58, 23., 5., 0., 748., 3., 1.,1.6]
+    environment_s02 = [7.67, 405., -231.,0.9,5.,0.0, 0., 6., 0., 2022., 1., 0.,0]
+    environment_s03 = [7.75, 223., -252.,0.1,3.,0.03, 1., 13., 0., 200., 1., 0.,0.8]
+    environment_s04 = [7.53, 58., -317.,0., 180.,1., 9., 15., 6., 122., 0., 0.,0.1]
 
     contaminants = ['benzene', 'toluene', 'ethylbenzene', 'pm_xylene',
                     'o_xylene', 'indane', 'indene', 'naphthalene']
@@ -510,7 +607,8 @@ def example_data(data_type = 'all',
         data = pd.DataFrame([units,sample_01,sample_02,sample_03,sample_04],
                             columns = columns)
 
-    if not units:
-        data.drop(0)
-
+    if not with_units:
+        data.drop(0,inplace = True)
+        if standardize:
+            data = check_values(data,verbose = False)
     return data
