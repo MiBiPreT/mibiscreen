@@ -32,7 +32,7 @@ class TestNA:
                         name = 'empyt_data',
                         dtype=float)
 
-    tot_oxi = pd.Series(data = [1.566197,3.700148, 3.005697, 2.095891],name = 'total_oxidators')
+    tot_oxi = pd.Series(data = [1.5663,3.70051, 3.00658, 2.09641], name = 'total_oxidators')
     tot_reduct = pd.Series(data = [11.819184,0.525160, 0.347116, 15.265349], name = 'total_reductors')
     e_bal = pd.Series(data = [7.546422, 0.141929, 0.115486, 7.283465], name = 'e_balance')
 
@@ -108,7 +108,7 @@ class TestNA:
         Correct calculation of total amount of oxidators for standard contaminant
         group BTEXIIN.
         """
-        tot_oxi_test = 10.367932537817707
+        tot_oxi_test = 10.369793079245106
         tot_oxi = np.sum(oxidators(self.data))
 
         assert (tot_oxi - tot_oxi_test)<1e-5
@@ -118,7 +118,7 @@ class TestNA:
 
         Correct calculation of total amount of oxidators for BTEX.
         """
-        tot_oxi_test = 3.52766763425254
+        tot_oxi_test = 3.5295281756799395
         tot_oxi = np.sum(oxidators(self.data,contaminant_group='BTEX'))
 
         assert (tot_oxi - tot_oxi_test)<1e-5
@@ -129,7 +129,7 @@ class TestNA:
         Correct calculation of total amount of oxidators with option to
         include available nutrients.
         """
-        tot_oxi_test = 6.667784560586794
+        tot_oxi_test = 6.669283330069978
         tot_oxi = np.sum(oxidators(self.data,nutrient = True))
 
         assert (tot_oxi - tot_oxi_test)<1e-5

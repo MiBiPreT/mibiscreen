@@ -26,7 +26,7 @@ properties[names.name_benzene]=dict(
 
 properties[names.name_toluene]=dict(
     chemical_formula = 'c6h5ch3',
-    molecular_mass = 106.,
+    molecular_mass = 92.,
     cs = 7.,
     factor_stoichiometry = 36.,
     thresholds_for_intervention_NL = 1000,
@@ -91,7 +91,7 @@ properties[names.name_indane]=dict(
 
 properties[names.name_naphthalene]=dict(
     chemical_formula = "c10h8",
-    molecular_mass = 128,
+    molecular_mass = 128.,
     cs = 10.,
     factor_stoichiometry = 48.,
     thresholds_for_intervention_NL = 70.,

@@ -13,7 +13,7 @@ from .properties import properties
 
 def reductors(
     data,
-    ea_group = 'ONSFe',
+    ea_group = 'ONS',
     inplace = False,
     verbose = False,
     **kwargs,
@@ -28,7 +28,7 @@ def reductors(
             concentration values of electron acceptors in [mg/l]
         ea_group: str
             Short name for group of electron acceptors to use
-            default is 'ONSFe' (for oxygen, nitrate, sulfate and ironII)
+            default is 'ONS' (for oxygen, nitrate, and sulfate)
         inplace: bool, default False
             Whether to modify the DataFrame rather than creating a new one.
         verbose: Boolean
@@ -323,7 +323,7 @@ def NA_traffic(
 
     e_bal = e_balance.values
     traffic = np.where(e_bal<1,"red","green")
-    traffic[np.isnan(e_bal)] = 'yellow'
+    traffic[np.isnan(e_bal)] = 'y'
 
     NA_traffic = pd.Series(name =ean.name_na_traffic_light,data = traffic,index = e_balance.index)
     if inplace:
@@ -474,7 +474,7 @@ def thresholds_for_intervention(
                 print('________________________________________________________________')
 
         traffic_light = np.where(traffic>0,"red","green")
-        traffic_light[np.isnan(traffic)] = 'yellow'
+        traffic_light[np.isnan(traffic)] = 'y'
         na_intervention[ean.name_intervention_traffic] = traffic_light
         na_intervention[ean.name_intervention_number] = traffic
         na_intervention[ean.name_intervention_contaminants] = intervention
@@ -501,7 +501,7 @@ def thresholds_for_intervention(
 
 def screening_NA(
     data,
-    ea_group = 'ONSFe',
+    ea_group = 'ONS',
     contaminant_group = "BTEXIIN",
     nutrient = False,
     inplace = False,
@@ -519,9 +519,9 @@ def screening_NA(
                 - electron acceptors in [mg/l]
                 - contaminant in [ug/l]
                 - nutrients (Nitrate, Nitrite and Phosphate) if nutrient is True
-        ea_group: str, default 'ONSFe'
+        ea_group: str, default 'ONS'
             Short name for group of electron acceptors to use
-            'ONSFe' stands for oxygen, nitrate, sulfate and ironII
+            'ONS' stands for oxygen, nitrate, sulfate and ironII
         contaminant_group: str, default 'BTEXIIN'
             Short name for group of contaminants to use
             'BTEXIIN' stands for benzene, toluene, ethylbenzene, xylene,

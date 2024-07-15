@@ -13,6 +13,7 @@ name_sample = "sample_nr"
 name_observation_well = "obs_well"
 name_well_type = "well_type"
 name_sample_depth = "depth"
+name_aquifer = 'aquifer'
 
 setting_data = [name_sample,
                 name_observation_well,
@@ -25,24 +26,41 @@ name_pH = "pH"
 name_EC = "EC"
 name_pE = "pE"
 name_NOPC = "NOPC"
-
-environmental_conditions = [name_redox,name_pH,name_EC,name_pE,name_NOPC]
+name_DOC = "DOC"
 
 name_oxygen = 'oxygen' #o2
 name_nitrite = 'nitrite' #no2
-name_nitrate = 'nitrate' #no3
 name_sulfate = 'sulfate' #"so4"
+name_ironII = "ironII" #"fe_II"
+name_manganese = 'manganese' #"mn_II"
+name_methane = 'methane' #"ch4"
+
+name_nitrate = 'nitrate' #no3
 name_sulfide = 'sulfide' #"s2min"
 name_ammonium = 'ammonium' #"nh4+"
-name_methane = 'methane' #"ch4"
-name_manganese = 'manganese' #"mn_II"
-name_ironII = "ironII" #"fe_II"
 name_phosphate = 'phosphate' # "po4"
+name_chloride = 'chloride'
+name_bromide = 'bromide'
+name_fluoride = 'fluoride'
+name_sodium = 'sodium'
+name_magnesium = 'magnesium'
+name_potassium = 'potassium'
+name_calcium = 'calcium'
+name_acetate = 'acetate'
+
+environmental_conditions = [name_redox,name_pH,name_EC,name_pE,name_NOPC]
+
+chemical_composition = [
+    name_oxygen, name_nitrate, name_sulfate, name_ironII, name_manganese,
+    name_methane, name_nitrite, name_sulfide, name_ammonium, name_phosphate,
+    name_chloride,name_bromide,name_fluoride,name_sodium,name_magnesium,
+    name_potassium,name_calcium,name_acetate,name_DOC]
 
 electron_acceptors = dict(
+    ONS = [name_oxygen, name_nitrate, name_sulfate],
     ONSFe = [name_oxygen, name_nitrate, name_sulfate, name_ironII],
-    all_ea = [name_oxygen, name_nitrate, name_nitrite, name_sulfate, name_sulfide,
-                name_ammonium, name_methane, name_ironII, name_manganese, name_phosphate]
+    all_ea = [name_oxygen, name_nitrate, name_sulfate,
+               name_ironII, name_manganese, name_methane]
 )
 
 ### Standard names for contaminants
@@ -66,15 +84,6 @@ contaminants = dict(
                 name_o_xylene, name_xylene, name_indane,name_indene, name_naphthalene],
 )
 
-
-### Standard names for metabolites and metabolite related quantities
-name_metabolites_conc = "metabolites_concentration"
-name_metabolites_variety = 'metabolites_variety'
-
-metabolites = dict(
-    all_meta = [name_metabolites_conc],
-)
-
 ### Standard names for NA screening related quantities
 name_total_oxidators = "total_oxidators"
 name_total_reductors = "total_reductors"
@@ -86,6 +95,9 @@ name_intervention_traffic = 'intervention_traffic'
 name_intervention_number = 'intervention_number'
 name_intervention_contaminants = 'intervention_contaminants'
 
+### Standard names for metabolite related quantities
+name_metabolites_conc = "metabolites_concentration"
+name_metabolites_variety = 'metabolites_variety'
 
 ### Dictionary with potential names of quantities to be replaced by standard name
 names_settings = {
@@ -128,6 +140,8 @@ names_settings = {
     "Well_type" : name_well_type,
     "Depth":name_sample_depth,
     "depth":name_sample_depth,
+    'aquifer': name_aquifer,
+    'Aquifer': name_aquifer,
 }
 
 names_environment = {
@@ -147,21 +161,34 @@ names_environment = {
     "PE": name_pE,
     "NPOC": name_NOPC,
     "NOPC": name_NOPC,
+    "DOC": name_DOC,
+    "doc": name_DOC,
+}
+
+names_chemicals = {
     "oxygen": name_oxygen,
+    "Oxygen": name_oxygen,
+    "o":name_oxygen,
+    "O": name_oxygen,
     "o2":name_oxygen,
     "O2": name_oxygen,
-    "Oxygen": name_oxygen,
     "nitrite": name_nitrite,
     "Nitrite": name_nitrite,
-    "NO2": name_nitrite,
     "no2": name_nitrite,
+    "No2": name_nitrite,
+    "NO2": name_nitrite,
     "nitrate": name_nitrate,
     "Nitrate": name_nitrate,
-    "NO3": name_nitrate,
     "no3": name_nitrate,
+    "No3": name_nitrate,
+    "NO3": name_nitrate,
     "sulfate": name_sulfate,
     "Sulfate": name_sulfate,
+    "so4": name_sulfate,
+    "So4": name_sulfate,
     "SO4": name_sulfate,
+    "so42-": name_sulfate,
+    "So42-": name_sulfate,
     "SO42-": name_sulfate,
     "sulfide": name_sulfide,
     "Sulfide": name_sulfide,
@@ -175,10 +202,10 @@ names_environment = {
     "S2min": name_sulfide,
     "ammonium": name_ammonium,
     "Ammonium": name_ammonium,
-    "nh4+": name_ammonium,
     "nh4": name_ammonium,
-    "NH4+": name_ammonium,
     "NH4": name_ammonium,
+    "nh4+": name_ammonium,
+    "NH4+": name_ammonium,
     "methane": name_methane,
     "Methane": name_methane,
     "ch4": name_methane,
@@ -211,34 +238,8 @@ names_environment = {
     "Mn II+": name_manganese,
     "mn_II+": name_manganese,
     "Mn_II+": name_manganese,
-    "fe": name_ironII,
-    "Fe": name_ironII,
     "iron": name_ironII,
     "Iron": name_ironII,
-    "fe2": name_ironII,
-    "Fe2": name_ironII,
-    "fe2+": name_ironII,
-    "Fe2+": name_ironII,
-    "fe 2": name_ironII,
-    "Fe 2": name_ironII,
-    "fe 2+": name_ironII,
-    "Fe 2+": name_ironII,
-    "fe_2": name_ironII,
-    "Fe_2": name_ironII,
-    "fe_2+": name_ironII,
-    "Fe_2+": name_ironII,
-    "feII": name_ironII,
-    "FeII": name_ironII,
-    "feII+": name_ironII,
-    "FeII+": name_ironII,
-    "fe II": name_ironII,
-    "Fe II": name_ironII,
-    "fe II+": name_ironII,
-    "Fe II+": name_ironII,
-    "fe_II": name_ironII,
-    "Fe_II": name_ironII,
-    "fe_II+": name_ironII,
-    "Fe_II+": name_ironII,
     "iron2": name_ironII,
     "Iron2": name_ironII,
     "iron2+": name_ironII,
@@ -263,14 +264,102 @@ names_environment = {
     "Iron_II": name_ironII,
     "iron_II+": name_ironII ,
     "Iron_II+": name_ironII,
+    "fe": name_ironII,
+    "Fe": name_ironII,
+    "fe2": name_ironII,
+    "Fe2": name_ironII,
+    "fe2+": name_ironII,
+    "Fe2+": name_ironII,
+    "fe 2": name_ironII,
+    "Fe 2": name_ironII,
+    "fe 2+": name_ironII,
+    "Fe 2+": name_ironII,
+    "fe_2": name_ironII,
+    "Fe_2": name_ironII,
+    "fe_2+": name_ironII,
+    "Fe_2+": name_ironII,
+    "feII": name_ironII,
+    "FeII": name_ironII,
+    "feII+": name_ironII,
+    "FeII+": name_ironII,
+    "fe II": name_ironII,
+    "Fe II": name_ironII,
+    "fe II+": name_ironII,
+    "Fe II+": name_ironII,
+    "fe_II": name_ironII,
+    "Fe_II": name_ironII,
+    "fe_II+": name_ironII,
+    "Fe_II+": name_ironII,
     "phosphate": name_phosphate,
     "Phosphate": name_phosphate,
     "po4": name_phosphate,
+    "Po4": name_phosphate,
     "PO4": name_phosphate,
     "po43-": name_phosphate,
+    "Po43-": name_phosphate,
     "PO43-": name_phosphate,
     "po4_3-": name_phosphate,
+    "Po4_3-": name_phosphate,
     "PO4_3-": name_phosphate,
+    "po4 3-": name_phosphate,
+    "Po4 3-": name_phosphate,
+    "PO4 3-": name_phosphate,
+    'chloride': name_chloride,
+    'Chloride': name_chloride,
+    'cl': name_chloride,
+    'Cl': name_chloride,
+    'CL': name_chloride,
+    'cl-': name_chloride,
+    'Cl-': name_chloride,
+    'CL-': name_chloride,
+    'bromide': name_bromide,
+    'Bromide': name_bromide,
+    'br': name_bromide,
+    'Br': name_bromide,
+    'BR': name_bromide,
+    'br-': name_bromide,
+    'Br-': name_bromide,
+    'BR-': name_bromide,
+    'fluoride': name_fluoride,
+    'Fluoride': name_fluoride,
+    'f': name_fluoride,
+    'F': name_fluoride,
+    'f-': name_fluoride,
+    'F-': name_fluoride,
+    'sodium': name_sodium,
+    'Sodium': name_sodium,
+    'na': name_sodium,
+    'Na': name_sodium,
+    'NA': name_sodium,
+    'na+': name_sodium,
+    'Na+': name_sodium,
+    'NA+': name_sodium,
+    'magnesium': name_magnesium,
+    'Magnesium': name_magnesium,
+    'mg': name_magnesium,
+    'Mg': name_magnesium,
+    'MG': name_magnesium,
+    'mg2+': name_magnesium,
+    'Mg2+': name_magnesium,
+    'MG2+': name_magnesium,
+    'potassium': name_potassium,
+    'Potassium': name_potassium,
+    'k': name_potassium,
+    'K': name_potassium,
+    'k+': name_potassium,
+    'K+': name_potassium,
+    'calcium': name_calcium,
+    'Calcium': name_calcium,
+    'ca': name_calcium,
+    'Ca': name_calcium,
+    'CA': name_calcium,
+    'ca2+': name_calcium,
+    'Ca2+': name_calcium,
+    'CA2+': name_calcium,
+    'acetate': name_acetate,
+    'Acetate': name_acetate,
+    'c2h3o2-': name_acetate,
+    'C2H3O2-': name_acetate,
 }
 
 names_contaminants = {
@@ -310,16 +399,20 @@ names_contaminants = {
     "indene": name_indene,
     "Indene": name_indene,
     "c9h8": name_indene,
+    "C9H8": name_indene,
     "indane": name_indane,
     "Indane": name_indane,
     "c9h10": name_indane,
+    "c9H10": name_indane,
     "naphtalene": name_naphthalene,
     "Naphtalene": name_naphthalene,
     "naphthalene": name_naphthalene,
     "Naphthalene": name_naphthalene,
-    "c10h8": name_naphthalene
+    "c10h8": name_naphthalene,
+    "C10H8": name_naphthalene,
     }
-names_metabolites = {
+
+names_metabolites_sum = {
     "metabolite_concentration": name_metabolites_conc,
     "Metabolite_concentration": name_metabolites_conc,
     "Metabolite_Concentration": name_metabolites_conc,
@@ -345,13 +438,14 @@ names_metabolites = {
     'Metabolites variety': name_metabolites_variety,
     'Metabolites Variety': name_metabolites_variety,
     "Number of detected metabolites":  name_metabolites_variety,
-    }
+}
 
 col_dict = {
     **names_settings,
     **names_environment,
+    **names_chemicals,
     **names_contaminants,
-    **names_metabolites,
+    **names_metabolites_sum,
 }
 
 ### potential units
