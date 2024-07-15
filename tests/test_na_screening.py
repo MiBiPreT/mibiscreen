@@ -32,6 +32,14 @@ class TestNA:
                         name = 'empyt_data',
                         dtype=float)
 
+    columns = ['sample_nr', 'sulfate', 'benzene']
+    units = [' ','mg/L', 'ug/L']
+    s01 = ['2000-001', 748, 263]
+    s02 = ['2000-002', 548, ]
+    data_nonstandard = pd.DataFrame([units,s01,s02],
+                                columns = columns)
+
+
     tot_oxi = pd.Series(data = [1.5663,3.70051, 3.00658, 2.09641], name = 'total_oxidators')
     tot_reduct = pd.Series(data = [11.819184,0.525160, 0.347116, 15.265349], name = 'total_reductors')
     e_bal = pd.Series(data = [7.546422, 0.141929, 0.115486, 7.283465], name = 'e_balance')
@@ -92,7 +100,12 @@ class TestNA:
         tot_reduct = reductors(self.data,ea_group = 'test')
         assert tot_reduct is False
 
-    def test_reductors_04(self,capsys):
+    def test_reductors_04(self):
+        """Testing Error message that given data type not defined."""
+        with pytest.raises(ValueError):  #, match = "Data not in standardized format. Run 'standardize()' first."):
+            reductors(self.data_nonstandard)
+
+    def test_reductors_05(self,capsys):
         """Testing routine reductors().
 
         Testing verbose flag.
@@ -144,6 +157,11 @@ class TestNA:
         assert tot_oxi is False
 
     def test_oxidators_05(self):
+        """Testing Error message that given data type not defined."""
+        with pytest.raises(ValueError):  #, match = "Data not in standardized format. Run 'standardize()' first."):
+            oxidators(self.data_nonstandard)
+
+    def test_oxidators_06(self):
         """Testing routine oxidators().
 
         Correct handling when unknown group of contaminants are provided.
@@ -151,7 +169,7 @@ class TestNA:
         tot_oxi = oxidators(self.data,contaminant_group = 'test')
         assert tot_oxi is False
 
-    def test_oxidators_06(self,capsys):
+    def test_oxidators_07(self,capsys):
         """Testing routine oxidators().
 
         Testing verbose flag.
@@ -281,10 +299,15 @@ class TestNA:
 
         Correct handling when unknown group of contaminants are provided.
         """
-        tot_conc = oxidators(self.data,contaminant_group = 'test')
+        tot_conc = total_contaminant_concentration(self.data,contaminant_group = 'test')
         assert tot_conc is False
 
     def test_total_contaminant_concentration_04(self):
+        """Testing Error message that given data type not defined."""
+        with pytest.raises(ValueError):  #, match = "Data not in standardized format. Run 'standardize()' first."):
+            total_contaminant_concentration(self.data_nonstandard)
+
+    def test_total_contaminant_concentration_05(self):
         """Testing routine total_contaminant_concentration().
 
         Correct handling when no data is provided.
@@ -292,7 +315,7 @@ class TestNA:
         tot_conc = total_contaminant_concentration(self.data_empty)
         assert tot_conc is False
 
-    def test_total_contaminant_concentration_05(self,capsys):
+    def test_total_contaminant_concentration_06(self,capsys):
         """Testing routine total_contaminant_concentration().
 
         Testing verbose flag.
@@ -350,7 +373,12 @@ class TestNA:
         na_intervention = thresholds_for_intervention(self.data,contaminant_group = 'test')
         assert na_intervention is False
 
-    def test_thresholds_for_intervention_06(self,capsys):
+    def test_thresholds_for_intervention_06(self):
+        """Testing Error message that given data type not defined."""
+        with pytest.raises(ValueError):  #, match = "Data not in standardized format. Run 'standardize()' first."):
+            thresholds_for_intervention(self.data_nonstandard)
+
+    def test_thresholds_for_intervention_07(self,capsys):
         """Testing routine thresholds_for_intervention().
 
         Testing verbose flag.
