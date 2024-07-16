@@ -74,34 +74,72 @@ class TestData:
             example_data(data_type = 'test_data')
 
     def test_load_csv_01(self):
-        """Testing correct loading of example data from csv file."""
+        """Testing routine load_csv().
+
+        Testing correct loading of example data from csv file.
+        """
         data_t1 = load_csv("{}/example_data.csv".format(path_data))[0]
         assert data_t1.shape == self.data_00.shape
 
     def test_load_csv_02(self):
-        """Testing Error message that no path to csv file is given."""
+        """Testing routine load_csv().
+
+        Testing Error message that no path to csv file is given.
+        """
         with pytest.raises(ValueError, match="Specify file path and file name!"):
             load_csv()
 
     def test_load_csv_03(self):
-        """Testing Error message that given file path does not match."""
+        """Testing routine load_csv().
+
+        Testing Error message that given file path does not match.
+        """
         with pytest.raises(OSError):
             load_csv("ThisFileDoesNotExist.csv")
 
+    def test_load_csv_04(self,capsys):
+        """Testing routine load_csv().
+
+        Testing verbose flag.
+        """
+        load_csv("{}/example_data.csv".format(path_data),verbose=True)
+        out,err=capsys.readouterr()
+
+        assert len(out)>0
+
     def test_load_excel_01(self):
-        """Testing correct loading of example data from excel file."""
+        """Testing routine load_excel().
+
+        Testing correct loading of example data from excel file.
+        """
         data_t2= load_excel("{}/example_data.xlsx".format(path_data),sheet_name= 'contaminants')[0]
         assert data_t2.shape == self.data_02.shape
 
     def test_load_excel_02(self):
-        """Testing Error message that no path to excel file is given."""
+        """Testing routine load_excel().
+
+        Testing Error message that no path to excel file is given.
+        """
         with pytest.raises(ValueError, match="Specify file path and file name!"):
             load_excel()
 
     def test_load_excel_03(self):
-        """Testing Error message that given file path does not match."""
+        """Testing routine load_excel().
+
+        Testing Error message that given file path does not match.
+        """
         with pytest.raises(OSError):
             load_excel("ThisFileDoesNotExist.xlsx")
+
+    def test_load_excel_04(self,capsys):
+        """Testing routine load_excel().
+
+        Testing verbose flag.
+        """
+        load_excel("{}/example_data.xlsx".format(path_data),verbose=True)
+        out,err=capsys.readouterr()
+
+        assert len(out)>0
 
     def test_check_columns_01(self):
         """Testing routine check_column() on check and standardization of column names.

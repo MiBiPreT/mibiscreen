@@ -36,7 +36,7 @@ all_units = [item for sublist in list(standard_units.values()) for item in subli
 
 def load_excel(
         file_path = None,
-        sheet_name = 'Sheet1',
+        sheet_name = 0,
         verbose = False,
         store_provenance = False,
         **kwargs,
