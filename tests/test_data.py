@@ -1,4 +1,7 @@
-"""Tests for the mibipret.data module."""
+"""Tests for the mibipret.data module.
+
+@author: Alraune Zech
+"""
 
 import numpy as np
 import pandas as pd

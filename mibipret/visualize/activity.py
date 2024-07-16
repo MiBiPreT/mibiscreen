@@ -71,14 +71,8 @@ def activity(
         meta_count = data[name_metabolites_variety].values
         tot_cont = data[name_total_contaminants].values
         well_color = data[name_na_traffic_light].values
-    elif isinstance(data, list):
-        if isinstance(data[0], np.ndarray):
-            tot_cont = data[0]
-            meta_count = data[1]
-            well_color = data[2]
-            if len(tot_cont) != len(meta_count) and len(tot_cont) != len(well_color):
-                raise ValueError("Provided arrays of data must have the same length!")
-        elif isinstance(data[0], pd.Series):
+    elif isinstance(data, list) and len(data)>=3:
+        if isinstance(data[0], pd.Series) and isinstance(data[1], pd.Series) and isinstance(data[2], pd.Series):
             for series in data:
                 if series.name == name_metabolites_variety:
                     meta_count = series.values
@@ -86,12 +80,20 @@ def activity(
                     tot_cont = series.values
                 if series.name == name_na_traffic_light:
                     well_color = series.values
+        elif isinstance(data[0], (np.ndarray, list)):
+            tot_cont = data[0]
+            meta_count = data[1]
+            well_color = data[2]
+            # print("MATCH")
+        else:
+            raise ValueError("List elements in data must be lists, np.arrays or pd.series.")
+        if len(tot_cont) != len(meta_count) or len(tot_cont) != len(well_color):
+            raise ValueError("Provided arrays/lists/series of data must have the same length.")
     else:
-        raise ValueError("Data not complete or in wrong format.")
+        raise ValueError("Data needs to be DataFrame or list of at least three lists/np.arrays/pd.series.")
 
     if len(tot_cont) <= 1:
-        print("Too little data for activity plot.")
-        return
+        raise ValueError("Too little data for activity plot. At least two values per quantity required.")
 
     fig, ax = plt.subplots(figsize=settings['figsize'])
     ax.scatter(tot_cont,
@@ -138,6 +140,10 @@ def activity(
     fig.tight_layout()
 
     if save_fig is not False:
-        plt.savefig(save_fig)
+        try:
+            plt.savefig(save_fig)
+            print("Save Figure to file:\n", save_fig)
+        except OSError:
+            print("WARNING: Figure could not be saved. Check provided file path and name: {}".format(save_fig))
 
     return fig, ax
