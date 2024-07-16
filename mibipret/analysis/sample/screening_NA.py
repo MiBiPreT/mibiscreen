@@ -13,7 +13,8 @@ from .properties import properties
 
 def reductors(
     data,
-    ea_group = 'ONSFe',
+    ea_group = 'ONS',
+    inplace = False,
     verbose = False,
     **kwargs,
     ):
@@ -27,7 +28,9 @@ def reductors(
             concentration values of electron acceptors in [mg/l]
         ea_group: str
             Short name for group of electron acceptors to use
-            default is 'ONSFe' (for oxygen, nitrate, sulfate and ironII)
+            default is 'ONS' (for oxygen, nitrate, and sulfate)
+        inplace: bool, default False
+            Whether to modify the DataFrame rather than creating a new one.
         verbose: Boolean
             verbose flag (default False)
 
@@ -53,26 +56,31 @@ def reductors(
                 print("WARNING: No data on {} given, zero concentration assumed.".format(ea))
                 print('________________________________________________________________')
     except KeyError:
-        print("WARNING: group of electron acceptors ('ea_group') not defined: '{}'".format(ea_group))
-        print('________________________________________________________________')
-        tot_reduct = False
+        raise ValueError("Group of electron acceptors ('ea_group') not defined: '{}'".format(ea_group))
     except TypeError:
         raise ValueError("Data not in standardized format. Run 'standardize()' first.")
 
-    if isinstance(tot_reduct, float) and tot_reduct <= 0.:
-        print("\nWARNING: No data on electron acceptor concentrations given.")
-        tot_reduct = False
-    elif isinstance(tot_reduct, pd.Series):
-        tot_reduct.rename("total_reductors",inplace = True)
+    if isinstance(tot_reduct, pd.Series):
+        tot_reduct.rename(ean.name_total_reductors,inplace = True)
         if verbose:
             print("Total amount of electron reductors per well in [mmol e-/l] is:\n{}".format(tot_reduct))
             print('----------------------------------------------------------------')
+    else:
+        raise ValueError("No data on electron acceptors or only zero concentrations given.")
+    # if isinstance(tot_reduct, float) and tot_reduct <= 0.:
+    #     print("\nWARNING: No data on electron acceptor concentrations given.")
+    #     tot_reduct = False
+
+    if inplace:
+        data[ean.name_total_reductors] = tot_reduct
+
     return tot_reduct
 
 def oxidators(
     data,
     contaminant_group = "BTEXIIN",
     nutrient = False,
+    inplace = False,
     verbose = False,
     **kwargs,
     ):
@@ -97,6 +105,8 @@ def oxidators(
         nutrient: Boolean
             flag to include oxidator availability based on nutrient supply
             calls internally routine "available_NP()" with data
+        inplace: bool, default False
+            Whether to modify the DataFrame rather than creating a new one.
         verbose: Boolean
             verbose flag (default False)
 
@@ -139,26 +149,30 @@ def oxidators(
                 print("WARNING: No data on {} given, zero concentration assumed.".format(cont))
                 print('________________________________________________________________')
     except KeyError:
-        print("WARNING: group of contaminant ('contaminant_group') not defined: '{}'".format(contaminant_group))
-        print('________________________________________________________________')
-        tot_oxi = False
+        raise ValueError("group of contaminant ('contaminant_group') not defined: '{}'".format(contaminant_group))
     except TypeError:
         raise ValueError("Data not in standardized format. Run 'standardize()' first.")
 
-    if isinstance(tot_oxi, float):
-        print("\nWARNING: No data on contaminant concentrations given.")
-        print('________________________________________________________________')
-        tot_oxi = False
-    elif isinstance(tot_oxi, pd.Series):
-        tot_oxi.rename("total_oxidators",inplace = True)
+    # if isinstance(tot_oxi, float):
+    #     print("\nWARNING: No data on contaminant concentrations given.")
+    #     print('________________________________________________________________')
+    #     tot_oxi = False
+    if isinstance(tot_oxi, pd.Series):
+        tot_oxi.rename(ean.name_total_oxidators,inplace = True)
         if verbose:
             print("Total amount of oxidators per well in [mmol e-/l] is:\n{}".format(tot_oxi))
             print('-----------------------------------------------------')
+    else:
+        raise ValueError("No data on oxidators or only zero concentrations given.")
+
+    if inplace:
+        data[ean.name_total_oxidators] = tot_oxi
 
     return tot_oxi
 
 def available_NP(
         data,
+        inplace = False,
         verbose = False,
         **kwargs,
         ):
@@ -171,6 +185,8 @@ def available_NP(
     -----
         data: pd.DataFrame
             nitrate, nitrite and phosphate concentrations in [mg/l]
+        inplace: bool, default False
+            Whether to modify the DataFrame rather than creating a new one.
         verbose: Boolean
             verbose flag (default False)
 
@@ -199,7 +215,10 @@ def available_NP(
     CNs = (data[ean.name_nitrate] + data[ean.name_nitrite]) * (39. / 4.5)
     CPs = data[ean.name_phosphate] * (39. / 1.)
     NP_avail =CNs.combine(CPs, min, 0)
-    NP_avail.name = "NP_avail"
+    NP_avail.name = ean.name_NP_avail
+
+    if inplace:
+        data[ean.name_NP_avail] = NP_avail
 
     if verbose:
         print("Total NP available is:\n{}".format(NP_avail))
@@ -209,6 +228,7 @@ def available_NP(
 
 def electron_balance(
         data,
+        inplace = False,
         verbose = False,
         **kwargs,
         ):
@@ -223,6 +243,8 @@ def electron_balance(
             tabular data containinng "total_reductors" and "total_oxidators"
                 -total amount of electrons available for reduction [mmol e-/l]
                 -total amount of electrons needed for oxidation [mmol e-/l]
+        inplace: bool, default False
+            Whether to modify the DataFrame rather than creating a new one.
         verbose: Boolean
             verbose flag (default False)
 
@@ -240,20 +262,23 @@ def electron_balance(
 
     cols = check_data(data)
 
-    if 'total_reductors' in cols:
-        tot_reduct = data['total_reductors']
+    if ean.name_total_reductors in cols:
+        tot_reduct = data[ean.name_total_reductors]
     else:
         tot_reduct = reductors(data,**kwargs)
         # raise ValueError("Total amount of oxidators not given in data.")
 
-    if 'total_oxidators' in cols:
-        tot_oxi = data['total_oxidators']
+    if ean.name_total_oxidators in cols:
+        tot_oxi = data[ean.name_total_oxidators]
     else:
         tot_oxi = oxidators(data,**kwargs)
         # raise ValueError("Total amount of reductors not given in data.")
 
     e_bal = tot_reduct.div(tot_oxi, axis=0)
-    e_bal.name = "e_balance"
+    e_bal.name = ean.name_e_balance
+
+    if inplace:
+        data[ean.name_e_balance] = e_bal
 
     if verbose:
         print("Electron balance e_red/e_cont is:\n{}".format(e_bal))
@@ -263,6 +288,7 @@ def electron_balance(
 
 def NA_traffic(
         data,
+        inplace = False,
         verbose = False,
         **kwargs,
         ):
@@ -275,6 +301,8 @@ def NA_traffic(
     -----
         data: pd.DataFrame
             Ratio of electron availability
+        inplace: bool, default False
+            Whether to modify the DataFrame rather than creating a new one.
         verbose: Boolean
             verbose flag (default False)
 
@@ -291,17 +319,20 @@ def NA_traffic(
 
     cols = check_data(data)
 
-    if 'e_balance' in cols:
-        e_balance = data['e_balance']
+    if ean.name_e_balance in cols:
+        e_balance = data[ean.name_e_balance]
     else:
         e_balance = electron_balance(data,**kwargs)
         # raise ValueError("Electron balance not given in data.")
 
     e_bal = e_balance.values
     traffic = np.where(e_bal<1,"red","green")
-    traffic[np.isnan(e_bal)] = 'yellow'
+    traffic[np.isnan(e_bal)] = 'y'
 
-    NA_traffic = pd.Series(name ='na_traffic_light',data = traffic,index = e_balance.index)
+    NA_traffic = pd.Series(name =ean.name_na_traffic_light,data = traffic,index = e_balance.index)
+
+    if inplace:
+        data[ean.name_na_traffic_light] = NA_traffic
 
     if verbose:
         print("Evaluation if natural attenuation (NA) is ongoing:")#" for {}".format(contaminant_group))
@@ -319,6 +350,7 @@ def NA_traffic(
 def total_contaminant_concentration(
         data,
         contaminant_group = "BTEXIIN",
+        inplace = False,
         verbose = False,
         **kwargs,
         ):
@@ -332,6 +364,8 @@ def total_contaminant_concentration(
             Short name for group of contaminants to use
             default is 'BTEXIIN' (for benzene, toluene, ethylbenzene, xylene,
                                   indene, indane and naphthaline)
+        inplace: bool, default False
+            Whether to modify the DataFrame rather than creating a new one.
         verbose: Boolean
             verbose flag (default False)
 
@@ -359,25 +393,31 @@ def total_contaminant_concentration(
                 print("WARNING: No data on {} given, zero concentration assumed.".format(cont))
                 print('________________________________________________________________')
     except KeyError:
-        print("WARNING: group of contaminant ('contaminant_group') not defined: '{}'".format(contaminant_group))
-        tot_conc = False
+        raise ValueError("Group of contaminant ('contaminant_group') not defined: '{}'".format(contaminant_group))
     except TypeError:
         raise ValueError("Data not in standardized format. Run 'standardize()' first.")
 
-    if isinstance(tot_conc, float):
-        print("\nWARNING: No data on contaminant concentrations given.")
-        print('________________________________________________________________')
-        tot_conc = False
-    elif isinstance(tot_conc, pd.Series):
-        tot_conc.rename("total_contaminants",inplace = True)
+    # if isinstance(tot_conc, float):
+    #     print("\nWARNING: No data on contaminant concentrations given.")
+    #     print('________________________________________________________________')
+    #     tot_conc = False
+    if isinstance(tot_conc, pd.Series):
+        tot_conc.rename(ean.name_total_contaminants,inplace = True)
         if verbose:
             print("Total concentration of {} in [ug/l] is:\n{}".format(contaminant_group,tot_conc))
             print('--------------------------------------------------')
+    else:
+        raise ValueError("No data on contaminants or only zero concentrations given.")
+
+    if inplace:
+        data[ean.name_total_contaminants] = tot_conc
+
     return tot_conc
 
 def thresholds_for_intervention(
         data,
         contaminant_group = "BTEXIIN",
+        inplace = False,
         verbose = False,
         **kwargs,
         ):
@@ -390,14 +430,14 @@ def thresholds_for_intervention(
     -----
         data: pd.DataFrame
             Contaminant contentrations in [ug/l], i.e. microgram per liter
-            if nutrient is True, data also needs to contain concentrations
-            of Nitrate, Nitrite and Phosphate
         contaminant_group: str
             Short name for group of contaminants to use
             default is 'BTEXIIN' (for benzene, toluene, ethylbenzene, xylene,
                                   indene, indane and naphthaline)
-        verbose: Boolean
-            verbose flag (default False)
+        inplace: bool, default False
+            Whether to modify the DataFrame rather than creating a new one.
+        verbose: Boolean, default False
+            verbose flag
 
     Output
     ------
@@ -405,7 +445,7 @@ def thresholds_for_intervention(
         DataFrame of similar format as input data with well specification and
         three columns on intervention threshold exceedance analysis:
             - traffic light if well requires intervention
-            - number of contaminant exceeding the intervention value
+            - number of contaminants exceeding the intervention value
             - list of contaminants above the threshold of intervention
     """
     if verbose:
@@ -414,7 +454,11 @@ def thresholds_for_intervention(
         print('==============================================================')
 
     cols= check_data(data)
-    na_intervention= pd.DataFrame(data, columns=[ean.name_sample,ean.name_observation_well])
+
+    if inplace:
+        na_intervention = data
+    else:
+        na_intervention= pd.DataFrame(data, columns=[ean.name_sample,ean.name_observation_well])
     traffic = np.zeros(data.shape[0],dtype=int)
     intervention = [[] for i in range(data.shape[0])]
 
@@ -434,11 +478,10 @@ def thresholds_for_intervention(
                 print('________________________________________________________________')
 
         traffic_light = np.where(traffic>0,"red","green")
-        traffic_light[np.isnan(traffic)] = 'yellow'
-        na_intervention['intervention_traffic'] = traffic_light
-
-        na_intervention['intervention_number'] = traffic
-        na_intervention['intervention_contaminants'] = intervention
+        traffic_light[np.isnan(traffic)] = 'y'
+        na_intervention[ean.name_intervention_traffic] = traffic_light
+        na_intervention[ean.name_intervention_number] = traffic
+        na_intervention[ean.name_intervention_contaminants] = intervention
 
         if verbose:
             print("Evaluation of contaminant concentrations exceeding intervention values for {}:".format(
@@ -452,9 +495,7 @@ def thresholds_for_intervention(
                 np.sum(np.isnan(traffic)),data.shape[0]))
             print('________________________________________________________________')
     except KeyError:
-        print("WARNING: group of contaminant ('contaminant_group') not defined: '{}'".format(contaminant_group))
-        print('________________________________________________________________')
-        na_intervention = False
+        raise ValueError("Group of contaminant ('contaminant_group') not defined: '{}'".format(contaminant_group))
     except TypeError:
         raise ValueError("Data not in standardized format. Run 'standardize()' first.")
 
@@ -462,9 +503,10 @@ def thresholds_for_intervention(
 
 def screening_NA(
     data,
-    ea_group = 'ONSFe',
+    ea_group = 'ONS',
     contaminant_group = "BTEXIIN",
     nutrient = False,
+    inplace = False,
     verbose = False,
     **kwargs,
     ):
@@ -477,20 +519,22 @@ def screening_NA(
         data: pd.DataFrame
             Concentration values of
                 - electron acceptors in [mg/l]
-                - contaminant in [ug/l]
+                - contaminants in [ug/l]
                 - nutrients (Nitrate, Nitrite and Phosphate) if nutrient is True
-        ea_group: str
+        ea_group: str, default 'ONS'
             Short name for group of electron acceptors to use
-            default is 'ONSFe' (for oxygen, nitrate, sulfate and ironII)
-        contaminant_group: str
+            'ONS' stands for oxygen, nitrate, sulfate and ironII
+        contaminant_group: str, default 'BTEXIIN'
             Short name for group of contaminants to use
-            default is 'BTEXIIN' (for benzene, toluene, ethylbenzene, xylene,
-                                   indene, indane and naphthaline)
-        nutrient: Boolean
+            'BTEXIIN' stands for benzene, toluene, ethylbenzene, xylene,
+                                   indene, indane and naphthaline
+        nutrient: Boolean, default False
             flag to include oxidator availability based on nutrient supply
             calls internally routine "available_NP()" with data
-        verbose: Boolean
-            verbose flag (default False)
+        inplace: bool, default False
+            Whether to modify the DataFrame rather than creating a new one.
+        verbose: Boolean, default False
+            verbose flag
 
     Output
     ------
@@ -505,31 +549,38 @@ def screening_NA(
 
     check_data(data)
 
-    tot_cont = total_contaminant_concentration(data,
-                                               contaminant_group = contaminant_group,
-                                               verbose = verbose)
-    na_data = thresholds_for_intervention(data,
-                                          contaminant_group = contaminant_group,
-                                          verbose = verbose)
     tot_reduct = reductors(data,
                             ea_group = ea_group,
+                            inplace = inplace,
                             verbose = verbose)
     tot_oxi = oxidators(data,
                         contaminant_group = contaminant_group,
                         nutrient = nutrient,
+                        inplace = inplace,
                         verbose = verbose)
     e_bal = electron_balance(data,
-                              verbose = verbose)
+                             inplace = inplace,
+                             verbose = verbose)
     na_traffic = NA_traffic(data,
                             contaminant_group = contaminant_group,
+                            inplace = inplace,
                             verbose = verbose)
+    tot_cont = total_contaminant_concentration(data,
+                                               contaminant_group = contaminant_group,
+                                               inplace = inplace,
+                                               verbose = verbose)
+    na_data = thresholds_for_intervention(data,
+                                          contaminant_group = contaminant_group,
+                                          inplace = inplace,
+                                          verbose = verbose)
 
-    for add in [tot_cont,na_traffic,e_bal,tot_oxi,tot_reduct]:
-        na_data.insert(2, add.name, add)
+    if inplace is False:
+        for add in [tot_cont,na_traffic,e_bal,tot_oxi,tot_reduct]:
+            na_data.insert(2, add.name, add)
 
-    if nutrient:
-        NP_avail = available_NP(data,verbose = verbose)
-        na_data.insert(4, NP_avail.name, NP_avail)
+        if nutrient:
+            NP_avail = available_NP(data,verbose = verbose)
+            na_data.insert(4, NP_avail.name, NP_avail)
 
     return na_data
 

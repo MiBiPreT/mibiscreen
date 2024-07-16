@@ -10,29 +10,33 @@ import numpy as np
 import pandas as pd
 
 try:
+    from names import chemical_composition
     from names import col_dict
     from names import contaminants
-    from names import electron_acceptors
     from names import environmental_conditions
     from names import name_EC
     from names import name_redox
     from names import name_sample_depth
     from names import standard_units
+    from names_metabolites import metabolites
+    from names_metabolites import names_metabolites
 except ImportError:
+    from .names import chemical_composition
     from .names import col_dict
     from .names import contaminants
-    from .names import electron_acceptors
     from .names import environmental_conditions
     from .names import name_EC
     from .names import name_redox
     from .names import name_sample_depth
     from .names import standard_units
+    from .names_metabolites import metabolites
+    from .names_metabolites import names_metabolites
 
 all_units = [item for sublist in list(standard_units.values()) for item in sublist]
 
 def load_excel(
         file_path = None,
-        sheet_name = 'Sheet1',
+        sheet_name = 0,
         verbose = False,
         store_provenance = False,
         **kwargs,
@@ -163,18 +167,28 @@ def load_csv(
         print('================================================================')
     return data, units
 
-def check_columns(data, verbose = True):
+def check_columns(data,
+                  standardize = False,
+                  reduce = False,
+                  check_metabolites = False,
+                  verbose = True):
     """Function checking names of columns of data frame.
 
-    Function that looks at the column names and renames the columns to
-    the standard names of the model.
+    Function that looks at the column names and links it to standard names.
+    Optionally, it renames identified column names to the standard names of the model.
 
     Args:
     -------
         data: pd.DataFrame
             dataframe with the measurements
-        verbose: Boolean
-            verbose statement (default True)
+        standardize: Boolean, default False
+            flat to standardize identified column names
+        reduce: Boolean, default False
+            flag to reduce data to known quantities
+        check_metabolites: Boolean, default False
+            flag to check on metabolite names
+        verbose: Boolean, default True
+            verbosity flag
 
     Returns:
     -------
@@ -197,13 +211,27 @@ def check_columns(data, verbose = True):
     column_names_known = []
     column_names_unknown = []
 
+    if check_metabolites:
+        dict_names = {
+            **col_dict,
+            **names_metabolites}
+    else:
+        dict_names = col_dict
+
     for x in data.columns:
-        y = col_dict.get(x, False)
+        y = dict_names.get(x, False)
         if y is False:
             column_names_unknown.append(x)
         else:
             column_names_known.append(x)
             column_names_standard.append(y)
+
+    if standardize:
+        data.columns = [dict_names.get(x, x) for x in data.columns]
+
+    if reduce:
+        data.drop(labels = column_names_unknown,axis = 1,inplace=True)
+
     if verbose:
         print('================================================================')
         print(" Running function 'check_columns()' on data")
@@ -214,18 +242,26 @@ def check_columns(data, verbose = True):
         for i,name in enumerate(column_names_known):
             print(name," --> ",column_names_standard[i])
         print('----------------------------------')
-        print("\nRenaming can be done by running standardize().\n")
-
+        if standardize:
+            print("Identified column names have been standardized")
+        else:
+            print("\nRenaming can be done by setting keyword 'standardize' to True.\n")
         print('________________________________________________________________')
-        print("{} quantities have not bee identified in provided data:".format(len(column_names_unknown)))
-        print('-------------------------------------------------------')
+        print("{} quantities have not been identified in provided data:".format(len(column_names_unknown)))
+        print('---------------------------------------------------------')
         for i,name in enumerate(column_names_unknown):
             print(name)
+        print('---------------------------------------------------------')
+        if reduce:
+            print("Not identified quantities have been removed from data frame")
+        else:
+            print("\nReduction to known quantities can be done by setting keyword 'reduce' to True.\n")
         print('================================================================')
 
     return (column_names_known,column_names_unknown,column_names_standard)
 
 def check_units(data,
+                check_metabolites = False,
                 verbose = True):
     """Function to check the units of the measurements.
 
@@ -234,6 +270,8 @@ def check_units(data,
         data: pandas.DataFrames
             dataframe with the measurements where first row contains
             the units or a dataframe with only the column names and units
+        check_metabolites: Boolean, default False
+            flag to check on metabolites' units
         verbose: Boolean
             verbose statement (default True)
 
@@ -260,7 +298,7 @@ def check_units(data,
     elif data.shape[0]>1:
         units = data.drop(labels = np.arange(1,data.shape[0]))
     else:
-        units = data
+        units = data.copy()
 
     ### testing if provided data frame contains any unit
     test_unit = False
@@ -274,17 +312,17 @@ def check_units(data,
                          line, check www.mibipretdocs.nl/dataloading.")
 
     # standardize column names (as it might not has happened for data yet)
-    units.columns = [col_dict.get(x, x) for x in units.columns]
+    check_columns(units,standardize = True, check_metabolites=check_metabolites, verbose = False)
 
     col_check_list= []
 
-    for quantity in electron_acceptors['all_ea']:
+    for quantity in chemical_composition:
         if quantity in units.columns:
             if units[quantity][0] not in standard_units['mgperl']:
                 col_check_list.append(quantity)
                 if verbose:
                     print("Warning: Check unit of {}!\n Given in {}, but must be milligramm per liter (e.g. {})."
-                              .format(quantity,data[quantity][0],standard_units['mgperl'][0]))
+                              .format(quantity,units[quantity][0],standard_units['mgperl'][0]))
 
     for quantity in contaminants['all_cont']:
         if quantity in units.columns:
@@ -292,7 +330,7 @@ def check_units(data,
                 col_check_list.append(quantity)
                 if verbose:
                     print("Warning: Check unit of {}!\n Given in {}, but must be microgramm per liter (e.g. {})."
-                              .format(quantity,data[quantity][0],standard_units['microgperl'][0]))
+                              .format(quantity,units[quantity][0],standard_units['microgperl'][0]))
 
     #environmental_conditions:
     env_cond = [name_sample_depth,name_EC,name_redox]
@@ -304,30 +342,16 @@ def check_units(data,
                 col_check_list.append(quantity)
                 if verbose:
                     print("Warning: Check unit of {}!\n Given in {}, but must be in {} (e.g. {}).".format(
-                            quantity,data[quantity][0],units_type,standard_units[units_type][0]))
+                            quantity,units[quantity][0],units_type,standard_units[units_type][0]))
 
-    # if name_sample_depth in units.columns:
-    #     if units[name_sample_depth][0] not in standard_units['meter']:
-    #         col_check_list.append(name_sample_depth)
-    #         if verbose:
-    #             print("Warning: Check unit of {}!\n Given in {}, but must be in meter (e.g. {}).".format(
-    #                     name_sample_depth,data[name_sample_depth][0], standard_units['meter'][0]))
-
-    # if name_EC in units.columns:
-    #     if units[name_EC][0] not in standard_units['microsimpercm']:
-    #         col_check_list.append(name_EC)
-    #         if verbose:
-    #             print("Warning: Check unit of {}!\n Given in {}, but must be in
-    #                microSiemens per cm (e.g. {}).".format(
-    #                     name_EC,data[name_EC][0],standard_units['microsimpercm'][0]))
-
-    # if name_redox in units.columns:
-    #     if units[name_redox][0] not in standard_units['millivolt']:
-    #         col_check_list.append(name_redox)
-    #         if verbose:
-    #             print("Warning: Check unit of {}!\n Given in {}, but must be in millivolt (e.g. {}).".format(
-    #                     name_redox,data[name_redox][0],standard_units['millivolt'][0]))
-
+    if check_metabolites:
+        for quantity in metabolites['all_meta']:
+            if quantity in units.columns:
+                if units[quantity][0] not in standard_units['microgperl']:
+                    col_check_list.append(quantity)
+                    if verbose:
+                        print("Warning: Check unit of {}!\n Given in {}, but must be microgramm per liter (e.g. {})."
+                                  .format(quantity,units[quantity][0],standard_units['microgperl'][0]))
 
     if verbose:
         print('________________________________________________________________')
@@ -342,6 +366,7 @@ def check_units(data,
 def check_values(
         data,
         contaminant_group = "all_cont",
+        check_metabolites = False,
         verbose = True,
         ):
     """Function that checks on value types and replaces non-measured values.
@@ -356,6 +381,8 @@ def check_values(
                 -- "BTEX": benzene, toluene, ethylbenzene, xylene
                 -- "BTEXIIN": benzene, toluene, ethylbenzene, xylene, indene, indane, naphthalene
             default: "all_cont"
+        check_metabolites: Boolean, default False
+            flag to check on metabolites' values
         verbose: Boolean
             verbose statement (default True)
 
@@ -391,14 +418,17 @@ def check_values(
             break
 
     # standardize column names (as it might not has happened for data yet)
-    data_pure.columns = [col_dict.get(x, x) for x in data_pure.columns]
+    check_columns(data_pure,standardize = True, check_metabolites=check_metabolites, verbose = False)
 
     # transform data to numeric values
     quantities_transformed = []
     cont_list = contaminants[contaminant_group]
-    ea_list = electron_acceptors['all_ea']
+    if check_metabolites:
+        metabolites_list = metabolites['all_meta']
+    else:
+        metabolites_list = []
 
-    for quantity in [name_sample_depth]+environmental_conditions+ea_list+cont_list:
+    for quantity in [name_sample_depth]+environmental_conditions+chemical_composition+cont_list+metabolites_list:
         if quantity in data_pure.columns:
             try:
                 data_pure[quantity] = pd.to_numeric(data_pure[quantity])
@@ -407,19 +437,23 @@ def check_values(
                 print("WARNING: Cound not transform '{}' to numerical values".format(quantity))
                 print('________________________________________________________________')
     if verbose:
-        print("Quantities with values transformed to numerical s(int/float):")
+        print("Quantities with values transformed to numerical (int/float):")
         print('-----------------------------------------------------------')
         for name in quantities_transformed:
             print(name)
         print('================================================================')
 
-    # data_pure.iloc[:,:] = data_pure.iloc[:,:].replace(to_replace="-", value=replace)
+    to_replace_list = ["-",'--']
+    to_replace_value = np.nan
+    for sign in to_replace_list:
+        data_pure.iloc[:,:] = data_pure.iloc[:,:].replace(to_replace=sign, value=to_replace_value)
 
     return data_pure
 
 def standardize(data,
                 reduce = True,
                 store_csv = False,
+                check_metabolites = False,
                 verbose=True,
                 ):
     """Function providing condensed data frame with standardized names.
@@ -435,13 +469,15 @@ def standardize(data,
     -------
         data: pandas.DataFrames
             dataframe with the measurements
-        verbose: Boolean
-            verbose statement (default True)
         reduce: Boolean
             flag to reduce data to known quantities (default True),
             otherwise full dataframe with renamed columns is returned
         store_csv: Boolean
             flag to save dataframe in standard format to csv-file
+        check_metabolites: Boolean, default False
+            flag to check on metabolites' values
+        verbose: Boolean
+            verbose statement (default True)
 
     Returns:
     -------
@@ -462,36 +498,30 @@ def standardize(data,
             (i.e. data columns to return)
 
     """
-    # general column check
-    column_names_known,column_names_unknown,column_names_standard = check_columns(data,verbose = False)
-
-    data_standard = data.copy()
-    data_standard.columns = [col_dict.get(x, x) for x in data_standard.columns]
-
-    if reduce:
-        data_standard = data_standard.drop(labels = column_names_unknown,axis = 1)
-
     if verbose:
         print('================================================================')
         print(" Running function 'standardize()' on data")
         print('================================================================')
-        print("{} quantities identified and renamed:".format(len(column_names_known)))
-        print('-------------------------------------')
-        for i,name in enumerate(column_names_known):
-            print(name," --> ",column_names_standard[i])
 
-        print('________________________________________________________________')
-        print("{} quantities not identified (and removed) from standard data:".format(len(column_names_unknown)))
-        print('--------------------------------------------------------------')
-        for i,name in enumerate(column_names_unknown):
-            print(name)
+    data_standard = data.copy()
+
+    # general column check & standardize column names
+    column_names_known,column_names_unknown,column_names_standard = check_columns(data_standard,
+                                                              standardize = True,
+                                                              reduce = reduce,
+                                                              check_metabolites = check_metabolites,
+                                                              verbose = verbose)
 
     # general unit check
     units = data_standard.drop(labels = np.arange(1,data_standard.shape[0]))
-    col_check_list = check_units(units,verbose = verbose)
+    col_check_list = check_units(units,
+                                 check_metabolites = check_metabolites,
+                                 verbose = verbose)
 
     # transform data to numeric values
-    data_numeric = check_values(data_standard.drop(labels = 0),verbose = verbose)
+    data_numeric = check_values(data_standard.drop(labels = 0),
+                                check_metabolites = check_metabolites,
+                                verbose = verbose)
 
     # store standard data to file
     if store_csv:
@@ -522,9 +552,10 @@ def example_data(data_type = 'all',
         data_type: string
             Type of data to return:
                 -- "all": all types of data available
+                -- "set_env_cont": well setting, environmental and contaminants data
                 -- "setting": well setting data only
-                -- "contaminants": data on contaminants
                 -- "environment": data on environmental
+                -- "contaminants": data on contaminants
                 -- "metabolites": data on metabolites
                 -- "hydro": data on hydrogeolocial conditions
         with_units: Boolean
@@ -563,6 +594,7 @@ def example_data(data_type = 'all',
 
     contaminants = ['benzene', 'toluene', 'ethylbenzene', 'pm_xylene',
                     'o_xylene', 'indane', 'indene', 'naphthalene']
+
     contaminants_units = ['ug/L', 'ug/L', 'ug/L', 'ug/L',
                           'ug/L', 'ug/L', 'ug/L', 'ug/L']
     contaminants_s01 = [263., 2., 269., 14., 51., 1254., 41., 2207.]
@@ -570,18 +602,14 @@ def example_data(data_type = 'all',
     contaminants_s03 = [853., 17., 1286., 528., 214., 1031., 31., 3879.]
     contaminants_s04 = [1254., 10., 1202., 79., 61., 814., 59., 1970.]
 
-    if  data_type == 'all':
-        units = setting_units+environment_units+contaminants_units
-        columns = setting+environment+contaminants
-        sample_01 = setting_s01+environment_s01+contaminants_s01
-        sample_02 = setting_s02+environment_s02+contaminants_s02
-        sample_03 = setting_s03+environment_s03+contaminants_s03
-        sample_04 = setting_s04+environment_s04+contaminants_s04
+    metabolites = ['Phenol',    "Cinnamic acid", "benzoic_acid"]
+    metabolites_units = ['ug/L', 'ug/L', 'ug/L']
+    metabolites_s01 = [0.2, 0.4, 1.4]
+    metabolites_s02 = [np.nan,'-', 0]
+    metabolites_s03 = [0, 11.4, 5.4]
+    metabolites_s04 = [0.3, 0.5, 0.7]
 
-        data = pd.DataFrame([units,sample_01,sample_02,sample_03,sample_04],
-                            columns = columns)
-
-    elif  data_type == 'setting':
+    if  data_type == 'setting':
         data = pd.DataFrame([setting_units,setting_s01,setting_s02,setting_s03,
                              setting_s04],columns = setting)
 
@@ -606,6 +634,44 @@ def example_data(data_type = 'all',
 
         data = pd.DataFrame([units,sample_01,sample_02,sample_03,sample_04],
                             columns = columns)
+
+    elif  data_type == 'metabolites':
+
+        units = setting_units+metabolites_units
+        columns = setting+metabolites
+        sample_01 = setting_s01+metabolites_s01
+        sample_02 = setting_s02+metabolites_s02
+        sample_03 = setting_s03+metabolites_s03
+        sample_04 = setting_s04+metabolites_s04
+
+        data = pd.DataFrame([units,sample_01,sample_02,sample_03,sample_04],
+                            columns = columns)
+
+    elif data_type == "set_env_cont":
+
+        units = setting_units+environment_units+contaminants_units
+        columns = setting+environment+contaminants
+        sample_01 = setting_s01+environment_s01+contaminants_s01
+        sample_02 = setting_s02+environment_s02+contaminants_s02
+        sample_03 = setting_s03+environment_s03+contaminants_s03
+        sample_04 = setting_s04+environment_s04+contaminants_s04
+
+        data = pd.DataFrame([units,sample_01,sample_02,sample_03,sample_04],
+                            columns = columns)
+
+    elif data_type == 'all':
+        units = setting_units+environment_units+contaminants_units+metabolites_units
+        columns = setting+environment+contaminants+metabolites
+        sample_01 = setting_s01+environment_s01+contaminants_s01+metabolites_s01
+        sample_02 = setting_s02+environment_s02+contaminants_s02+metabolites_s02
+        sample_03 = setting_s03+environment_s03+contaminants_s03+metabolites_s03
+        sample_04 = setting_s04+environment_s04+contaminants_s04+metabolites_s04
+
+        data = pd.DataFrame([units,sample_01,sample_02,sample_03,sample_04],
+                            columns = columns)
+
+    else:
+        raise ValueError("Specified data type '{}' not available".format(data_type))
 
     if not with_units:
         data.drop(0,inplace = True)

@@ -3,18 +3,21 @@
 @author: Alraune Zech
 """
 
-# import sys
+
 # path = '/home/alraune/GitHub/MiBiPreT/mibipret/mibipret/'
 # sys.path.append(path) # append the path to module
 # import analysis.sample.screening_NA as na
 # import data.data as md
+# from visualize.activity import activity
 
 import mibipret.analysis.sample.screening_NA as na
 import mibipret.data.data as md
+from mibipret.visualize.activity import activity
 
 ###------------------------------------------------------------------------###
 ### Script settings
 verbose = True
+contaminant_group='BTEXIIN'
 
 ###------------------------------------------------------------------------###
 ### File path settings
@@ -38,9 +41,9 @@ data,units = md.standardize(data_raw,reduce = True, store_csv=file_standard,  ve
 ###------------------------------------------------------------------------###
 ### perform NA screening step by step
 
-tot_reduct = na.reductors(data,verbose = verbose,ea_group = 'ONSFe')
+tot_reduct = na.reductors(data,verbose = verbose,ea_group = 'ONS')
 
-tot_oxi = na.oxidators(data,verbose = verbose, contaminant_group='BTEXIIN')
+tot_oxi = na.oxidators(data,verbose = verbose, contaminant_group=contaminant_group)
 #tot_oxi_nut = na.oxidators(data,verbose = verbose,nutrient = True)
 
 e_bal = na.electron_balance(data,verbose = verbose)
@@ -50,11 +53,21 @@ na_traffic = na.NA_traffic(data,verbose = verbose)
 ###------------------------------------------------------------------------###
 ### Evaluation of intervention threshold exceedance
 
-tot_cont = na.total_contaminant_concentration(data,verbose = verbose,contaminant_group='BTEXIIN')
+tot_cont = na.total_contaminant_concentration(data,verbose = verbose,contaminant_group=contaminant_group)
 
-na_intervention = na.thresholds_for_intervention(data,verbose = verbose,contaminant_group='BTEXIIN')
+na_intervention = na.thresholds_for_intervention(data,verbose = verbose,contaminant_group=contaminant_group)
 
 ###------------------------------------------------------------------------###
 ### NA screening and evaluation of intervention threshold exceedance in one go
 
+### run full NA screening with results in separate DataFrame
 data_na = na.screening_NA(data,verbose = verbose)
+
+### run full NA screening with results added to data
+na.screening_NA(data,inplace = True,verbose = verbose)
+
+###------------------------------------------------------------------------###
+### Create activity plot linking contaminant concentration to metabolite occurence
+### and NA screening
+
+fig, ax = activity(data)

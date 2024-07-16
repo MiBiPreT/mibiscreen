@@ -32,11 +32,19 @@ class TestNA:
                         name = 'empyt_data',
                         dtype=float)
 
-    tot_oxi = pd.Series(data = [1.566197,3.700148, 3.005697, 2.095891],name = 'total_oxidators')
+    columns = ['sample_nr', 'sulfate', 'benzene']
+    units = [' ','mg/L', 'ug/L']
+    s01 = ['2000-001', 748, 263]
+    s02 = ['2000-002', 548, ]
+    data_nonstandard = pd.DataFrame([units,s01,s02],
+                                columns = columns)
+
+
+    tot_oxi = pd.Series(data = [1.5663,3.70051, 3.00658, 2.09641], name = 'total_oxidators')
     tot_reduct = pd.Series(data = [11.819184,0.525160, 0.347116, 15.265349], name = 'total_reductors')
     e_bal = pd.Series(data = [7.546422, 0.141929, 0.115486, 7.283465], name = 'e_balance')
 
-    data_na = pd.concat([tot_reduct, tot_oxi,e_bal],axis =1)
+    data_na = pd.concat([tot_reduct, tot_oxi],axis =1)
 
     def test_check_data_01(self):
         """Testing routine check_data().
@@ -81,18 +89,35 @@ class TestNA:
 
         Correct handling when no EA data is provided.
         """
-        tot_reduct = reductors(self.data_empty)
-        assert tot_reduct is False
+        with pytest.raises(ValueError):
+            reductors(self.data_empty)
 
     def test_reductors_03(self):
         """Testing routine reductors().
 
         Correct handling when unknown group of EA are provided.
         """
-        tot_reduct = reductors(self.data,ea_group = 'test')
-        assert tot_reduct is False
+        with pytest.raises(ValueError):
+            reductors(self.data,ea_group = 'test')
 
-    def test_reductors_04(self,capsys):
+    def test_reductors_04(self):
+        """Testing routine reductors().
+
+        Testing Error message that data is not in standard format.
+        """
+        with pytest.raises(ValueError):
+            reductors(self.data_nonstandard)
+
+    def test_reductors_05(self):
+        """Testing routine reductors().
+
+        Testing inplace option adding calculated values as column to data.
+        """
+        data_test = self.data.copy()
+        reductors(data_test,inplace = True)
+        assert data_test.shape[1] == self.data.shape[1]+1
+
+    def test_reductors_06(self,capsys):
         """Testing routine reductors().
 
         Testing verbose flag.
@@ -108,7 +133,7 @@ class TestNA:
         Correct calculation of total amount of oxidators for standard contaminant
         group BTEXIIN.
         """
-        tot_oxi_test = 10.367932537817707
+        tot_oxi_test = 10.369793079245106
         tot_oxi = np.sum(oxidators(self.data))
 
         assert (tot_oxi - tot_oxi_test)<1e-5
@@ -118,7 +143,7 @@ class TestNA:
 
         Correct calculation of total amount of oxidators for BTEX.
         """
-        tot_oxi_test = 3.52766763425254
+        tot_oxi_test = 3.5295281756799395
         tot_oxi = np.sum(oxidators(self.data,contaminant_group='BTEX'))
 
         assert (tot_oxi - tot_oxi_test)<1e-5
@@ -129,7 +154,7 @@ class TestNA:
         Correct calculation of total amount of oxidators with option to
         include available nutrients.
         """
-        tot_oxi_test = 6.667784560586794
+        tot_oxi_test = 6.669283330069978
         tot_oxi = np.sum(oxidators(self.data,nutrient = True))
 
         assert (tot_oxi - tot_oxi_test)<1e-5
@@ -140,18 +165,33 @@ class TestNA:
 
         Correct handling when no contaminant data is provided.
         """
-        tot_oxi = oxidators(self.data_empty)
-        assert tot_oxi is False
+        with pytest.raises(ValueError):
+            oxidators(self.data_empty)
 
     def test_oxidators_05(self):
+        """Testing Error message that given data type not defined."""
+        with pytest.raises(ValueError):  #, match = "Data not in standardized format. Run 'standardize()' first."):
+            oxidators(self.data_nonstandard)
+
+    def test_oxidators_06(self):
         """Testing routine oxidators().
 
         Correct handling when unknown group of contaminants are provided.
         """
-        tot_oxi = oxidators(self.data,contaminant_group = 'test')
-        assert tot_oxi is False
+        with pytest.raises(ValueError):
+            oxidators(self.data,contaminant_group = 'test')
 
-    def test_oxidators_06(self,capsys):
+    def test_oxidators_07(self):
+        """Testing routine oxidators().
+
+        Testing inplace option adding calculated values as column to data.
+        """
+        data_test = self.data.copy()
+        oxidators(data_test,inplace = True)
+        assert data_test.shape[1] == self.data.shape[1]+1
+
+
+    def test_oxidators_08(self,capsys):
         """Testing routine oxidators().
 
         Testing verbose flag.
@@ -167,7 +207,7 @@ class TestNA:
         Correct calculation of total amount of nutrients.
         """
         NP_avail_test = 92.56
-        NP_avail = np.sum(available_NP(self.data,nutrient = True))
+        NP_avail = np.sum(available_NP(self.data))
 
         assert (NP_avail - NP_avail_test)<1e-5
 
@@ -180,7 +220,16 @@ class TestNA:
             # available_NP(test_data)
             available_NP(self.data_empty)
 
-    def test_available_NP_03(self,capsys):
+    def test_available_NP_03(self):
+        """Testing routine available_NP().
+
+        Testing inplace option adding calculated values as column to data.
+        """
+        data_test = self.data.copy()
+        available_NP(data_test,inplace = True)
+        assert data_test.shape[1] == self.data.shape[1]+1
+
+    def test_available_NP_04(self,capsys):
         """Testing routine available_NP().
 
         Testing verbose flag.
@@ -213,6 +262,15 @@ class TestNA:
         assert (e_bal - e_bal_test)<1e-5
 
     def test_electron_balance_03(self,capsys):
+        """Testing routine electron_balance().
+
+        Testing inplace option adding calculated values as column to data.
+        """
+        data_test = self.data_na.copy()
+        electron_balance(data_test,inplace = True)
+        assert data_test.shape[1] == self.data_na.shape[1]+1
+
+    def test_electron_balance_04(self,capsys):
         """Testing routine electron_balance().
 
         Testing verbose flag.
@@ -248,6 +306,15 @@ class TestNA:
     def test_NA_traffic_03(self,capsys):
         """Testing routine NA_traffic().
 
+        Testing inplace option adding calculated values as column to data.
+        """
+        data_test = self.data_na.copy()
+        NA_traffic(data_test,inplace = True)
+        assert data_test.shape[1] == self.data_na.shape[1]+1
+
+    def test_NA_traffic_04(self,capsys):
+        """Testing routine NA_traffic().
+
         Testing verbose flag.
         """
         NA_traffic(self.data,verbose=True)
@@ -281,18 +348,35 @@ class TestNA:
 
         Correct handling when unknown group of contaminants are provided.
         """
-        tot_conc = oxidators(self.data,contaminant_group = 'test')
-        assert tot_conc is False
+        with pytest.raises(ValueError):
+            total_contaminant_concentration(self.data,contaminant_group = 'test')
 
     def test_total_contaminant_concentration_04(self):
         """Testing routine total_contaminant_concentration().
 
+        Testing Error message that given data type not defined.
+        """
+        with pytest.raises(ValueError):  #, match = "Data not in standardized format. Run 'standardize()' first."):
+            total_contaminant_concentration(self.data_nonstandard)
+
+    def test_total_contaminant_concentration_05(self):
+        """Testing routine total_contaminant_concentration().
+
         Correct handling when no data is provided.
         """
-        tot_conc = total_contaminant_concentration(self.data_empty)
-        assert tot_conc is False
+        with pytest.raises(ValueError):
+            total_contaminant_concentration(self.data_empty)
 
-    def test_total_contaminant_concentration_05(self,capsys):
+    def test_total_contaminant_concentration_06(self,capsys):
+        """Testing routine total_contaminant_concentration().
+
+        Testing inplace option adding calculated values as column to data.
+        """
+        data_test = self.data.copy()
+        total_contaminant_concentration(data_test,inplace = True)
+        assert data_test.shape[1] == self.data.shape[1]+1
+
+    def test_total_contaminant_concentration_07(self,capsys):
         """Testing routine total_contaminant_concentration().
 
         Testing verbose flag.
@@ -347,10 +431,37 @@ class TestNA:
 
         Correct handling when unknown group of contaminants are provided.
         """
-        na_intervention = thresholds_for_intervention(self.data,contaminant_group = 'test')
-        assert na_intervention is False
+        with pytest.raises(ValueError):
+            thresholds_for_intervention(self.data,contaminant_group = 'test')
 
-    def test_thresholds_for_intervention_06(self,capsys):
+    def test_thresholds_for_intervention_06(self):
+        """Testing routine thresholds_for_intervention().
+
+        Testing Error message that data is not in standard format.
+        """
+        with pytest.raises(ValueError):
+            thresholds_for_intervention(self.data_nonstandard)
+
+    def test_thresholds_for_intervention_07(self,capsys):
+        """Testing routine thresholds_for_intervention().
+
+        Testing Warning that some contaminant concentrations are missing.
+        """
+        data_test = self.data.drop(labels = 'benzene',axis = 1)
+        thresholds_for_intervention(data_test,verbose = False, contaminant_group='BTEX')
+        out,err=capsys.readouterr()
+        assert len(out)>0
+
+    def test_thresholds_for_intervention_08(self):
+        """Testing routine thresholds_for_intervention().
+
+        Testing inplace option adding calculated values as column to data.
+        """
+        data_test = self.data.copy()
+        thresholds_for_intervention(data_test,inplace = True)
+        assert data_test.shape[1] == self.data.shape[1]+3
+
+    def test_thresholds_for_intervention_09(self,capsys):
         """Testing routine thresholds_for_intervention().
 
         Testing verbose flag.
