@@ -56,20 +56,21 @@ def reductors(
                 print("WARNING: No data on {} given, zero concentration assumed.".format(ea))
                 print('________________________________________________________________')
     except KeyError:
-        print("WARNING: group of electron acceptors ('ea_group') not defined: '{}'".format(ea_group))
-        print('________________________________________________________________')
-        tot_reduct = False
+        raise ValueError("Group of electron acceptors ('ea_group') not defined: '{}'".format(ea_group))
     except TypeError:
         raise ValueError("Data not in standardized format. Run 'standardize()' first.")
 
-    if isinstance(tot_reduct, float) and tot_reduct <= 0.:
-        print("\nWARNING: No data on electron acceptor concentrations given.")
-        tot_reduct = False
-    elif isinstance(tot_reduct, pd.Series):
+    if isinstance(tot_reduct, pd.Series):
         tot_reduct.rename(ean.name_total_reductors,inplace = True)
         if verbose:
             print("Total amount of electron reductors per well in [mmol e-/l] is:\n{}".format(tot_reduct))
             print('----------------------------------------------------------------')
+    else:
+        raise ValueError("No data on electron acceptors or only zero concentrations given.")
+    # if isinstance(tot_reduct, float) and tot_reduct <= 0.:
+    #     print("\nWARNING: No data on electron acceptor concentrations given.")
+    #     tot_reduct = False
+
     if inplace:
         data[ean.name_total_reductors] = tot_reduct
 
@@ -148,21 +149,22 @@ def oxidators(
                 print("WARNING: No data on {} given, zero concentration assumed.".format(cont))
                 print('________________________________________________________________')
     except KeyError:
-        print("WARNING: group of contaminant ('contaminant_group') not defined: '{}'".format(contaminant_group))
-        print('________________________________________________________________')
-        tot_oxi = False
+        raise ValueError("group of contaminant ('contaminant_group') not defined: '{}'".format(contaminant_group))
     except TypeError:
         raise ValueError("Data not in standardized format. Run 'standardize()' first.")
 
-    if isinstance(tot_oxi, float):
-        print("\nWARNING: No data on contaminant concentrations given.")
-        print('________________________________________________________________')
-        tot_oxi = False
-    elif isinstance(tot_oxi, pd.Series):
+    # if isinstance(tot_oxi, float):
+    #     print("\nWARNING: No data on contaminant concentrations given.")
+    #     print('________________________________________________________________')
+    #     tot_oxi = False
+    if isinstance(tot_oxi, pd.Series):
         tot_oxi.rename(ean.name_total_oxidators,inplace = True)
         if verbose:
             print("Total amount of oxidators per well in [mmol e-/l] is:\n{}".format(tot_oxi))
             print('-----------------------------------------------------')
+    else:
+        raise ValueError("No data on oxidators or only zero concentrations given.")
+
     if inplace:
         data[ean.name_total_oxidators] = tot_oxi
 
@@ -214,6 +216,7 @@ def available_NP(
     CPs = data[ean.name_phosphate] * (39. / 1.)
     NP_avail =CNs.combine(CPs, min, 0)
     NP_avail.name = ean.name_NP_avail
+
     if inplace:
         data[ean.name_NP_avail] = NP_avail
 
@@ -273,6 +276,7 @@ def electron_balance(
 
     e_bal = tot_reduct.div(tot_oxi, axis=0)
     e_bal.name = ean.name_e_balance
+
     if inplace:
         data[ean.name_e_balance] = e_bal
 
@@ -326,6 +330,7 @@ def NA_traffic(
     traffic[np.isnan(e_bal)] = 'y'
 
     NA_traffic = pd.Series(name =ean.name_na_traffic_light,data = traffic,index = e_balance.index)
+
     if inplace:
         data[ean.name_na_traffic_light] = NA_traffic
 
@@ -388,20 +393,21 @@ def total_contaminant_concentration(
                 print("WARNING: No data on {} given, zero concentration assumed.".format(cont))
                 print('________________________________________________________________')
     except KeyError:
-        print("WARNING: group of contaminant ('contaminant_group') not defined: '{}'".format(contaminant_group))
-        tot_conc = False
+        raise ValueError("Group of contaminant ('contaminant_group') not defined: '{}'".format(contaminant_group))
     except TypeError:
         raise ValueError("Data not in standardized format. Run 'standardize()' first.")
 
-    if isinstance(tot_conc, float):
-        print("\nWARNING: No data on contaminant concentrations given.")
-        print('________________________________________________________________')
-        tot_conc = False
-    elif isinstance(tot_conc, pd.Series):
+    # if isinstance(tot_conc, float):
+    #     print("\nWARNING: No data on contaminant concentrations given.")
+    #     print('________________________________________________________________')
+    #     tot_conc = False
+    if isinstance(tot_conc, pd.Series):
         tot_conc.rename(ean.name_total_contaminants,inplace = True)
         if verbose:
             print("Total concentration of {} in [ug/l] is:\n{}".format(contaminant_group,tot_conc))
             print('--------------------------------------------------')
+    else:
+        raise ValueError("No data on contaminants or only zero concentrations given.")
 
     if inplace:
         data[ean.name_total_contaminants] = tot_conc
@@ -424,8 +430,6 @@ def thresholds_for_intervention(
     -----
         data: pd.DataFrame
             Contaminant contentrations in [ug/l], i.e. microgram per liter
-            if nutrient is True, data also needs to contain concentrations
-            of Nitrate, Nitrite and Phosphate
         contaminant_group: str
             Short name for group of contaminants to use
             default is 'BTEXIIN' (for benzene, toluene, ethylbenzene, xylene,
@@ -441,7 +445,7 @@ def thresholds_for_intervention(
         DataFrame of similar format as input data with well specification and
         three columns on intervention threshold exceedance analysis:
             - traffic light if well requires intervention
-            - number of contaminant exceeding the intervention value
+            - number of contaminants exceeding the intervention value
             - list of contaminants above the threshold of intervention
     """
     if verbose:
@@ -491,9 +495,7 @@ def thresholds_for_intervention(
                 np.sum(np.isnan(traffic)),data.shape[0]))
             print('________________________________________________________________')
     except KeyError:
-        print("WARNING: group of contaminant ('contaminant_group') not defined: '{}'".format(contaminant_group))
-        print('________________________________________________________________')
-        na_intervention = False
+        raise ValueError("Group of contaminant ('contaminant_group') not defined: '{}'".format(contaminant_group))
     except TypeError:
         raise ValueError("Data not in standardized format. Run 'standardize()' first.")
 
@@ -517,7 +519,7 @@ def screening_NA(
         data: pd.DataFrame
             Concentration values of
                 - electron acceptors in [mg/l]
-                - contaminant in [ug/l]
+                - contaminants in [ug/l]
                 - nutrients (Nitrate, Nitrite and Phosphate) if nutrient is True
         ea_group: str, default 'ONS'
             Short name for group of electron acceptors to use
