@@ -28,6 +28,8 @@ dependencies = [
 	"pandas",
 	"openpyxl",
 	"matplotlib",
+	"sklearn",
+	"scikit-bio",
 ]
 description = "A collection of analytical and semi-semianalytical solutions for hydrogeological transport phenomena"
 keywords = [
