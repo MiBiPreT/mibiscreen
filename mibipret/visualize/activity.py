@@ -66,6 +66,7 @@ def activity(
     settings = copy.copy(DEF_settings)
     settings.update(**kwargs)
 
+    ### ---------------------------------------------------------------------------
     ### Handling of input data
     if isinstance(data, pd.DataFrame):
         meta_count = data[name_metabolites_variety].values
@@ -95,6 +96,8 @@ def activity(
     if len(tot_cont) <= 1:
         raise ValueError("Too little data for activity plot. At least two values per quantity required.")
 
+    ### ---------------------------------------------------------------------------
+    ### Creating Figure
     fig, ax = plt.subplots(figsize=settings['figsize'])
     ax.scatter(tot_cont,
                meta_count,
@@ -105,6 +108,7 @@ def activity(
                lw = settings['lw'],
                )
 
+    ### generate legend labels
     if "green" in well_color:
         ax.scatter([], [],
                    label="available",
@@ -130,6 +134,8 @@ def activity(
                    lw = settings['lw'],
                    )
 
+    ### ---------------------------------------------------------------------------
+    ### Adapt plot optics
     ax.set_xlabel(r"Concentration contaminants [$\mu$g/L]",fontsize=settings['textsize'])
     ax.set_ylabel("Metabolite variety", fontsize=settings['textsize'])
     ax.grid()
@@ -139,6 +145,8 @@ def activity(
     plt.legend(title = 'Electron acceptors:',loc =settings['loc'], fontsize=settings['textsize'] )
     fig.tight_layout()
 
+    ### ---------------------------------------------------------------------------
+    ### Save figure to file if file path provided
     if save_fig is not False:
         try:
             plt.savefig(save_fig)
