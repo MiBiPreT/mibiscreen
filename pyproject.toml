@@ -28,6 +28,7 @@ dependencies = [
 	"pandas",
 	"openpyxl",
 	"matplotlib",
+	"adjustText",
 	"scikit-learn",
 	"scikit-bio",
 ]
