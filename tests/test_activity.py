@@ -14,7 +14,7 @@ from mibipret.visualize.activity import activity
 
 
 class TestActivity:
-    """Class for testing data module of mibipret."""
+    """Class for testing activity plot of mibipret."""
 
     meta = [41,33,47,20,36]
     conc = [13132.,11695.,4101.,498.,2822]
