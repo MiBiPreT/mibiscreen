@@ -25,20 +25,23 @@ class TestData:
     data_03 = example_data(data_type = 'setting',with_units = True)
     data_04 = example_data(data_type = 'environment',with_units = True)
     data_05 = example_data(data_type = 'metabolites',with_units = True)
-    data_05 = example_data(data_type = 'metabolites',with_units = True)
+    data_06 = example_data(data_type = 'isotopes',with_units = True)
 
     columns = ['sample_nr', 'obs_well', 'depth', 'pH', 'redoxpot', 'sulfate',\
-               'methane', 'ironII', 'benzene', 'naphthalene']
+               'methane', 'iron2', 'benzene', 'naphthalene']
     columns_mod = ["sample","well","Depth",'pH', 'redox' , 'Sulfate', 'CH4','iron','c6h6', 'Naphthalene']
 
-    units = [' ',' ','m',' ','mV', 'mg/L', 'mg/L', 'mg/L', 'ug/L', 'ug/L']
+    units = [' ',' ','m',' ','mV', 'mg/l', 'mg/l', 'mg/l', 'ug/l', 'ug/l']
     units_mod = [' ',' ','cm',' ','','ug/L', 'mg/L', 'ppm', 'mg/L',  'ug/L']
 
     s01 = ['2000-001', 'B-MLS1-3-12',-12, 7.23, -208, 23, 748, 3,263,2207]
-
     new_column = pd.Series(data = ['ug/L',27.0, 54.1, 38.8, 19.70], name = 'unknown_contaminant')
 
     data_11 = pd.concat([data_01,new_column],axis = 1)
+
+    def test_example_data_00(self):
+        """Testing correct loading of example data as pandas data frame."""
+        assert self.data_00.shape == (5,29)
 
     def test_example_data_01(self):
         """Testing correct loading of example data as pandas data frame."""
@@ -66,7 +69,8 @@ class TestData:
 
     def test_example_data_06(self):
         """Testing correct loading of example data as pandas data frame."""
-        assert self.data_00.shape == (5,27)
+        # assert isinstance(self.data_04, pd.DataFrame) == True
+        assert self.data_06.shape == (5,5)
 
     def test_example_data_07(self):
         """Testing Error message that given data type not defined."""
@@ -141,6 +145,18 @@ class TestData:
 
         assert len(out)>0
 
+    def test_columns_00(self):
+        """Testing check_column() on complete example data.
+
+        Testing that routine  check_column() identifies all standard names in
+        data frame of complete example data..
+        """
+        column_names_known,column_names_unknown,column_names_standard = check_columns(
+            self.data_00,
+            check_metabolites=True)
+
+        assert len(column_names_unknown) == 0
+
     def test_check_columns_01(self):
         """Testing routine check_column() on check and standardization of column names.
 
@@ -195,7 +211,33 @@ class TestData:
             )
         assert len(column_names_unknown) == 0
 
-    def test_check_columns_06(self,capsys):
+    def test_check_columns_06(self):
+        """Testing routine check_column() on isotope sample names.
+
+        Testing check of isotope data by checking that routine identifies
+        column names for isotopes in example data.
+        """
+        column_names_known,column_names_unknown,column_names_standard = check_columns(
+            self.data_06,
+            )
+        assert len(column_names_unknown) == 0
+
+    def test_check_columns_07(self):
+        """Testing routine check_column() on isotope names.
+
+        Testing check of isotope data by checking that routine identifies unknown
+        quantities (not standard column names) for isotopes data.
+        """
+        new_isotopes_1 = pd.Series(data = ['permil',-77, -75, -51,-61], name = 'delta_2H-unknown_contaminant')
+        new_isotopes_2 = pd.Series(data = ['permil',-26.5,-26.2,-25.2,-25.7], name = 'delta_13H-toluene')
+        df2 = pd.concat([self.data_06, new_isotopes_1,new_isotopes_2],axis = 1)
+
+        column_names_known,column_names_unknown,column_names_standard = check_columns(df2)
+
+        assert len(column_names_unknown) == 2
+
+
+    def test_check_columns_08(self,capsys):
         """Testing routine check_column() on check and standardization of column names.
 
         Testing verbose flag.
@@ -204,6 +246,16 @@ class TestData:
         out,err=capsys.readouterr()
 
         assert len(out)>0
+
+    def test_units_00(self):
+        """Testing check_units() on complete example data.
+
+        Testing that routine check_units() identifies all standard names in
+        data frame of complete example data.
+        """
+        col_check_list = check_units(self.data_00, check_metabolites=True)
+
+        assert len(col_check_list) == 0
 
     def test_check_units_01(self):
         """Testing check of units.
@@ -215,7 +267,7 @@ class TestData:
         """
         data4units = pd.DataFrame([self.units_mod,self.s01],columns = self.columns)
         col_check_list = check_units(data4units)
-        check_list = ['sulfate', 'benzene','depth', 'redoxpot']
+        check_list = ['depth', 'redoxpot','sulfate', 'benzene']
 
         assert col_check_list == check_list
 
@@ -228,7 +280,7 @@ class TestData:
         """
         data4units = pd.DataFrame([self.units_mod],columns = self.columns)
         col_check_list = check_units(data4units)
-        check_list = ['sulfate', 'benzene','depth', 'redoxpot']
+        check_list = ['depth', 'redoxpot','sulfate', 'benzene']
 
         assert col_check_list == check_list
 
@@ -241,11 +293,24 @@ class TestData:
         """
         data4units = pd.DataFrame([self.units_mod+['-']],columns = self.columns+['Phenol'])
         col_check_list = check_units(data4units,check_metabolites=True)
-        check_list = ['sulfate', 'benzene', 'depth', 'redoxpot', 'phenol']
+        check_list = ['depth', 'redoxpot','sulfate', 'benzene', 'phenol']
 
         assert col_check_list == check_list
 
     def test_check_units_04(self):
+        """Testing check of units.
+
+        Testing routine check_units() with isotope data.
+        Testing of quantities where units are not in expected format when input is
+        the data frame with only the unit-row.
+        """
+        data4units = pd.DataFrame([self.units_mod+['-']],columns = self.columns+['delta_13C-benzene'])
+        col_check_list = check_units(data4units)
+        check_list = ['depth', 'redoxpot','sulfate', 'benzene', 'delta_13C-benzene']
+
+        assert col_check_list == check_list
+
+    def test_check_units_05(self):
         """Testing check of units.
 
         Testing Error message that provided input is not a data frame.
@@ -253,7 +318,7 @@ class TestData:
         with pytest.raises(ValueError, match="Provided data is not a data frame."):
             check_units(self.s01)
 
-    def test_check_units_05(self):
+    def test_check_units_06(self):
         """Testing check of units.
 
         Testing Error message that provided data frame does not contain units.
@@ -262,7 +327,7 @@ class TestData:
             data4units = pd.DataFrame([self.s01],columns = self.columns)
             check_units(data4units)
 
-    def test_check_units_06(self,capsys):
+    def test_check_units_07(self,capsys):
         """Testing routine check of units.
 
         Testing verbose flag.
@@ -273,14 +338,14 @@ class TestData:
         assert len(out)>0
 
     def test_check_values_01(self):
-        """Testing routine check_values().
+        """Testing check_values() on complete example data.
 
-        Testing that values in data frame have been transformed to numerics.
+        Testing that values in example data frame have been transformed to numerics.
         """
-        data_pure = check_values(self.data_01)
+        data_pure = check_values(self.data_00,check_metabolites = True)
 
         # assert isinstance(data_pure.iloc[-1,-1], np.int64)
-        assert isinstance(data_pure.iloc[-1,-1], np.float64)
+        assert isinstance(data_pure.iloc[-1,-1], (np.float64,np.int64))
 
     def test_check_values_02(self):
         """Testing routine check_values().
