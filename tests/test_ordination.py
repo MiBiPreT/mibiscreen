@@ -23,12 +23,12 @@ class TestOrdination:
     cols = data.columns.to_list()
     environment_00 = ['oxygen','nitrate', 'Sulfate']
     environment_01 = ['nitrate', 'oxygen','sulfate']
-    environment_02 = ['nitrate', 'oxygen','sulfate', 'ironII']
+    environment_02 = ['nitrate', 'oxygen','sulfate', 'iron2']
 
     species_01 = ['benzene', 'toluene']
     species_02 = ['benzene', 'toluene','naphthalene']
     # species_03 = ['benzene', 'toluene','benzoic_acid']
-    species_03 = ['benzene', 'toluene','Phenol']
+    species_03 = ['benzene', 'toluene','phenol']
 
 
     # data_01 = example_data(data_type = 'set_env_cont',with_units = True)
