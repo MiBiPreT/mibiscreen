@@ -61,7 +61,7 @@ class TestOrdinationPlot:
         }
 
     def test_ordination_plot_01(self):
-        """Testing routine activity().
+        """Testing routine ordination_plot().
 
         Testing Error message that input data not in required data format.
         """
@@ -70,7 +70,7 @@ class TestOrdinationPlot:
             ordination_plot([1,2,3])
 
     def test_ordination_plot_02(self):
-        """Testing routine activity().
+        """Testing routine ordination_plot().
 
         Testing Error message that input dictionary does not contain all required data.
         """
@@ -81,7 +81,7 @@ class TestOrdinationPlot:
             ordination_plot(test)
 
     def test_ordination_plot_03(self):
-        """Testing routine activity().
+        """Testing routine ordination_plot().
 
         Testing Error message that input dictionary does not contain all required data.
         """

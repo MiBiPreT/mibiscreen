@@ -14,9 +14,12 @@ try:
     from names import col_dict
     from names import contaminants
     from names import environmental_conditions
+    from names import isotopes
     from names import name_EC
     from names import name_redox
     from names import name_sample_depth
+    from names import names_contaminants
+    from names import names_isotopes
     from names import standard_units
     from names_metabolites import metabolites
     from names_metabolites import names_metabolites
@@ -25,14 +28,19 @@ except ImportError:
     from .names import col_dict
     from .names import contaminants
     from .names import environmental_conditions
+    from .names import isotopes
     from .names import name_EC
     from .names import name_redox
     from .names import name_sample_depth
+    from .names import names_contaminants
+    from .names import names_isotopes
     from .names import standard_units
     from .names_metabolites import metabolites
     from .names_metabolites import names_metabolites
 
 all_units = [item for sublist in list(standard_units.values()) for item in sublist]
+to_replace_list = ["-",'--','',' ','  ']
+to_replace_value = np.nan
 
 def load_excel(
         file_path = None,
@@ -218,16 +226,33 @@ def check_columns(data,
     else:
         dict_names = col_dict
 
+    dict_names_in_cols = {}
     for x in data.columns:
         y = dict_names.get(x, False)
-        if y is False:
-            column_names_unknown.append(x)
+        x_isotope = x.split('-')[0]
+        y_isotopes = names_isotopes.get(x_isotope.lower(), False)
+
+        if y_isotopes is not False:
+            x_molecule = x.removeprefix(x_isotope+'-')
+            y_molecule = names_contaminants.get(x_molecule.lower(), False)
+            if y_molecule is False:
+                column_names_unknown.append(x)
+            else:
+                y = y_isotopes+'-'+y_molecule
+                column_names_known.append(x)
+                column_names_standard.append(y)
+                dict_names_in_cols[x] = y
         else:
-            column_names_known.append(x)
-            column_names_standard.append(y)
+            y = dict_names.get(x.lower(), False)
+            if y is False:
+                column_names_unknown.append(x)
+            else:
+                column_names_known.append(x)
+                column_names_standard.append(y)
+                dict_names_in_cols[x] = y
 
     if standardize:
-        data.columns = [dict_names.get(x, x) for x in data.columns]
+        data.columns = [dict_names_in_cols.get(x, x) for x in data.columns]
 
     if reduce:
         data.drop(labels = column_names_unknown,axis = 1,inplace=True)
@@ -315,39 +340,43 @@ def check_units(data,
     check_columns(units,standardize = True, check_metabolites=check_metabolites, verbose = False)
 
     col_check_list= []
+    #environmental_conditions:
+    env_cond = [name_sample_depth,name_EC,name_redox]
+    unit_types = ['meter','microsimpercm','millivolt']
 
-    for quantity in chemical_composition:
-        if quantity in units.columns:
-            if units[quantity][0] not in standard_units['mgperl']:
+    for quantity in units.columns:
+        if quantity in chemical_composition:
+            if units[quantity][0].lower() not in standard_units['mgperl']:
                 col_check_list.append(quantity)
                 if verbose:
                     print("Warning: Check unit of {}!\n Given in {}, but must be milligramm per liter (e.g. {})."
                               .format(quantity,units[quantity][0],standard_units['mgperl'][0]))
 
-    for quantity in contaminants['all_cont']:
-        if quantity in units.columns:
-            if units[quantity][0] not in standard_units['microgperl']:
+        if quantity in contaminants['all_cont']:
+            if units[quantity][0].lower() not in standard_units['microgperl']:
                 col_check_list.append(quantity)
                 if verbose:
                     print("Warning: Check unit of {}!\n Given in {}, but must be microgramm per liter (e.g. {})."
                               .format(quantity,units[quantity][0],standard_units['microgperl'][0]))
 
-    #environmental_conditions:
-    env_cond = [name_sample_depth,name_EC,name_redox]
-    unit_types = ['meter','microsimpercm','millivolt']
-
-    for quantity,units_type in zip(env_cond,unit_types):
-        if quantity in units.columns:
-            if units[quantity][0] not in standard_units[units_type]:
+        if quantity in env_cond:
+            unit_type = unit_types[env_cond.index(quantity)]
+            if units[quantity][0].lower() not in standard_units[unit_type]:
                 col_check_list.append(quantity)
                 if verbose:
                     print("Warning: Check unit of {}!\n Given in {}, but must be in {} (e.g. {}).".format(
-                            quantity,units[quantity][0],units_type,standard_units[units_type][0]))
+                            quantity,units[quantity][0],unit_type,standard_units[unit_type][0]))
 
-    if check_metabolites:
-        for quantity in metabolites['all_meta']:
-            if quantity in units.columns:
-                if units[quantity][0] not in standard_units['microgperl']:
+        if quantity.split('-')[0] in isotopes:
+            if units[quantity][0].lower() not in standard_units['permil']:
+                col_check_list.append(quantity)
+                if verbose:
+                    print("Warning: Check unit of {}!\n Given in {}, but must be per mille (e.g. {})."
+                              .format(quantity,units[quantity][0],standard_units['permil'][0]))
+
+        if check_metabolites:
+            if quantity in metabolites['all_meta']:
+                if units[quantity][0].lower() not in standard_units['microgperl']:
                     col_check_list.append(quantity)
                     if verbose:
                         print("Warning: Check unit of {}!\n Given in {}, but must be microgramm per liter (e.g. {})."
@@ -417,19 +446,23 @@ def check_values(
             data_pure.drop(labels = 0,inplace = True)
             break
 
+    for sign in to_replace_list:
+        data_pure.iloc[:,:] = data_pure.iloc[:,:].replace(to_replace=sign, value=to_replace_value)
+
     # standardize column names (as it might not has happened for data yet)
-    check_columns(data_pure,standardize = True, check_metabolites=check_metabolites, verbose = False)
+    check_columns(data_pure,
+                  standardize = True,
+                  check_metabolites=check_metabolites,
+                  verbose = False)
 
     # transform data to numeric values
     quantities_transformed = []
     cont_list = contaminants[contaminant_group]
-    if check_metabolites:
-        metabolites_list = metabolites['all_meta']
-    else:
-        metabolites_list = []
 
-    for quantity in [name_sample_depth]+environmental_conditions+chemical_composition+cont_list+metabolites_list:
-        if quantity in data_pure.columns:
+    for quantity in data_pure.columns:
+        if quantity in [name_sample_depth]+environmental_conditions+chemical_composition+cont_list\
+            or (check_metabolites is True and quantity in metabolites['all_meta']) \
+            or quantity.split('-')[0] in isotopes:
             try:
                 data_pure[quantity] = pd.to_numeric(data_pure[quantity])
                 quantities_transformed.append(quantity)
@@ -442,11 +475,6 @@ def check_values(
         for name in quantities_transformed:
             print(name)
         print('================================================================')
-
-    to_replace_list = ["-",'--']
-    to_replace_value = np.nan
-    for sign in to_replace_list:
-        data_pure.iloc[:,:] = data_pure.iloc[:,:].replace(to_replace=sign, value=to_replace_value)
 
     return data_pure
 
@@ -557,6 +585,7 @@ def example_data(data_type = 'all',
                 -- "environment": data on environmental
                 -- "contaminants": data on contaminants
                 -- "metabolites": data on metabolites
+                -- "isotopes": data on isotopes
                 -- "hydro": data on hydrogeolocial conditions
         with_units: Boolean
             flag to provide first row with units (default: True)
@@ -584,9 +613,9 @@ def example_data(data_type = 'all',
     setting_s04 = ['2000-004', 'B-MLS1-7-19', -19.]
 
     environment = ['pH','EC', 'redox','oxygen','nitrate','nitrite', 'sulfate', 'ammonium', 'sulfide',
-                   'methane', 'ironII', 'manganese','phosphate']
-    environment_units = [' ','uS/cm','mV', 'mg/L', 'mg/L', 'mg/L', 'mg/L',
-                         'mg/L', 'mg/L', 'mg/L', 'mg/L', 'mg/L', 'mg/L']
+                   'methane', 'iron2', 'manganese','phosphate']
+    environment_units = [' ','uS/cm','mV', 'mg/l', 'mg/l', 'mg/l', 'mg/l',
+                         'mg/l', 'mg/l', 'mg/l', 'mg/l', 'mg/l', 'mg/l']
     environment_s01 = [7.23, 322., -208.,0.3,122.,0.58, 23., 5., 0., 748., 3., 1.,1.6]
     environment_s02 = [7.67, 405., -231.,0.9,5.,0.0, 0., 6., 0., 2022., 1., 0.,0]
     environment_s03 = [7.75, 223., -252.,0.1,3.,0.03, 1., 13., 0., 200., 1., 0.,0.8]
@@ -595,19 +624,28 @@ def example_data(data_type = 'all',
     contaminants = ['benzene', 'toluene', 'ethylbenzene', 'pm_xylene',
                     'o_xylene', 'indane', 'indene', 'naphthalene']
 
-    contaminants_units = ['ug/L', 'ug/L', 'ug/L', 'ug/L',
-                          'ug/L', 'ug/L', 'ug/L', 'ug/L']
+    contaminants_units = ['ug/l', 'ug/l', 'ug/l', 'ug/l',
+                          'ug/l', 'ug/l', 'ug/l', 'ug/l']
     contaminants_s01 = [263., 2., 269., 14., 51., 1254., 41., 2207.]
     contaminants_s02 = [179., 7., 1690., 751., 253., 1352., 15., 5410.]
     contaminants_s03 = [853., 17., 1286., 528., 214., 1031., 31., 3879.]
     contaminants_s04 = [1254., 10., 1202., 79., 61., 814., 59., 1970.]
 
-    metabolites = ['Phenol',    "Cinnamic acid", "benzoic_acid"]
-    metabolites_units = ['ug/L', 'ug/L', 'ug/L']
+    # metabolites = ['Phenol',    "Cinnamic acid", "benzoic_acid"]
+    metabolites = ['phenol',    "cinnamic_acid", "benzoic_acid"]
+    metabolites_units = ['ug/l', 'ug/l', 'ug/l']
     metabolites_s01 = [0.2, 0.4, 1.4]
-    metabolites_s02 = [np.nan,'-', 0]
+    metabolites_s02 = [np.nan,' ', 0]
     metabolites_s03 = [0, 11.4, 5.4]
     metabolites_s04 = [0.3, 0.5, 0.7]
+
+    isotopes = ['delta_13C-benzene','delta_2H-benzene']
+    isotopes_units = ['permil','permil']#,'per mil']
+    # isotopes_units = ['mUr','‰']#,'per mil']
+    isotopes_s01 = [-26.1,-106]
+    isotopes_s02 = [-25.8,-110]
+    isotopes_s03 = [-24.1,-118]
+    isotopes_s04 = [-24.1,-117]
 
     if  data_type == 'setting':
         data = pd.DataFrame([setting_units,setting_s01,setting_s02,setting_s03,
@@ -647,6 +685,18 @@ def example_data(data_type = 'all',
         data = pd.DataFrame([units,sample_01,sample_02,sample_03,sample_04],
                             columns = columns)
 
+    elif  data_type == 'isotopes':
+
+        units = setting_units+isotopes_units
+        columns = setting+isotopes
+        sample_01 = setting_s01+isotopes_s01
+        sample_02 = setting_s02+isotopes_s02
+        sample_03 = setting_s03+isotopes_s03
+        sample_04 = setting_s04+isotopes_s04
+
+        data = pd.DataFrame([units,sample_01,sample_02,sample_03,sample_04],
+                            columns = columns)
+
     elif data_type == "set_env_cont":
 
         units = setting_units+environment_units+contaminants_units
@@ -660,12 +710,12 @@ def example_data(data_type = 'all',
                             columns = columns)
 
     elif data_type == 'all':
-        units = setting_units+environment_units+contaminants_units+metabolites_units
-        columns = setting+environment+contaminants+metabolites
-        sample_01 = setting_s01+environment_s01+contaminants_s01+metabolites_s01
-        sample_02 = setting_s02+environment_s02+contaminants_s02+metabolites_s02
-        sample_03 = setting_s03+environment_s03+contaminants_s03+metabolites_s03
-        sample_04 = setting_s04+environment_s04+contaminants_s04+metabolites_s04
+        units = setting_units+environment_units+contaminants_units+metabolites_units + isotopes_units
+        columns = setting+environment+contaminants+metabolites + isotopes
+        sample_01 = setting_s01+environment_s01+contaminants_s01+metabolites_s01+isotopes_s01
+        sample_02 = setting_s02+environment_s02+contaminants_s02+metabolites_s02+isotopes_s02
+        sample_03 = setting_s03+environment_s03+contaminants_s03+metabolites_s03+isotopes_s03
+        sample_04 = setting_s04+environment_s04+contaminants_s04+metabolites_s04+isotopes_s04
 
         data = pd.DataFrame([units,sample_01,sample_02,sample_03,sample_04],
                             columns = columns)
