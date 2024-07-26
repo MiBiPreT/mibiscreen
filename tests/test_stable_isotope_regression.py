@@ -198,7 +198,7 @@ class TestData:
 
         Correct identification of valid indices in both arrays - filtering out infinity values
         """
-        delta_13C = np.array([26.5, -26.2, -25.2,np.infty])
+        delta_13C = np.array([26.5, -26.2, -25.2,np.inf])
 
 
         data1 , data2 = valid_indices(delta_13C,self.delta_2H_01)
