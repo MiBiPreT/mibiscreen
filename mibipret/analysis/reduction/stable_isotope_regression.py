@@ -5,7 +5,7 @@
 @author: Alraune Zech
 """
 import numpy as np
-
+from mibipret.data.names import names_contaminants,names_isotopes
 
 def Lambda_regression(delta_C,
                       delta_H,
@@ -343,3 +343,55 @@ def valid_indices(data1,
         valid_indices *= (data1 != 0) & (data2 != 0)
 
     return data1[valid_indices],data2[valid_indices]
+
+def extract_isotope_data(df,
+                         molecule,
+                         name_13C = 'delta_13C',
+                         name_2H = 'delta_2H',
+                         ):
+
+    """Extracts isotope data from standardised input-dataframe.
+
+    Parameters
+    ----------
+    df : pd.dataframe
+        numeric (observational) data
+    molecule : str
+        name of contaminant molecule to extract isotope data for
+    name_13C : str, default 'delta_13C' (standard name)
+        name of C13 isotope to extract data for
+    name_2H : str, default 'delta_2H' (standard name)
+        name of deuterium isotope to extract data for
+
+    Returns
+    -------
+    C_data : np.array 
+        numeric isotope data
+    H_data : np.array 
+        numeric isotope data
+
+    """
+
+    molecule_standard = names_contaminants.get(molecule.lower(), False)
+    isotope_13C = names_isotopes.get(name_13C.lower(), False)
+    isotope_2H = names_isotopes.get(name_2H.lower(), False)
+
+    if molecule_standard is False:
+        raise ValueError("Contaminant (name) unknown: {}".format(molecule))
+    if isotope_13C is False:
+        raise ValueError("Isotope (name) unknown: {}".format(isotope_13C))
+    if isotope_2H is False:
+        raise ValueError("Isotope (name) unknown: {}".format(isotope_2H))
+
+    name_C = '{}-{}'.format(isotope_13C,molecule_standard)
+    name_H = '{}-{}'.format(isotope_2H,molecule_standard)
+
+    if name_C not in df.columns.to_list():
+        raise ValueError("No isotope data available for : {}".format(name_C))
+    if name_H not in df.columns.to_list():
+        raise ValueError("No isotope data available for : {}".format(name_H))
+
+    C_data = df[name_C].values
+    H_data = df[name_H].values
+
+    return C_data, H_data
