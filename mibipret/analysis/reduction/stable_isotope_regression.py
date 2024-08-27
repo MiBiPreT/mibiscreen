@@ -5,7 +5,9 @@
 @author: Alraune Zech
 """
 import numpy as np
-from mibipret.data.names import names_contaminants,names_isotopes
+from mibipret.data.names import names_contaminants
+from mibipret.data.names import names_isotopes
+
 
 def Lambda_regression(delta_C,
                       delta_H,
@@ -349,7 +351,6 @@ def extract_isotope_data(df,
                          name_13C = 'delta_13C',
                          name_2H = 'delta_2H',
                          ):
-
     """Extracts isotope data from standardised input-dataframe.
 
     Parameters
@@ -365,13 +366,12 @@ def extract_isotope_data(df,
 
     Returns
     -------
-    C_data : np.array 
+    C_data : np.array
         numeric isotope data
-    H_data : np.array 
+    H_data : np.array
         numeric isotope data
 
     """
-
     molecule_standard = names_contaminants.get(molecule.lower(), False)
     isotope_13C = names_isotopes.get(name_13C.lower(), False)
     isotope_2H = names_isotopes.get(name_2H.lower(), False)
@@ -379,9 +379,9 @@ def extract_isotope_data(df,
     if molecule_standard is False:
         raise ValueError("Contaminant (name) unknown: {}".format(molecule))
     if isotope_13C is False:
-        raise ValueError("Isotope (name) unknown: {}".format(isotope_13C))
+        raise ValueError("Isotope (name) unknown: {}".format(name_13C))
     if isotope_2H is False:
-        raise ValueError("Isotope (name) unknown: {}".format(isotope_2H))
+        raise ValueError("Isotope (name) unknown: {}".format(name_2H))
 
     name_C = '{}-{}'.format(isotope_13C,molecule_standard)
     name_H = '{}-{}'.format(isotope_2H,molecule_standard)
