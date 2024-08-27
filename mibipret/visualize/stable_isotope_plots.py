@@ -17,6 +17,7 @@ DEF_settings = dict(
     fit_color = 'red',
     intercept_color = 'forestgreen',
     loc = 'best',
+    dpi = 300,
     )
 
 def Lambda_plot(delta_C,
@@ -115,7 +116,7 @@ def Lambda_plot(delta_C,
     ### Save figure to file if file path provided
     if save_fig is not False:
         try:
-            plt.savefig(save_fig)
+            plt.savefig(save_fig,dpi = settings['dpi'])
             print("Save Figure to file:\n", save_fig)
         except OSError:
             print("WARNING: Figure could not be saved. Check provided file path and name: {}".format(save_fig))
@@ -207,7 +208,7 @@ def Rayleigh_fractionation_plot(concentration,
     ### Save figure to file if file path provided
     if save_fig is not False:
         try:
-            plt.savefig(save_fig)
+            plt.savefig(save_fig,dpi = settings['dpi'])
             print("Save Figure to file:\n", save_fig)
         except OSError:
             print("WARNING: Figure could not be saved. Check provided file path and name: {}".format(save_fig))
@@ -314,7 +315,7 @@ def Keeling_plot(concentration,
     ### Save figure to file if file path provided
     if save_fig is not False:
         try:
-            plt.savefig(save_fig)
+            plt.savefig(save_fig,dpi = settings['dpi'])
             print("Save Figure to file:\n", save_fig)
         except OSError:
             print("WARNING: Figure could not be saved. Check provided file path and name: {}".format(save_fig))

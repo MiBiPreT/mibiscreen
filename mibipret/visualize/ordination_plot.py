@@ -11,7 +11,6 @@ import numpy as np
 
 DEF_settings = dict(
     figsize = [3.75,3.75],
-    dpi = 300,
     label_fontsize = 8,
     loading_fontsize = 8,
     score_fontsize = 6,
@@ -29,6 +28,7 @@ DEF_settings = dict(
     score_facecolor = 'none',
     score_marker = 'o',
     score_marker_size = 45,
+    dpi = 300,
     )
 
 def ordination_plot(ordination_output,
@@ -151,9 +151,7 @@ def ordination_plot(ordination_output,
 
     ### ---------------------------------------------------------------------------
     ### Create Figure, finally!
-    fig, ax = plt.subplots(figsize=settings['figsize'],
-                           dpi=settings['dpi'],
-                           )
+    fig, ax = plt.subplots(figsize=settings['figsize'])
     texts = []
 
     # Plotting the ordination scores by iterating over every coordinate
@@ -245,7 +243,7 @@ def ordination_plot(ordination_output,
     plt.tight_layout()
     if save_fig is not False:
         try:
-            plt.savefig(save_fig)
+            plt.savefig(save_fig,dpi = settings['dpi'])
             print("Figure saved to file:\n", save_fig)
         except OSError:
             print("WARNING: Figure could not be saved. Check provided file path and name: {}".format(save_fig))
