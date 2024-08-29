@@ -70,4 +70,4 @@ na.screening_NA(data,inplace = True,verbose = verbose)
 ### Create activity plot linking contaminant concentration to metabolite occurence
 ### and NA screening
 
-fig, ax = activity(data)
+fig, ax = activity(data,save_fig='grift_NA_activity.png',dpi = 300)

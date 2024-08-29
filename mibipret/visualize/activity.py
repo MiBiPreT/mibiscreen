@@ -26,6 +26,7 @@ DEF_settings = dict(
     ec = 'k',
     lw = 0.5,
     loc = 'lower right',
+    dpi = 300,
     )
 
 def activity(
@@ -149,7 +150,7 @@ def activity(
     ### Save figure to file if file path provided
     if save_fig is not False:
         try:
-            plt.savefig(save_fig)
+            plt.savefig(save_fig,dpi = settings['dpi'])
             print("Save Figure to file:\n", save_fig)
         except OSError:
             print("WARNING: Figure could not be saved. Check provided file path and name: {}".format(save_fig))

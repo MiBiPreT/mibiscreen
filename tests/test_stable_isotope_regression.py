@@ -10,7 +10,9 @@ import pytest
 from mibipret.analysis.reduction.stable_isotope_regression import Keeling_regression
 from mibipret.analysis.reduction.stable_isotope_regression import Lambda_regression
 from mibipret.analysis.reduction.stable_isotope_regression import Rayleigh_fractionation
+from mibipret.analysis.reduction.stable_isotope_regression import extract_isotope_data
 from mibipret.analysis.reduction.stable_isotope_regression import valid_indices
+from mibipret.data.data import example_data
 
 
 class TestData:
@@ -23,6 +25,8 @@ class TestData:
     delta_01 = 0.001*np.linspace(9, 30,9)
     concentration_02 = np.array([0.05,0.075,0.11,0.13,0.15,0.04,0.04])
     delta_02 = np.array([35.,20.,10.,7.,5.,25.,35.])
+
+    data = example_data(with_units = False,standardize=True)
 
     ### ---------------------------------------------------------------------------
 
@@ -222,3 +226,46 @@ class TestData:
         """
         with pytest.raises(ValueError):
             valid_indices(self.delta_13C_01,self.delta_2H_01[:-1])
+
+    def test_extract_isotope_data_01(self):
+        """Testing routine extract_isotope_data().
+
+        Test proper functionality
+        """
+        delta_C , delta_H = extract_isotope_data(self.data,'benzene')
+
+        assert np.all(delta_C == self.data['delta_13C-benzene'].values) and \
+            np.all(delta_H == self.data['delta_2H-benzene'].values)
+
+    def test_extract_isotope_data_02(self):
+        """Testing routine extract_isotope_data().
+
+        Correct error message when data of unknown contaminant is requested
+        """
+        with pytest.raises(ValueError):
+            extract_isotope_data(self.data,'test')
+
+    def test_extract_isotope_data_03(self):
+        """Testing routine extract_isotope_data().
+
+        Correct error message when name of isotope is unknown
+        """
+        with pytest.raises(ValueError):
+            extract_isotope_data(self.data,'benzene',name_13C = 'd13C')
+
+    def test_extract_isotope_data_04(self):
+        """Testing routine extract_isotope_data().
+
+        Correct error message when name of isotope is unknown
+        """
+        with pytest.raises(ValueError):
+            extract_isotope_data(self.data,'benzene',name_2H = 'd2H')
+
+    def test_extract_isotope_data_05(self):
+        """Testing routine extract_isotope_data().
+
+        Correct error message when data is not available.
+        """
+        with pytest.raises(ValueError):
+            extract_isotope_data(self.data,'toluene')
+

@@ -15,6 +15,7 @@ from mibipret.data.data import load_excel
 from mibipret.data.data import standardize
 
 path_data = "./mibipret/data"
+#path_data = "../mibipret/data"
 
 class TestData:
     """Class for testing data module of mibipret."""
