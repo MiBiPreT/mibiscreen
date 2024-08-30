@@ -17,7 +17,9 @@ try:
     from names import isotopes
     from names import name_EC
     from names import name_redox
+    from names import name_sample
     from names import name_sample_depth
+    from names import setting_data
     from names import names_contaminants
     from names import names_isotopes
     from names import standard_units
@@ -31,7 +33,9 @@ except ImportError:
     from .names import isotopes
     from .names import name_EC
     from .names import name_redox
+    from .names import name_sample
     from .names import name_sample_depth
+    from .names import setting_data
     from .names import names_contaminants
     from .names import names_isotopes
     from .names import standard_units
@@ -190,7 +194,7 @@ def check_columns(data,
         data: pd.DataFrame
             dataframe with the measurements
         standardize: Boolean, default False
-            flat to standardize identified column names
+            flag to standardize identified column names
         reduce: Boolean, default False
             flag to reduce data to known quantities
         check_metabolites: Boolean, default False
@@ -215,44 +219,16 @@ def check_columns(data,
         - complete list of potential contaminants, environmental factors
         - add name check for metabolites?
     """
-    column_names_standard = []
-    column_names_known = []
-    column_names_unknown = []
 
-    if check_metabolites:
-        dict_names = {
-            **col_dict,
-            **names_metabolites}
-    else:
-        dict_names = col_dict
-
-    dict_names_in_cols = {}
-    for x in data.columns:
-        y = dict_names.get(x, False)
-        x_isotope = x.split('-')[0]
-        y_isotopes = names_isotopes.get(x_isotope.lower(), False)
-
-        if y_isotopes is not False:
-            x_molecule = x.removeprefix(x_isotope+'-')
-            y_molecule = names_contaminants.get(x_molecule.lower(), False)
-            if y_molecule is False:
-                column_names_unknown.append(x)
-            else:
-                y = y_isotopes+'-'+y_molecule
-                column_names_known.append(x)
-                column_names_standard.append(y)
-                dict_names_in_cols[x] = y
-        else:
-            y = dict_names.get(x.lower(), False)
-            if y is False:
-                column_names_unknown.append(x)
-            else:
-                column_names_known.append(x)
-                column_names_standard.append(y)
-                dict_names_in_cols[x] = y
+    (column_names_known, column_names_unknown, column_names_standard, column_names_transform) = standard_names(data.columns,
+                   standardize = False,
+                   reduce = False,
+                   check_metabolites = check_metabolites,
+                   verbose = False,
+                   )
 
     if standardize:
-        data.columns = [dict_names_in_cols.get(x, x) for x in data.columns]
+        data.columns = [column_names_transform.get(x, x) for x in data.columns]
 
     if reduce:
         data.drop(labels = column_names_unknown,axis = 1,inplace=True)
@@ -284,6 +260,116 @@ def check_columns(data,
         print('================================================================')
 
     return (column_names_known,column_names_unknown,column_names_standard)
+
+# def check_columns(data,
+#                   standardize = False,
+#                   reduce = False,
+#                   check_metabolites = False,
+#                   verbose = True):
+#     """Function checking names of columns of data frame.
+
+#     Function that looks at the column names and links it to standard names.
+#     Optionally, it renames identified column names to the standard names of the model.
+
+#     Args:
+#     -------
+#         data: pd.DataFrame
+#             dataframe with the measurements
+#         standardize: Boolean, default False
+#             flag to standardize identified column names
+#         reduce: Boolean, default False
+#             flag to reduce data to known quantities
+#         check_metabolites: Boolean, default False
+#             flag to check on metabolite names
+#         verbose: Boolean, default True
+#             verbosity flag
+
+#     Returns:
+#     -------
+#         tuple: three list containing names of
+#                 list with identitied quantities in data (but not standardized names)
+#                 list with unknown quantities in data (not in list of standardized names)
+#                 list with standard names of identified quantities
+
+#     Raises:
+#     -------
+#     None (yet).
+
+#     Example:
+#     -------
+#     Todo's:
+#         - complete list of potential contaminants, environmental factors
+#         - add name check for metabolites?
+#     """
+#     column_names_standard = []
+#     column_names_known = []
+#     column_names_unknown = []
+
+#     if check_metabolites:
+#         dict_names = {
+#             **col_dict,
+#             **names_metabolites}
+#     else:
+#         dict_names = col_dict
+
+#     dict_names_in_cols = {}
+#     for x in data.columns:
+#         y = dict_names.get(x, False)
+#         x_isotope = x.split('-')[0]
+#         y_isotopes = names_isotopes.get(x_isotope.lower(), False)
+
+#         if y_isotopes is not False:
+#             x_molecule = x.removeprefix(x_isotope+'-')
+#             y_molecule = names_contaminants.get(x_molecule.lower(), False)
+#             if y_molecule is False:
+#                 column_names_unknown.append(x)
+#             else:
+#                 y = y_isotopes+'-'+y_molecule
+#                 column_names_known.append(x)
+#                 column_names_standard.append(y)
+#                 dict_names_in_cols[x] = y
+#         else:
+#             y = dict_names.get(x.lower(), False)
+#             if y is False:
+#                 column_names_unknown.append(x)
+#             else:
+#                 column_names_known.append(x)
+#                 column_names_standard.append(y)
+#                 dict_names_in_cols[x] = y
+
+#     if standardize:
+#         data.columns = [dict_names_in_cols.get(x, x) for x in data.columns]
+
+#     if reduce:
+#         data.drop(labels = column_names_unknown,axis = 1,inplace=True)
+
+#     if verbose:
+#         print('================================================================')
+#         print(" Running function 'check_columns()' on data")
+#         print('================================================================')
+#         print("{} quantities identified in provided data.".format(len(column_names_known)))
+#         print("List of names with standard names:")
+#         print('----------------------------------')
+#         for i,name in enumerate(column_names_known):
+#             print(name," --> ",column_names_standard[i])
+#         print('----------------------------------')
+#         if standardize:
+#             print("Identified column names have been standardized")
+#         else:
+#             print("\nRenaming can be done by setting keyword 'standardize' to True.\n")
+#         print('________________________________________________________________')
+#         print("{} quantities have not been identified in provided data:".format(len(column_names_unknown)))
+#         print('---------------------------------------------------------')
+#         for i,name in enumerate(column_names_unknown):
+#             print(name)
+#         print('---------------------------------------------------------')
+#         if reduce:
+#             print("Not identified quantities have been removed from data frame")
+#         else:
+#             print("\nReduction to known quantities can be done by setting keyword 'reduce' to True.\n")
+#         print('================================================================')
+
+#     return (column_names_known,column_names_unknown,column_names_standard)
 
 def check_units(data,
                 check_metabolites = False,
@@ -457,12 +543,12 @@ def check_values(
 
     # transform data to numeric values
     quantities_transformed = []
-    cont_list = contaminants[contaminant_group]
+    # cont_list = contaminants[contaminant_group]
 
     for quantity in data_pure.columns:
-        if quantity in [name_sample_depth]+environmental_conditions+chemical_composition+cont_list\
-            or (check_metabolites is True and quantity in metabolites['all_meta']) \
-            or quantity.split('-')[0] in isotopes:
+        # if quantity in [name_sample_depth]+environmental_conditions+chemical_composition+cont_list\
+        #     or (check_metabolites is True and quantity in metabolites['all_meta']) \
+        #     or quantity.split('-')[0] in isotopes:
             try:
                 data_pure[quantity] = pd.to_numeric(data_pure[quantity])
                 quantities_transformed.append(quantity)
@@ -728,3 +814,250 @@ def example_data(data_type = 'all',
         if standardize:
             data = check_values(data,verbose = False)
     return data
+
+def standard_names(names,
+                   standardize = True,
+                   reduce = False,
+                   check_metabolites = False,
+                   verbose = False,
+                   ):
+
+    """Function transforming list of names to standard names.
+
+    Function that looks at the names (of e.g. environmental variables, contaminants,
+    metabolites, isotopes, etc) and provides the corresponding standard names.
+
+    Args:
+    -------
+        names: string or list of strings
+            names of quantities to be transformed to standard
+
+        standardize: Boolean, default False
+            flag to standardize identified column names
+        reduce: Boolean, default False
+            flag to reduce data to known quantities
+        check_metabolites: Boolean, default False
+            flag to check on metabolite names
+        verbose: Boolean, default True
+            verbosity flag
+
+    Returns:
+    -------
+        tuple: three list containing names of
+                list with identitied quantities in data (but not standardized names)
+                list with unknown quantities in data (not in list of standardized names)
+                list with standard names of identified quantities
+
+    Raises:
+    -------
+    None (yet).
+
+    Example:
+    -------
+    Todo's:
+        - complete list of potential contaminants, environmental factors
+        - add name check for metabolites?
+    """
+    names_known = []
+    names_unknown = []
+    names_standard = []
+    names_transform = {}
+
+    if check_metabolites:
+        dict_names = {
+            **col_dict,
+            **names_metabolites}
+    else:
+        dict_names = col_dict
+
+    if isinstance(names, str):
+        names = [names]
+    elif isinstance(names, list):
+        for name in names:
+            if not isinstance(name, str):
+                raise ValueError("Entry in provided list of names is not a string:", name)
+
+    for x in names:
+        y = dict_names.get(x, False)
+        x_isotope = x.split('-')[0]
+        y_isotopes = names_isotopes.get(x_isotope.lower(), False)
+
+        if y_isotopes is not False:
+            x_molecule = x.removeprefix(x_isotope+'-')
+            y_molecule = names_contaminants.get(x_molecule.lower(), False)
+            if y_molecule is False:
+                names_unknown.append(x)
+            else:
+                y = y_isotopes+'-'+y_molecule
+                names_known.append(x)
+                names_standard.append(y)
+                names_transform[x] = y
+        else:
+            y = dict_names.get(x.lower(), False)
+            if y is False:
+                names_unknown.append(x)
+            else:
+                names_known.append(x)
+                names_standard.append(y)
+                names_transform[x] = y
+
+    if verbose:
+        print('================================================================')
+        print(" Running function 'standard_names()'")
+        print('================================================================')
+        print("{} of {} quantities identified in name list.".format(len(names_known),len(names)))
+        print("List of names with standard names:")
+        print('----------------------------------')
+        for i,name in enumerate(names_known):
+            print(name," --> ",names_standard[i])
+        print('----------------------------------')
+        if standardize:
+            print("Identified column names have been standardized")
+        else:
+            print("\nRenaming can be done by setting keyword 'standardize' to True.\n")
+        print('________________________________________________________________')
+        print("{} quantities have not been identified in provided data:".format(len(names_unknown)))
+        print('---------------------------------------------------------')
+        for i,name in enumerate(names_unknown):
+            print(name)
+        print('---------------------------------------------------------')
+        if reduce:
+            print("Not identified quantities have been removed from data frame")
+        else:
+            print("\nReduction to known quantities can be done by setting keyword 'reduce' to True.\n")
+        print('================================================================')
+
+    if standardize:
+        if reduce:
+            return names_standard
+        else:
+            return names_standard + names_unknown
+    else:
+        return (names_known, names_unknown, names_standard, names_transform)
+
+def compare_lists(list1,
+                  list2,
+                  verbose = False,
+                  ):
+    """Checking overlap of two given list.
+
+    Input
+    -----
+        list1: list of strings
+            given extensive list (usually column names of a pd.DataFrame)
+        list2: list of strings
+            list of names to extract/check overlap with strings in list 'column'
+        verbose: Boolean, default True
+            verbosity flag
+
+    Output
+    ------
+        (intersection, remainder): tuple of lists
+            intersection is list of strings present in both lists 'list1' and 'list2'
+            remainder is list of strings present either of both lists 'list1' and 'list2'
+
+    """
+    intersection = list(set(list1) & set(list2))
+    remainder_list1 = list(set(list1) - set(list2))
+    remainder_list2 = list(set(list2) - set(list1))
+    remainder = remainder_list1 +  remainder_list2
+
+    if verbose:
+        print('================================================================')
+        print(" Running function 'extract_variables()'")
+        print('================================================================')
+        print("strings present in both lists:", intersection)
+        print("strings only present in either of the lists:", remainder)
+
+    return (intersection,remainder,remainder_list1,remainder_list2)
+
+def merge_data(data_list,
+               how='outer',
+               on=[name_sample],
+               clean = True,
+               **kwargs,
+               ):
+
+    """Function merging dataframes along columns.
+
+    Args:
+    -------
+        data_list: list of pd.DataFrame
+            list of dataframes with the measurements
+        how: str 
+            Type of merge to be performed.
+            corresponds to keyword in pd.merge()
+            {‘left’, ‘right’, ‘outer’, ‘inner’, ‘cross’}, default ‘outer’
+        on: label
+            Column name to join on.
+            corresponds to keyword in pd.merge()
+        **kwargs: dict
+            optional keyword arguments to be passed to pd.merge()
+
+    Returns:
+    -------
+        data: pd.DataFrame
+            dataframe with the measurements
+
+    Raises:
+    -------
+    None (yet).
+
+    Example:
+    -------
+    """
+    
+    if len(data_list)<2:
+        raise ValueError('Not sufficient elements in data_list for merging provided.')
+
+    data_merge = data_list[0]
+    for data_add in data_list[1:]:
+        if clean:
+            intersection,remainder,remainder_list1,remainder_list2 = compare_lists(data_merge.columns.to_list(),data_add.columns.to_list())
+            intersection,remainder,remainder_list1,remainder_list2 = compare_lists(intersection,on)
+            data_add = data_add.drop(labels = remainder,axis = 1)
+        data_merge = pd.merge(data_merge,data_add, how=how, on=on,**kwargs) # complete data set, where values of porosity are added (otherwise nan)
+
+    return data_merge
+
+def extract_data(data,
+                 name_list, 
+                 keep_setting_data = True,
+                 inplace = True,
+                 ):
+
+    """Function extracting data from dataframe for specified variables.
+
+    Args:
+    -------
+        data: pandas.DataFrames
+            dataframe with the measurements
+        name_list: list of strings
+            list of column names to extract from dataframes
+        inplace: bool, default True
+            If False, return a copy. Otherwise, do operation in place.
+
+    Returns:
+    -------
+        data: pd.DataFrame
+            dataframe with the measurements
+
+    Raises:
+    -------
+    None (yet).
+
+    Example:
+    -------
+    """
+    
+    if keep_setting_data:
+        name_list = setting_data + name_list
+
+    intersection,remainder,remainder_list1,remainder_list2 = compare_lists(data.columns.to_list(),name_list)  
+
+    if len(intersection)<len(name_list):
+        print("Warning: Not all variables in name_list are identified in the data frame columns: ",remainder_list2)
+
+    data_new = data.drop(labels = remainder_list1,axis = 1,inplace=inplace)
+
+    return data_new
