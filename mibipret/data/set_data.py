@@ -5,13 +5,7 @@
 @author: Alraune Zech
 """
 import pandas as pd
-try:
-    import names_data as names
-except:
-    import sys
-    path = '/home/alraune/GitHub/MiBiPreT/mibipret/mibipret/data/'
-    sys.path.append(path) # append the path to module
-    import names_data as names
+import  mibipret.data.names_data as names
 
 def extract_data(data_frame,
                  name_list,

@@ -7,21 +7,11 @@
 import numpy as np
 import pandas as pd
 
-try:
-    import mibipret.data.names_data as names
-    import mibipret.data.names_metabolites as names_meta
-    from mibipret.data.unit_settings import all_units
-    from mibipret.data.unit_settings import standard_units
-    from mibipret.data.unit_settings import units_env_cond
-except:
-    import sys
-    path = '/home/alraune/GitHub/MiBiPreT/mibipret/mibipret/data/'
-    sys.path.append(path) # append the path to module
-    import names_data as names
-    import names_metabolites as names_meta
-    from unit_settings import all_units
-    from unit_settings import standard_units
-    from unit_settings import units_env_cond
+import mibipret.data.names_data as names
+import mibipret.data.names_metabolites as names_meta
+from mibipret.data.unit_settings import all_units
+from mibipret.data.unit_settings import standard_units
+from mibipret.data.unit_settings import units_env_cond
 
 to_replace_list = ["-",'--','',' ','  ']
 to_replace_value = np.nan
