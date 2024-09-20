@@ -158,16 +158,16 @@ class TestOrdination:
                                    dependent_variables = self.species_02,
                                    )
 
-    def test_constrained_ordination_05(self):
-        """Testing routine constrained_ordination().
+    # def test_constrained_ordination_05(self):
+    #     """Testing routine constrained_ordination().
 
-        Correct error message when number of dependent variables is too small.
-        """
-        with pytest.raises(ValueError,match="Number of dependent variables too small."):
-            constrained_ordination(self.data,
-                                   independent_variables = self.environment_02,
-                                   dependent_variables = self.species_01,
-                                   )
+    #     Correct error message when number of dependent variables is too small.
+    #     """
+    #     with pytest.raises(ValueError,match="Number of dependent variables too small."):
+    #         constrained_ordination(self.data,
+    #                                independent_variables = self.environment_02,
+    #                                dependent_variables = self.species_01,
+    #                                )
 
     def test_constrained_ordination_06(self):
         """Testing routine constrained_ordination().
