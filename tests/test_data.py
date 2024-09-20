@@ -18,24 +18,7 @@ from mibipret.data.set_data import compare_lists
 from mibipret.data.set_data import extract_data
 from mibipret.data.set_data import merge_data
 
-# path_data = "./mibipret/data"
-
-# import sys
-# path = '/home/alraune/GitHub/MiBiPreT/mibipret/mibipret/data/'
-# sys.path.append(path) # append the path to module
-# from check_data import check_columns
-# from check_data import check_data_frame
-# from check_data import check_units
-# from check_data import check_values
-# from check_data import standard_names
-# from check_data import standardize
-# from example_data import example_data
-# from load_data import load_csv
-# from load_data import load_excel
-# from set_data import compare_lists
-# from set_data import extract_data
-# from set_data import merge_data
-path_data = "../mibipret/data"
+path_data = "./mibipret/data"
 
 class TestLoadData:
     """Class for testing data loading routines in data module of mibipret."""

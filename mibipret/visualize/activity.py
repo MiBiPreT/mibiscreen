@@ -9,7 +9,6 @@ import copy
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-
 from mibipret.data.names_data import name_metabolites_variety
 from mibipret.data.names_data import name_na_traffic_light
 from mibipret.data.names_data import name_total_contaminants

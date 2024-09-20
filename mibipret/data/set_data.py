@@ -5,7 +5,8 @@
 @author: Alraune Zech
 """
 import pandas as pd
-import  mibipret.data.names_data as names
+import mibipret.data.names_data as names
+
 
 def extract_data(data_frame,
                  name_list,

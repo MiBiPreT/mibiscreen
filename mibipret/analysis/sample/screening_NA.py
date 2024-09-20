@@ -10,6 +10,7 @@ import pandas as pd
 import mibipret.data.names_data as names
 from .properties import properties
 
+
 def reductors(
     data,
     ea_group = 'ONS',
