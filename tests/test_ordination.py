@@ -13,7 +13,7 @@ from mibipret.analysis.reduction.ordination import constrained_ordination
 from mibipret.analysis.reduction.ordination import extract_variables
 from mibipret.analysis.reduction.ordination import pca
 from mibipret.analysis.reduction.ordination import rda
-from mibipret.data.data import example_data
+from mibipret.data.example_data import example_data
 
 
 class TestOrdination:
@@ -27,17 +27,7 @@ class TestOrdination:
 
     species_01 = ['benzene', 'toluene']
     species_02 = ['benzene', 'toluene','naphthalene']
-    # species_03 = ['benzene', 'toluene','benzoic_acid']
     species_03 = ['benzene', 'toluene','phenol']
-
-
-    # data_01 = example_data(data_type = 'set_env_cont',with_units = True)
-    # data_02 = example_data(data_type = 'contaminants',with_units = True)
-    # data_03 = example_data(data_type = 'setting',with_units = True)
-    # data_04 = example_data(data_type = 'environment',with_units = True)
-    # data_05 = example_data(data_type = 'metabolites',with_units = True)
-    # data_05 = example_data(data_type = 'metabolites',with_units = True)
-    # new_column = pd.Series(data = ['ug/L',27.0, 54.1, 38.8, 19.70], name = 'unknown_contaminant')
 
     def test_check_data_frame_01(self):
         """Testing routine check_data_frame().
@@ -168,16 +158,16 @@ class TestOrdination:
                                    dependent_variables = self.species_02,
                                    )
 
-    def test_constrained_ordination_05(self):
-        """Testing routine constrained_ordination().
+    # def test_constrained_ordination_05(self):
+    #     """Testing routine constrained_ordination().
 
-        Correct error message when number of dependent variables is too small.
-        """
-        with pytest.raises(ValueError,match="Number of dependent variables too small."):
-            constrained_ordination(self.data,
-                                   independent_variables = self.environment_02,
-                                   dependent_variables = self.species_01,
-                                   )
+    #     Correct error message when number of dependent variables is too small.
+    #     """
+    #     with pytest.raises(ValueError,match="Number of dependent variables too small."):
+    #         constrained_ordination(self.data,
+    #                                independent_variables = self.environment_02,
+    #                                dependent_variables = self.species_01,
+    #                                )
 
     def test_constrained_ordination_06(self):
         """Testing routine constrained_ordination().

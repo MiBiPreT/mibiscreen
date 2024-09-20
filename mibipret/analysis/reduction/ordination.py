@@ -9,7 +9,7 @@ import numpy as np
 import pandas as pd
 import skbio.stats.ordination as sciord
 from sklearn import decomposition
-from mibipret.data.names import name_sample
+from mibipret.data.names_data import name_sample
 
 
 def pca(data_frame,
@@ -293,21 +293,23 @@ def constrained_ordination(data_frame,
         (data_independent_variables.shape[0] < data_independent_variables.shape[1]):
         raise ValueError("Ordination method {} not possible with more variables than samples.".format(method))
 
-    try:
-        # Performing constrained ordination using function from scikit-bio.
-        if method == 'cca':
+    # Performing constrained ordination using function from scikit-bio.
+    if method == 'cca':
+        try:
             sci_ordination = sciord.cca(data_dependent_variables, data_independent_variables, scaling = n_comp)
-        elif method == 'rda':
+        except(TypeError,ValueError):
+            raise TypeError("Not all column values are numeric values. Consider standardizing data first.")
+    elif method == 'rda':
+        try:
             sci_ordination = sciord.rda(data_dependent_variables, data_independent_variables, scaling = n_comp)
-        else:
-            raise ValueError("Ordination method {} not a valid option.".format(method))
+        except(TypeError,ValueError):
+            raise TypeError("Not all column values are numeric values. Consider standardizing data first.")
+    else:
+        raise ValueError("Ordination method {} not a valid option.".format(method))
 
-        loadings_independent = sci_ordination.biplot_scores.to_numpy()[:,0:n_comp]
-        loadings_dependent = sci_ordination.features.to_numpy()[:,0:n_comp]
-        scores = sci_ordination.samples.to_numpy()[:,0:n_comp]
-
-    except(TypeError):
-        raise TypeError("Not all column values are numeric values. Consider standardizing data first.")
+    loadings_independent = sci_ordination.biplot_scores.to_numpy()[:,0:n_comp]
+    loadings_dependent = sci_ordination.features.to_numpy()[:,0:n_comp]
+    scores = sci_ordination.samples.to_numpy()[:,0:n_comp]
 
     if loadings_independent.shape[1]<n_comp:
         raise ValueError("Number of dependent variables too small.")

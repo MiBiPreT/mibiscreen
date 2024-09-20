@@ -7,7 +7,7 @@
 
 import numpy as np
 import pandas as pd
-import mibipret.data.names as ean
+import mibipret.data.names_data as names
 from .properties import properties
 
 
@@ -48,7 +48,7 @@ def reductors(
     cols= check_data(data)
 
     try:
-        for ea in ean.electron_acceptors[ea_group]:
+        for ea in names.electron_acceptors[ea_group]:
             if ea in cols:
                 tot_reduct += properties[ea]['factor_stoichiometry']* data[ea]/properties[ea]['molecular_mass']
                 #     pd.to_numeric(data[ea]) / properties[ea]['molecular_mass']
@@ -61,7 +61,7 @@ def reductors(
         raise ValueError("Data not in standardized format. Run 'standardize()' first.")
 
     if isinstance(tot_reduct, pd.Series):
-        tot_reduct.rename(ean.name_total_reductors,inplace = True)
+        tot_reduct.rename(names.name_total_reductors,inplace = True)
         if verbose:
             print("Total amount of electron reductors per well in [mmol e-/l] is:\n{}".format(tot_reduct))
             print('----------------------------------------------------------------')
@@ -72,7 +72,7 @@ def reductors(
     #     tot_reduct = False
 
     if inplace:
-        data[ean.name_total_reductors] = tot_reduct
+        data[names.name_total_reductors] = tot_reduct
 
     return tot_reduct
 
@@ -128,9 +128,9 @@ def oxidators(
         NP_avail = available_NP(data)
 
     try:
-        eas = ean.contaminants[contaminant_group].copy()
-        if (ean.name_o_xylene in cols) and (ean.name_pm_xylene in cols): # and (ean.name_xylene in cols):
-            eas.remove(ean.name_xylene)
+        eas = names.contaminants[contaminant_group].copy()
+        if (names.name_o_xylene in cols) and (names.name_pm_xylene in cols): # and (names.name_xylene in cols):
+            eas.remove(names.name_xylene)
 
         for cont in eas:
             if cont in cols:
@@ -158,7 +158,7 @@ def oxidators(
     #     print('________________________________________________________________')
     #     tot_oxi = False
     if isinstance(tot_oxi, pd.Series):
-        tot_oxi.rename(ean.name_total_oxidators,inplace = True)
+        tot_oxi.rename(names.name_total_oxidators,inplace = True)
         if verbose:
             print("Total amount of oxidators per well in [mmol e-/l] is:\n{}".format(tot_oxi))
             print('-----------------------------------------------------')
@@ -166,7 +166,7 @@ def oxidators(
         raise ValueError("No data on oxidators or only zero concentrations given.")
 
     if inplace:
-        data[ean.name_total_oxidators] = tot_oxi
+        data[names.name_total_oxidators] = tot_oxi
 
     return tot_oxi
 
@@ -203,7 +203,7 @@ def available_NP(
 
     cols = check_data(data)
 
-    nutrient_list = [ean.name_nitrate, ean.name_nitrite, ean.name_phosphate]
+    nutrient_list = [names.name_nitrate, names.name_nitrite, names.name_phosphate]
     list_nut_miss = []
 
     for nut in nutrient_list:
@@ -212,13 +212,13 @@ def available_NP(
     if len(list_nut_miss)>0:
         raise ValueError("Concentrations of nutrient(s) missing:", list_nut_miss)
 
-    CNs = (data[ean.name_nitrate] + data[ean.name_nitrite]) * (39. / 4.5)
-    CPs = data[ean.name_phosphate] * (39. / 1.)
+    CNs = (data[names.name_nitrate] + data[names.name_nitrite]) * (39. / 4.5)
+    CPs = data[names.name_phosphate] * (39. / 1.)
     NP_avail =CNs.combine(CPs, min, 0)
-    NP_avail.name = ean.name_NP_avail
+    NP_avail.name = names.name_NP_avail
 
     if inplace:
-        data[ean.name_NP_avail] = NP_avail
+        data[names.name_NP_avail] = NP_avail
 
     if verbose:
         print("Total NP available is:\n{}".format(NP_avail))
@@ -262,23 +262,23 @@ def electron_balance(
 
     cols = check_data(data)
 
-    if ean.name_total_reductors in cols:
-        tot_reduct = data[ean.name_total_reductors]
+    if names.name_total_reductors in cols:
+        tot_reduct = data[names.name_total_reductors]
     else:
         tot_reduct = reductors(data,**kwargs)
         # raise ValueError("Total amount of oxidators not given in data.")
 
-    if ean.name_total_oxidators in cols:
-        tot_oxi = data[ean.name_total_oxidators]
+    if names.name_total_oxidators in cols:
+        tot_oxi = data[names.name_total_oxidators]
     else:
         tot_oxi = oxidators(data,**kwargs)
         # raise ValueError("Total amount of reductors not given in data.")
 
     e_bal = tot_reduct.div(tot_oxi, axis=0)
-    e_bal.name = ean.name_e_balance
+    e_bal.name = names.name_e_balance
 
     if inplace:
-        data[ean.name_e_balance] = e_bal
+        data[names.name_e_balance] = e_bal
 
     if verbose:
         print("Electron balance e_red/e_cont is:\n{}".format(e_bal))
@@ -319,8 +319,8 @@ def NA_traffic(
 
     cols = check_data(data)
 
-    if ean.name_e_balance in cols:
-        e_balance = data[ean.name_e_balance]
+    if names.name_e_balance in cols:
+        e_balance = data[names.name_e_balance]
     else:
         e_balance = electron_balance(data,**kwargs)
         # raise ValueError("Electron balance not given in data.")
@@ -329,10 +329,10 @@ def NA_traffic(
     traffic = np.where(e_bal<1,"red","green")
     traffic[np.isnan(e_bal)] = 'y'
 
-    NA_traffic = pd.Series(name =ean.name_na_traffic_light,data = traffic,index = e_balance.index)
+    NA_traffic = pd.Series(name =names.name_na_traffic_light,data = traffic,index = e_balance.index)
 
     if inplace:
-        data[ean.name_na_traffic_light] = NA_traffic
+        data[names.name_na_traffic_light] = NA_traffic
 
     if verbose:
         print("Evaluation if natural attenuation (NA) is ongoing:")#" for {}".format(contaminant_group))
@@ -383,9 +383,9 @@ def total_contaminant_concentration(
     tot_conc = 0.
     cols = check_data(data)
     try:
-        eas = ean.contaminants[contaminant_group].copy()
-        if (ean.name_o_xylene in cols) and (ean.name_pm_xylene in cols): # and (ean.name_xylene in cols):
-            eas.remove(ean.name_xylene)
+        eas = names.contaminants[contaminant_group].copy()
+        if (names.name_o_xylene in cols) and (names.name_pm_xylene in cols): # and (names.name_xylene in cols):
+            eas.remove(names.name_xylene)
         for cont in eas:
             if cont in cols:
                 tot_conc += data[cont] # mass concentration in ug/l
@@ -402,7 +402,7 @@ def total_contaminant_concentration(
     #     print('________________________________________________________________')
     #     tot_conc = False
     if isinstance(tot_conc, pd.Series):
-        tot_conc.rename(ean.name_total_contaminants,inplace = True)
+        tot_conc.rename(names.name_total_contaminants,inplace = True)
         if verbose:
             print("Total concentration of {} in [ug/l] is:\n{}".format(contaminant_group,tot_conc))
             print('--------------------------------------------------')
@@ -410,7 +410,7 @@ def total_contaminant_concentration(
         raise ValueError("No data on contaminants or only zero concentrations given.")
 
     if inplace:
-        data[ean.name_total_contaminants] = tot_conc
+        data[names.name_total_contaminants] = tot_conc
 
     return tot_conc
 
@@ -458,14 +458,14 @@ def thresholds_for_intervention(
     if inplace:
         na_intervention = data
     else:
-        na_intervention= pd.DataFrame(data, columns=[ean.name_sample,ean.name_observation_well])
+        na_intervention= pd.DataFrame(data, columns=[names.name_sample,names.name_observation_well])
     traffic = np.zeros(data.shape[0],dtype=int)
     intervention = [[] for i in range(data.shape[0])]
 
     try:
-        eas = ean.contaminants[contaminant_group].copy()
-        if (ean.name_o_xylene in cols) and (ean.name_pm_xylene in cols): # and (ean.name_xylene in cols):
-            eas.remove(ean.name_xylene)
+        eas = names.contaminants[contaminant_group].copy()
+        if (names.name_o_xylene in cols) and (names.name_pm_xylene in cols): # and (names.name_xylene in cols):
+            eas.remove(names.name_xylene)
         for cont in eas:
             if cont in cols:
                 th_value = properties[cont]['thresholds_for_intervention_NL']
@@ -479,9 +479,9 @@ def thresholds_for_intervention(
 
         traffic_light = np.where(traffic>0,"red","green")
         traffic_light[np.isnan(traffic)] = 'y'
-        na_intervention[ean.name_intervention_traffic] = traffic_light
-        na_intervention[ean.name_intervention_number] = traffic
-        na_intervention[ean.name_intervention_contaminants] = intervention
+        na_intervention[names.name_intervention_traffic] = traffic_light
+        na_intervention[names.name_intervention_number] = traffic
+        na_intervention[names.name_intervention_contaminants] = intervention
 
         if verbose:
             print("Evaluation of contaminant concentrations exceeding intervention values for {}:".format(

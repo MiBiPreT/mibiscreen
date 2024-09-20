@@ -398,17 +398,3 @@ col_dict = {
     **names_contaminants,
     **names_metabolites_sum,
 }
-
-### potential units
-standard_units = dict(
-    mgperl = ["mg/l",'ppm'],
-    microgperl = [
-        "ug/l",
-        "micro g/l",
-        r"$\mu$ g/l",
-    ],
-    millivolt = ["mV","mv"],
-    meter = ['m',"meter"],
-    microsimpercm = ['uS/cm','us/cm'],
-    permil = ['permil','mur','‰','per mil','per mill','per mille','permill','permille','promille']
-    )
