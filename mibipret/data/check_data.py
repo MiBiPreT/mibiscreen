@@ -4,14 +4,24 @@
 
 @author: Alraune Zech
 """
-
-import names
-import names_metabolites as names_meta
 import numpy as np
 import pandas as pd
-from unit_settings import all_units
-from unit_settings import standard_units
-from unit_settings import units_env_cond
+
+try:
+    import names_data as names
+    import names_metabolites as names_meta
+    from unit_settings import all_units
+    from unit_settings import standard_units
+    from unit_settings import units_env_cond
+except:
+    import sys
+    path = '/home/alraune/GitHub/MiBiPreT/mibipret/mibipret/data/'
+    sys.path.append(path) # append the path to module
+    import names_data as names
+    import names_metabolites as names_meta
+    from unit_settings import all_units
+    from unit_settings import standard_units
+    from unit_settings import units_env_cond
 
 to_replace_list = ["-",'--','',' ','  ']
 to_replace_value = np.nan

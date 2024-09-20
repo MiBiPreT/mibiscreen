@@ -8,7 +8,6 @@ import os.path
 import numpy as np
 import pandas as pd
 
-
 def load_excel(
         file_path = None,
         sheet_name = 0,

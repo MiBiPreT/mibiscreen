@@ -18,7 +18,7 @@ from mibipret.data.set_data import compare_lists
 from mibipret.data.set_data import extract_data
 from mibipret.data.set_data import merge_data
 
-path_data = "./mibipret/data"
+# path_data = "./mibipret/data"
 
 # import sys
 # path = '/home/alraune/GitHub/MiBiPreT/mibipret/mibipret/data/'
@@ -35,7 +35,7 @@ path_data = "./mibipret/data"
 # from set_data import compare_lists
 # from set_data import extract_data
 # from set_data import merge_data
-# path_data = "../mibipret/data"
+path_data = "../mibipret/data"
 
 class TestLoadData:
     """Class for testing data loading routines in data module of mibipret."""

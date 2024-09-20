@@ -9,15 +9,10 @@ import copy
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-# import sys
-# path = '/home/alraune/GitHub/MiBiPreT/mibipret/mibipret/data/'
-# sys.path.append(path) # append the path to module
-# from names import name_metabolites_variety
-# from names import name_na_traffic_light
-# from names import name_total_contaminants
-from mibipret.data.names import name_metabolites_variety
-from mibipret.data.names import name_na_traffic_light
-from mibipret.data.names import name_total_contaminants
+
+from mibipret.data.names_data import name_metabolites_variety
+from mibipret.data.names_data import name_na_traffic_light
+from mibipret.data.names_data import name_total_contaminants
 
 DEF_settings = dict(
     figsize = [3.75,2.8],

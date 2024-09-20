@@ -8,14 +8,20 @@ used for biodegredation and bioremediation analysis.
 @author: Alraune Zech
 """
 
-# import sys
-# path = '/home/alraune/GitHub/MiBiPreT/mibipret/mibipret/data/'
-# sys.path.append(path) # append the path to module
-import names
-import names_metabolites as names_meta
 import numpy as np
 import pandas as pd
-from unit_settings import standard_units
+
+try:
+    import names_data as names
+    import names_metabolites as names_meta
+    from unit_settings import standard_units
+except:
+    import sys
+    path = '/home/alraune/GitHub/MiBiPreT/mibipret/mibipret/data/'
+    sys.path.append(path) # append the path to module
+    import names_data as names
+    import names_metabolites as names_meta
+    from unit_settings import standard_units
 
 
 def example_data(data_type = 'all',

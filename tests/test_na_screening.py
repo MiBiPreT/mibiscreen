@@ -17,7 +17,7 @@ from mibipret.analysis.sample.screening_NA import reductors
 from mibipret.analysis.sample.screening_NA import screening_NA
 from mibipret.analysis.sample.screening_NA import thresholds_for_intervention
 from mibipret.analysis.sample.screening_NA import total_contaminant_concentration
-from mibipret.data.data import example_data  #, check_values
+from mibipret.data.example_data import example_data  #, check_values
 
 #path_data = "./mibipret/d"
 
@@ -25,7 +25,7 @@ class TestNA:
     """Class for testing analysis module on NA screening of mibipret."""
 
     # data, units = standardize(example_data(),verbose = False)
-    data = example_data(with_units = False,standardize=True)
+    data = example_data(with_units = False)
     cols = data.columns.to_list()
     data_empty = pd.Series(
                         data = np.arange(4),

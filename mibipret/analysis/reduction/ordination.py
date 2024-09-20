@@ -9,8 +9,7 @@ import numpy as np
 import pandas as pd
 import skbio.stats.ordination as sciord
 from sklearn import decomposition
-from mibipret.data.names import name_sample
-
+from mibipret.data.names_data import name_sample
 
 def pca(data_frame,
         independent_variables = False,
@@ -306,7 +305,7 @@ def constrained_ordination(data_frame,
         loadings_dependent = sci_ordination.features.to_numpy()[:,0:n_comp]
         scores = sci_ordination.samples.to_numpy()[:,0:n_comp]
 
-    except(TypeError):
+    except(TypeError,ValueError):
         raise TypeError("Not all column values are numeric values. Consider standardizing data first.")
 
     if loadings_independent.shape[1]<n_comp:

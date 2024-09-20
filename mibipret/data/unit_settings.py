@@ -8,14 +8,18 @@ groundwater samples useful for biodegredation and bioremediation analysis.
 @author: Alraune Zech
 """
 
-try:
-    from names import name_EC
-    from names import name_redox
-    from names import name_sample_depth
-except ImportError:
-    from .names import name_EC
-    from .names import name_redox
-    from .names import name_sample_depth
+from names_data import name_EC
+from names_data import name_redox
+from names_data import name_sample_depth
+
+# try:
+#     from names_data import name_EC
+#     from names_data import name_redox
+#     from names_data import name_sample_depth
+# except ImportError:
+#     from .names import name_EC
+#     from .names import name_redox
+#     from .names import name_sample_depth
 
 ### potential units
 standard_units = dict(
