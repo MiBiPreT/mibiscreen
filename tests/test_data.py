@@ -2,81 +2,43 @@
 
 @author: Alraune Zech
 """
-
 import numpy as np
 import pandas as pd
 import pytest
-from mibipret.data.data import check_columns
-from mibipret.data.data import check_units
-from mibipret.data.data import check_values
-from mibipret.data.data import example_data
-from mibipret.data.data import load_csv
-from mibipret.data.data import load_excel
-from mibipret.data.data import standardize
+from mibipret.data.check_data import check_columns
+from mibipret.data.check_data import check_data_frame
+from mibipret.data.check_data import check_units
+from mibipret.data.check_data import check_values
+from mibipret.data.check_data import standard_names
+from mibipret.data.check_data import standardize
+from mibipret.data.example_data import example_data
+from mibipret.data.load_data import load_csv
+from mibipret.data.load_data import load_excel
+from mibipret.data.set_data import compare_lists
+from mibipret.data.set_data import extract_data
+from mibipret.data.set_data import merge_data
 
 path_data = "./mibipret/data"
-#path_data = "../mibipret/data"
 
-class TestData:
-    """Class for testing data module of mibipret."""
+# import sys
+# path = '/home/alraune/GitHub/MiBiPreT/mibipret/mibipret/data/'
+# sys.path.append(path) # append the path to module
+# from check_data import check_columns
+# from check_data import check_data_frame
+# from check_data import check_units
+# from check_data import check_values
+# from check_data import standard_names
+# from check_data import standardize
+# from example_data import example_data
+# from load_data import load_csv
+# from load_data import load_excel
+# from set_data import compare_lists
+# from set_data import extract_data
+# from set_data import merge_data
+# path_data = "../mibipret/data"
 
-    data_00 = example_data(with_units = True)
-    data_01 = example_data(data_type = 'set_env_cont',with_units = True)
-    data_02 = example_data(data_type = 'contaminants',with_units = True)
-    data_03 = example_data(data_type = 'setting',with_units = True)
-    data_04 = example_data(data_type = 'environment',with_units = True)
-    data_05 = example_data(data_type = 'metabolites',with_units = True)
-    data_06 = example_data(data_type = 'isotopes',with_units = True)
-
-    columns = ['sample_nr', 'obs_well', 'depth', 'pH', 'redoxpot', 'sulfate',\
-               'methane', 'iron2', 'benzene', 'naphthalene']
-    columns_mod = ["sample","well","Depth",'pH', 'redox' , 'Sulfate', 'CH4','iron','c6h6', 'Naphthalene']
-
-    units = [' ',' ','m',' ','mV', 'mg/l', 'mg/l', 'mg/l', 'ug/l', 'ug/l']
-    units_mod = [' ',' ','cm',' ','','ug/L', 'mg/L', 'ppm', 'mg/L',  'ug/L']
-
-    s01 = ['2000-001', 'B-MLS1-3-12',-12, 7.23, -208, 23, 748, 3,263,2207]
-    new_column = pd.Series(data = ['ug/L',27.0, 54.1, 38.8, 19.70], name = 'unknown_contaminant')
-
-    data_11 = pd.concat([data_01,new_column],axis = 1)
-
-    def test_example_data_00(self):
-        """Testing correct loading of example data as pandas data frame."""
-        assert self.data_00.shape == (5,29)
-
-    def test_example_data_01(self):
-        """Testing correct loading of example data as pandas data frame."""
-        assert self.data_01.shape == (5,24)
-
-    def test_example_data_02(self):
-        """Testing correct loading of example data as pandas data frame."""
-        # assert isinstance(self.data_02, pd.DataFrame) == True
-        assert self.data_02.shape == (5,11)
-
-    def test_example_data_03(self):
-        """Testing correct loading of example data as pandas data frame."""
-        # assert isinstance(self.data_03, pd.DataFrame) == True
-        assert self.data_03.shape == (5,3)
-
-    def test_example_data_04(self):
-        """Testing correct loading of example data as pandas data frame."""
-        # assert isinstance(self.data_04, pd.DataFrame) == True
-        assert self.data_04.shape == (5,16)
-
-    def test_example_data_05(self):
-        """Testing correct loading of example data as pandas data frame."""
-        # assert isinstance(self.data_04, pd.DataFrame) == True
-        assert self.data_05.shape == (5,6)
-
-    def test_example_data_06(self):
-        """Testing correct loading of example data as pandas data frame."""
-        # assert isinstance(self.data_04, pd.DataFrame) == True
-        assert self.data_06.shape == (5,5)
-
-    def test_example_data_07(self):
-        """Testing Error message that given data type not defined."""
-        with pytest.raises(ValueError):
-            example_data(data_type = 'test_data')
+class TestLoadData:
+    """Class for testing data loading routines in data module of mibipret."""
 
     def test_load_csv_01(self):
         """Testing routine load_csv().
@@ -84,7 +46,8 @@ class TestData:
         Testing correct loading of example data from csv file.
         """
         data_t1 = load_csv("{}/example_data.csv".format(path_data))[0]
-        assert data_t1.shape == self.data_00.shape
+        data = example_data(with_units = True)
+        assert data_t1.shape == data.shape
 
     def test_load_csv_02(self):
         """Testing routine load_csv().
@@ -118,7 +81,8 @@ class TestData:
         Testing correct loading of example data from excel file.
         """
         data_t2= load_excel("{}/example_data.xlsx".format(path_data),sheet_name= 'contaminants')[0]
-        assert data_t2.shape == self.data_02.shape
+        data = example_data(data_type = 'contaminants',with_units = True)
+        assert data_t2.shape == data.shape
 
     def test_load_excel_02(self):
         """Testing routine load_excel().
@@ -146,117 +110,309 @@ class TestData:
 
         assert len(out)>0
 
-    def test_columns_00(self):
+
+class TestExampleData:
+    """Class for testing example data of data module of mibipret."""
+
+    def test_example_data_01(self):
+        """Testing correct loading of example data as pandas data frame."""
+        data = example_data(with_units = True)
+
+        assert data.shape == (5,29)
+
+    def test_example_data_02(self):
+        """Testing correct loading of example data as pandas data frame."""
+        data = example_data(data_type = 'set_env_cont',with_units = True)
+        assert data.shape == (5,24)
+
+    def test_example_data_03(self):
+        """Testing correct loading of example data as pandas data frame."""
+        # assert isinstance(self.data_02, pd.DataFrame) == True
+        data = example_data(data_type = 'contaminants',with_units = True)
+        assert data.shape == (5,11)
+
+    def test_example_data_04(self):
+        """Testing correct loading of example data as pandas data frame."""
+        # assert isinstance(self.data_03, pd.DataFrame) == True
+        data = example_data(data_type = 'setting',with_units = True)
+        assert data.shape == (5,3)
+
+    def test_example_data_05(self):
+        """Testing correct loading of example data as pandas data frame."""
+        # assert isinstance(self.data_04, pd.DataFrame) == True
+        data = example_data(data_type = 'environment',with_units = True)
+        assert data.shape == (5,16)
+
+    def test_example_data_06(self):
+        """Testing correct loading of example data as pandas data frame."""
+        # assert isinstance(self.data_04, pd.DataFrame) == True
+        data = example_data(data_type = 'metabolites',with_units = True)
+        assert data.shape == (5,6)
+
+    def test_example_data_07(self):
+        """Testing correct loading of example data as pandas data frame."""
+        # assert isinstance(self.data_04, pd.DataFrame) == True
+        data = example_data(data_type = 'isotopes',with_units = True)
+        assert data.shape == (5,5)
+
+    def test_example_data_08(self):
+        """Testing correct loading of example data as pandas data frame."""
+        data = example_data(with_units = False)
+
+        assert data.shape == (4,29)
+
+    def test_example_data_09(self):
+        """Testing Error message that given data type not defined."""
+        with pytest.raises(ValueError):
+            example_data(data_type = 'test_data')
+
+
+class TestStandardNames:
+    """Testing routines on column name handling."""
+
+    names_standard = ['sample_nr', 'obs_well', 'depth', 'pH', 'redoxpot', 'sulfate',\
+                      'methane', 'iron2', 'benzene', 'naphthalene']
+    names_mod = ["sample","well","Depth",'pH', 'redox' , 'Sulfate', 'CH4','iron','c6h6', 'Naphthalene']
+    unknown  = ['unknown_contaminant']
+    names_isotopes = ['delta_2H-unknown_contaminant', 'delta_13C-Toluene']
+
+    def test_standard_names_01(self):
+        """Testing routine standard_names().
+
+        Testing routine on standard routine settings. It should provides
+        a list with standardized names for those identified, plus those
+        names (unchanged) which have not been identified.
+        """
+        results = standard_names(self.names_mod + self.unknown)
+
+        assert results == self.names_standard + self.unknown
+
+    def test_standard_names_02(self):
+        """Testing routine standard_names().
+
+        Testing that routine provides list with standardized column names
+        containing only all names identified.
+        """
+        results = standard_names(self.names_mod + self.unknown,
+                                  reduce = True,
+                                  )
+
+        assert results == self.names_standard
+
+    def test_standard_names_03(self):
+        """Testing routine standard_names().
+
+        Testing when standardize is False.
+        Routine provides tuple of lists with:
+                * standardized column names
+                * known column names
+                * unknown column names
+                * dictionary with transformation references
+        """
+        results = standard_names(self.names_mod + self.unknown,
+                                  standardize = False)
+
+        assert results[0] == self.names_standard and results[1] == self.names_mod and \
+                results[2] == self.unknown and isinstance(results[3],dict)
+
+
+    def test_standard_names_04(self):
+        """Testing routine standard_names().
+
+        Testing keywork check_metabolites by checking that routine identifies
+        column names for metabolites in example data.
+        """
+        names_meta = ['Phenol','benzoic acid']
+
+        results = standard_names(names_meta,
+                                  reduce = True,
+                                  check_metabolites = True,
+                                  )
+        assert len(results) == 2
+
+    def test_standard_names_05(self):
+        """Testing routine standard_names() on isotope sample names.
+
+        Testing routine on isotope data by checking that routine identifies
+        column names for isotopes in example data.
+        """
+        result  = standard_names(self.names_isotopes,
+                                  reduce = True,
+                                  )
+
+        assert result == ['delta_13C-toluene']
+
+    def test_standard_names_06(self):
+        """Testing routine standard_names() on isotope names.
+
+        Testing on isotope data by checking one name with identifiable name
+        and one with unknown name combination.
+        """
+        result  = standard_names(self.names_isotopes,
+                                  standardize = False,
+                                  )
+
+        assert len(result[1]) == 1 and len(result[2]) == 1
+
+
+    def test_standard_names_07(self):
+        """Testing routine standard_names().
+
+        Testing that routine works also with single string, to be put into
+        a list.
+        """
+        result  = standard_names('unknown_contaminant',
+                                  standardize = False)
+
+        assert len(result[0]) == 0 and len(result[1]) == 0 and len(result[2]) == 1
+
+
+    def test_standard_names_08(self,capsys):
+        """Testing routine standard_names().
+
+        Testing verbose flag.
+        """
+        standard_names(self.names_mod + self.unknown,
+                        verbose=True)
+        out,err=capsys.readouterr()
+
+        assert len(out)>0
+
+
+class TestCheckDataFrame:
+    """Testing routines on function check_data_frame()."""
+
+    data_01 = example_data(with_units = False)
+    cols = data_01.columns.to_list()
+
+    def test_check_data_frame_01(self):
+        """Testing routine check_data_frame().
+
+        Check on correct identification of data as dataframe and
+        returning dataframe and the list of column names for standard settings.
+        """
+        df, cols = check_data_frame(self.data_01)
+
+        assert np.all(self.cols == cols)
+
+    def test_check_data_frame_02(self):
+        """Testing routine check_data_frame().
+
+        Correct error message when data is not a pd.dataframe.
+        """
+        with pytest.raises(ValueError):
+            check_data_frame(self.data_01.iloc[:,3])
+
+    def test_check_data_frame_03(self):
+        """Testing routine check_data_frame().
+
+        Check keyword 'sample_name_to_index' which makes column of sample names
+        (standard name) the indices.
+        """
+        df, cols = check_data_frame(self.data_01,sample_name_to_index=True)
+
+        assert df.shape[1] == self.data_01.shape[1]-1
+
+    def test_check_data_frame_04(self):
+        """Testing routine check_data_frame().
+
+        Check on keyword "inplace" which modifies dataframe inplace.
+        """
+        data_01b = example_data(with_units = False)
+
+        check_data_frame(data_01b,
+                         inplace = True,
+                         sample_name_to_index=True)
+
+        assert data_01b.shape[1] == self.data_01.shape[1]-1
+
+    def test_check_data_frame_05(self,capsys):
+        """Testing routine check_data_frame().
+
+        Check on keyword "inplace" providing a warning when no sample name
+        is provided.
+        """
+        data_01c = example_data(with_units = False)
+        data_01c.drop(labels = 'sample_nr',axis = 1,inplace=True)
+
+        check_data_frame(data_01c,sample_name_to_index=True)
+
+        out,err=capsys.readouterr()
+
+        assert len(out)>0
+
+
+class TestCheckDataColumns:
+    """Testing routines on checking and standardizing data.
+
+    Class for testing routines on checking and standardizing data
+    in data module of mibipret.
+    """
+
+    columns = ['sample_nr', 'obs_well', 'depth', 'pH', 'redoxpot', 'sulfate',\
+                'methane', 'iron2', 'benzene', 'naphthalene']
+    columns_mod = ["sample","well","Depth",'pH', 'redox' , 'Sulfate', 'CH4','iron','c6h6', 'Naphthalene']
+    units = [' ',' ','m',' ','mV', 'mg/l', 'mg/l', 'mg/l', 'ug/l', 'ug/l']
+    s01 = ['2000-001', 'B-MLS1-3-12',-12, 7.23, -208, 23, 748, 3,263,2207]
+
+    new_column = pd.Series(data = ['ug/L',27.0], name = 'unknown_contaminant')
+
+    data4check = pd.DataFrame([units,s01],columns = columns_mod)
+
+    def test_check_columns_01(self):
         """Testing check_column() on complete example data.
 
         Testing that routine  check_column() identifies all standard names in
         data frame of complete example data..
         """
-        column_names_known,column_names_unknown,column_names_standard = check_columns(
-            self.data_00,
-            check_metabolites=True)
+        results = check_columns(self.data4check,
+                                check_metabolites=True)
 
-        assert len(column_names_unknown) == 0
-
-    def test_check_columns_01(self):
-        """Testing routine check_column() on check and standardization of column names.
-
-        Testing that routine provides correct list of known quantities
-        identified in the columns (when names are not in standard form).
-        """
-        data4check = pd.DataFrame([self.units,self.s01],columns = self.columns_mod)
-        column_names_known,column_names_unknown,column_names_standard = check_columns(data4check)
-
-        assert len(column_names_unknown) == 0 and np.all(column_names_standard == self.columns)
+        assert len(results) == 3
 
     def test_check_columns_02(self):
         """Testing routine check_column() on check and standardization of column names.
 
-        Testing that routine provides correct list of unknown quantities
-        identified in the columns (when provided unknown quantity).
+        Testing that data column names have been properly standardies.
         """
-        column_names_known,column_names_unknown,column_names_standard = check_columns(self.data_11)
-        assert column_names_unknown[0] == 'unknown_contaminant'
+        check_columns(self.data4check,
+                      standardize = True)
+
+        assert np.all(self.data4check.columns == self.columns)
 
     def test_check_columns_03(self):
         """Testing routine check_column() on check and standardization of column names.
 
         Testing that data column names have been properly standardies.
         """
-        data4check = pd.DataFrame([self.units,self.s01],columns = self.columns_mod)
-        check_columns(data4check,
-                      standardize = True)
-
-        assert np.all(data4check.columns == self.columns)
-
-    def test_check_columns_04(self):
-        """Testing routine check_column() on check and standardization of column names.
-
-        Testing that data column names have been properly standardies.
-        """
-        data_check = self.data_11.copy()
-        check_columns(data_check,
+        data = pd.concat([self.data4check,self.new_column],axis = 1)
+        check_columns(data,
                       reduce = True)
 
-        assert data_check.shape[1] == self.data_11.shape[1]-1
-
-    def test_check_columns_05(self):
-        """Testing routine check_column() on check and standardization of column names.
-
-        Testing keywork "check_metabolites" by checking that routine identifies
-        column names for metabolites in example data.
-        """
-        column_names_known,column_names_unknown,column_names_standard = check_columns(
-            self.data_00,
-            check_metabolites = True
-            )
-        assert len(column_names_unknown) == 0
-
-    def test_check_columns_06(self):
-        """Testing routine check_column() on isotope sample names.
-
-        Testing check of isotope data by checking that routine identifies
-        column names for isotopes in example data.
-        """
-        column_names_known,column_names_unknown,column_names_standard = check_columns(
-            self.data_06,
-            )
-        assert len(column_names_unknown) == 0
-
-    def test_check_columns_07(self):
-        """Testing routine check_column() on isotope names.
-
-        Testing check of isotope data by checking that routine identifies unknown
-        quantities (not standard column names) for isotopes data.
-        """
-        new_isotopes_1 = pd.Series(data = ['permil',-77, -75, -51,-61], name = 'delta_2H-unknown_contaminant')
-        new_isotopes_2 = pd.Series(data = ['permil',-26.5,-26.2,-25.2,-25.7], name = 'delta_13H-toluene')
-        df2 = pd.concat([self.data_06, new_isotopes_1,new_isotopes_2],axis = 1)
-
-        column_names_known,column_names_unknown,column_names_standard = check_columns(df2)
-
-        assert len(column_names_unknown) == 2
+        assert self.data4check.shape[1] == data.shape[1]
 
 
-    def test_check_columns_08(self,capsys):
+    def test_check_columns_04(self,capsys):
         """Testing routine check_column() on check and standardization of column names.
 
         Testing verbose flag.
         """
-        check_columns(self.data_11,verbose=True)
+        check_columns(self.data4check,
+                      verbose=True)
         out,err=capsys.readouterr()
 
         assert len(out)>0
 
-    def test_units_00(self):
-        """Testing check_units() on complete example data.
 
-        Testing that routine check_units() identifies all standard names in
-        data frame of complete example data.
-        """
-        col_check_list = check_units(self.data_00, check_metabolites=True)
+class TestCheckDataUnits:
+    """Class for testing data module of mibipret."""
 
-        assert len(col_check_list) == 0
+    columns = ['sample_nr', 'obs_well', 'depth', 'pH', 'redoxpot', 'sulfate',\
+                'methane', 'iron2', 'benzene', 'naphthalene']
+    units =     [' ',' ', 'm',' ','mV', 'mg/l', 'mg/l', 'mg/l', 'ug/l', 'ug/l']
+    units_mod = [' ',' ','cm',' ','',   'ug/L', 'mg/L', 'ppm', 'mg/L',  'ug/L']
+    check_list = ['depth', 'redoxpot','sulfate', 'benzene']
+    s01 = ['2000-001', 'B-MLS1-3-12',-12, 7.23, -208, 23, 748, 3,263,2207]
 
     def test_check_units_01(self):
         """Testing check of units.
@@ -268,9 +424,8 @@ class TestData:
         """
         data4units = pd.DataFrame([self.units_mod,self.s01],columns = self.columns)
         col_check_list = check_units(data4units)
-        check_list = ['depth', 'redoxpot','sulfate', 'benzene']
 
-        assert col_check_list == check_list
+        assert col_check_list == self.check_list
 
     def test_check_units_02(self):
         """Testing check of units.
@@ -281,9 +436,8 @@ class TestData:
         """
         data4units = pd.DataFrame([self.units_mod],columns = self.columns)
         col_check_list = check_units(data4units)
-        check_list = ['depth', 'redoxpot','sulfate', 'benzene']
 
-        assert col_check_list == check_list
+        assert col_check_list == self.check_list
 
     def test_check_units_03(self):
         """Testing check of units.
@@ -294,9 +448,8 @@ class TestData:
         """
         data4units = pd.DataFrame([self.units_mod+['-']],columns = self.columns+['Phenol'])
         col_check_list = check_units(data4units,check_metabolites=True)
-        check_list = ['depth', 'redoxpot','sulfate', 'benzene', 'phenol']
 
-        assert col_check_list == check_list
+        assert col_check_list == self.check_list+['phenol']
 
     def test_check_units_04(self):
         """Testing check of units.
@@ -307,9 +460,8 @@ class TestData:
         """
         data4units = pd.DataFrame([self.units_mod+['-']],columns = self.columns+['delta_13C-benzene'])
         col_check_list = check_units(data4units)
-        check_list = ['depth', 'redoxpot','sulfate', 'benzene', 'delta_13C-benzene']
 
-        assert col_check_list == check_list
+        assert col_check_list == self.check_list+['delta_13C-benzene']
 
     def test_check_units_05(self):
         """Testing check of units.
@@ -331,49 +483,83 @@ class TestData:
     def test_check_units_07(self,capsys):
         """Testing routine check of units.
 
-        Testing verbose flag.
+        Testing verbose flag (When all units are correct).
         """
-        check_units(self.data_01,verbose=True)
+        data4units = pd.DataFrame([self.units,self.s01],columns = self.columns)
+
+        check_units(data4units,verbose=True)
         out,err=capsys.readouterr()
 
         assert len(out)>0
 
-    def test_check_values_01(self):
+    def test_check_units_08(self,capsys):
+        """Testing routine check of units.
+
+        Testing verbose flag  (When some units need correction).
+        """
+        data4units = pd.DataFrame([self.units_mod,self.s01],columns = self.columns)
+
+        check_units(data4units,verbose=True)
+        out,err=capsys.readouterr()
+
+        assert len(out)>0
+
+
+class TestCheckDataValues:
+    """Class for testing data module of mibipret."""
+
+    data_00 = example_data(with_units = True)
+
+    def test_check_values_01(self,capsys):
         """Testing check_values() on complete example data.
 
         Testing that values in example data frame have been transformed to numerics.
+        Testing verbose flag.
         """
-        data_pure = check_values(self.data_00,check_metabolites = True)
+        data = check_values(self.data_00,
+                            inplace = False,
+                            verbose = True)
+        out,err=capsys.readouterr()
 
-        # assert isinstance(data_pure.iloc[-1,-1], np.int64)
-        assert isinstance(data_pure.iloc[-1,-1], (np.float64,np.int64))
+        assert len(out)>0 and isinstance(data.iloc[-1,-1], (np.float64,np.int64))
 
     def test_check_values_02(self):
         """Testing routine check_values().
 
         Testing that data frame is cut clean from units row.
         """
-        data_pure = check_values(self.data_01)
+        data = check_values(self.data_00,
+                            inplace = False,
+                            )
 
-        assert data_pure.shape[0] == self.data_01.shape[0]-1
+        assert data.shape[0] == self.data_00.shape[0]-1
 
     def test_check_values_03(self):
         """Testing routine check_values().
 
-        Testing Error message that provided input is not a data frame.
+        Testing 'inplace' keyword.
         """
-        with pytest.raises(ValueError, match="Provided data is not a data frame."):
-            check_values(self.s01)
+        data_01 =self.data_00.copy()
+        check_values(data_01,
+                     inplace = True,
+                     verbose = False)
 
-    def test_check_values_04(self,capsys):
-        """Testing routine check_values().
+        assert data_01.shape[0] == self.data_00.shape[0]-1
 
-        Testing verbose flag.
-        """
-        check_values(self.data_01,verbose=True)
-        out,err=capsys.readouterr()
+class TestDataStandardize:
+    """Class for testing data module of mibipret."""
 
-        assert len(out)>0
+    columns = ['sample_nr', 'obs_well', 'depth', 'pH', 'redoxpot', 'sulfate',\
+                'methane', 'iron2', 'benzene', 'naphthalene']
+    units = [' ',' ','m',' ','mV', 'mg/l', 'mg/l', 'mg/l', 'ug/l', 'ug/l']
+    s00 = ['2000-001', 'B-MLS1-3-12',-12, 7.23, -208, 23, 748, 3,263,2207]
+    data4standard_0 = pd.DataFrame([units,s00],columns = columns)
+
+    columns_mod = ["sample","well","Depth",'pH', 'redox' , 'Sulfate', 'CH4',
+                   'iron','c6h6', 'Naphthalene','Phenol','delta_13C-Benzene','unknown_contaminant']
+    units_mod = [' ',' ','cm',' ','','ug/L', 'mg/L', 'ppm', 'mg/L',  'ug/L', 'ppm', '-',' ']
+    s01 = ['2000-001', 'B-MLS1-3-12',-12, 7.23, -208, 23, 748, 3,263,2207 , 10., 20.,30.]
+    data4standard_1 = pd.DataFrame([units_mod,s01],columns = columns_mod)
 
     def test_standardize_01(self):
         """Testing routine standardize().
@@ -381,39 +567,200 @@ class TestData:
         Testing that data has been properly standardies,
         here that data frame is cut from unidentified quantities.
         """
-        data_standard,units = standardize(self.data_11,reduce = True, store_csv=False,  verbose=False)
+        data_standard,units = standardize(self.data4standard_1,
+                                          check_metabolites = False,
+                                          verbose=False)
 
-        assert data_standard.shape[1] == self.data_01.shape[1]
+        print(data_standard.columns[-2:])
+        assert data_standard.shape[1] == self.data4standard_1.shape[1]-2 and \
+                data_standard.shape[0] == self.data4standard_1.shape[0]-1
 
-    def test_standardize_02(self):
+    def test_standardize_02(self,capsys):
         """Testing routine standardize().
 
-        Testing that data has been properly standardised,
-        here without reducing to know quantities.
+        Testing Warning that data could not be saved to file given that not
+        all quantities are given in requested units.
         """
-        data_standard,units = standardize(self.data_11,reduce = False, store_csv=False,  verbose=False)
+        file_name = '../dir_does_not_exist/file.csv'
+        out_text_end = 'quantities are given in requested units.'
 
-        assert data_standard.shape == (4,25)
+        standardize(self.data4standard_1,
+                    store_csv = file_name,
+                    verbose=False)
+
+        out,err=capsys.readouterr()
+        # print(out[-40:])
+
+        assert out[-41:-1]== out_text_end
 
     def test_standardize_03(self,capsys):
-        """Testing routine standardize().
-
-        Testing verbose flag.
-        """
-        standardize(self.data_11,reduce = True, store_csv=False,  verbose=True)
-        out,err=capsys.readouterr()
-
-        assert len(out)>0
-
-    def test_standardize_04(self,capsys):
         """Testing routine standardize().
 
         Testing Error message that given file path does not match for writing
         standarized data to file.
         """
         file_name = '../dir_does_not_exist/file.csv'
-        out_text = "WARNING: data could not be saved. Check provided file path and name: {}\n".format(file_name)
-        standardize(self.data_11,reduce = True, store_csv=file_name,  verbose=False)
+
+        standardize(self.data4standard_0,
+                    store_csv = file_name,
+                    verbose=False)
         out,err=capsys.readouterr()
 
-        assert out==out_text
+        assert out[-len(file_name)-1:-1]==file_name
+
+    def test_standardize_04(self,capsys):
+        """Testing routine standardize().
+
+        Testing verbose flag.
+        """
+        standardize(self.data4standard_1,  verbose=True)
+        out,err=capsys.readouterr()
+
+        assert len(out)>0
+
+class TestDataCompareLists:
+    """Class for testing data module of mibipret."""
+
+    list1 = ['test1','test2']
+    list2 =  ['test1','test3']
+
+    def test_compare_lists_01(self):
+        """Testing routine compare_lists().
+
+        Testing functionality of routines in standard settings.
+        """
+        inter,r1,r2 = compare_lists(self.list1,self.list2)
+
+        assert inter == ['test1'] and r1 == ['test2'] and r2 == ['test3']
+
+    def test_compare_lists_02(self,capsys):
+        """Testing routine compare_lists().
+
+        Testing verbose flag.
+        """
+        compare_lists(self.list1,self.list2,verbose=True)
+        out,err=capsys.readouterr()
+
+        assert len(out)>0
+
+class TestDataExtract:
+    """Class for testing data module of mibipret."""
+
+    columns = ['sample_nr', 'obs_well', 'pH', 'sulfate','benzene']
+    s00 = ['2000-001', 'B-MLS1-3-12',7.23,  23, 263]
+    data4extract = pd.DataFrame(data = [s00],columns = columns)
+
+    name_list1 = ['sulfate','benzene']
+    name_list2 = ['sample_nr','benzene']
+    name_list3 = ['sulfate','benzene','naphtalene']
+
+    def test_extract_data_01(self):
+        """Testing routine extract_data().
+
+        Testing functionality of routines in standard settings.
+        """
+        data = extract_data(self.data4extract,
+                            name_list = self.name_list1)
+
+        assert data.shape[1] == 4
+
+    def test_extract_data_02(self):
+        """Testing routine extract_data().
+
+        Testing functionality of routines in standard settings.
+        """
+        data = extract_data(self.data4extract,
+                            name_list = self.name_list1,
+                            keep_setting_data=False
+                            )
+
+        assert data.shape[1] == 2
+
+    def test_extract_data_03(self):
+        """Testing routine extract_data().
+
+        Testing functionality of routines in standard settings.
+        """
+        data = extract_data(self.data4extract,
+                            name_list = self.name_list2)
+
+        assert data.shape[1] == 3
+
+    def test_extract_data_04(self):
+        """Testing routine extract_data().
+
+        Testing functionality of routines in standard settings.
+        """
+        data = extract_data(self.data4extract,
+                            name_list = self.name_list2,
+                            keep_setting_data=False,
+                            )
+
+        assert data.shape[1] == 2
+
+
+    def test_extract_data_05(self,capsys):
+        """Testing routine extract_data().
+
+        Testing functionality of routines in standard settings.
+        """
+        data = extract_data(self.data4extract,
+                            name_list = self.name_list3)
+
+        out,err=capsys.readouterr()
+
+        assert data.shape[1] == 4 and len(out)>0
+
+class TestDataMerge:
+    """Class for testing data module of mibipret."""
+
+    columns = ['sample_nr', 'obs_well', 'pH', 'sulfate','benzene']
+    s01 = ['2000-001', 'B-MLS1-3-12']
+    s02 = ['2000-002', 'B-MLS1-5-15']
+    s03 = ['2000-003', 'B-MLS1-6-17']
+    s04 = ['2000-004', 'B-MLS1-7-19']
+
+    e01 = [7.23,1.6]
+    e02 = [7.67,0]
+    e03 = [7.75,0.8]
+    e04 = [7.53, 0.1]
+
+    c01 = [263.]
+    c02 = [179.]
+    c03 = [853.]
+    c04 = [1254.]
+
+    data4merge_1 = pd.DataFrame(data = [s01+e01,s02+e02,s03+e03],
+                                columns = ['sample_nr', 'obs_well', 'pH', 'sulfate'])
+
+    data4merge_2 = pd.DataFrame(data = [s01+c01,s02+c02,s04+c04],
+                                columns = ['sample_nr', 'obs_well','benzene'])
+
+    def test_merge_data_01(self):
+        """Testing routine merge_data().
+
+        Testing functionality of routines in standard settings.
+        """
+        data1 = merge_data([self.data4merge_1,self.data4merge_2])
+
+        assert data1.shape[1] == 5
+
+
+    def test_merge_data_02(self):
+        """Testing routine merge_data().
+
+        Testing keywork 'clean'.
+        """
+        data1 = merge_data([self.data4merge_1,self.data4merge_2],
+                           clean = False)
+
+        assert data1.shape[1] == 6
+
+    def test_merge_data_03(self):
+        """Testing routine merge_data().
+
+        Testing error message if not suffient data frames are provided.
+        """
+        with pytest.raises(ValueError,match = 'Provide List of DataFrames.'):
+            merge_data([self.data4merge_1])
+
