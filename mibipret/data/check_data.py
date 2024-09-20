@@ -8,11 +8,11 @@ import numpy as np
 import pandas as pd
 
 try:
-    import mibirpret.data.names_data as names
-    import mibirpret.data.names_metabolites as names_meta
-    from mibirpret.data.unit_settings import all_units
-    from mibirpret.data.unit_settings import standard_units
-    from mibirpret.data.unit_settings import units_env_cond
+    import mibipret.data.names_data as names
+    import mibipret.data.names_metabolites as names_meta
+    from mibipret.data.unit_settings import all_units
+    from mibipret.data.unit_settings import standard_units
+    from mibipret.data.unit_settings import units_env_cond
 except:
     import sys
     path = '/home/alraune/GitHub/MiBiPreT/mibipret/mibipret/data/'
