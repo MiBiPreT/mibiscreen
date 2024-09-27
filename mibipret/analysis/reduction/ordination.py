@@ -8,25 +8,14 @@
 import numpy as np
 import pandas as pd
 import skbio.stats.ordination as sciord
-from scipy.stats import zscore
 from sklearn import decomposition
-from mibipret.data.names import name_sample
-# from mibipret.data.data import compare_lists
+from mibipret.data.names_data import name_sample
 
-import sys
-path = '/home/alraune/GitHub/MiBiPreT/mibipret/mibipret/'
-sys.path.append(path) # append the path to module
-from data.data import compare_lists
-try:
-    from data.names import setting_data
-except ImportError:
-    from .data.names import setting_data
 
 def pca(data_frame,
         independent_variables = False,
         dependent_variables = False,
         n_comp = 2,
-        replace_NaN = 'remove',
         verbose = False,
         ):
     """Function that performs Principal Component Analysis.
@@ -53,9 +42,6 @@ def pca(data_frame,
             being characterized as dependent variables (= species)
         n_comp : int, default is 2
             Number of components to report
-        replace_NaN : string or float, default "remove"
-            Keyword specifying how to handle missing/NaN/non-numeric values,
-            for all options see filter_values().        
         verbose : Boolean, The default is False.
            Set to True to get messages in the Console about the status of the run code.
 
@@ -105,11 +91,6 @@ def pca(data_frame,
                               name_variables = 'dependent variables'
                               )
         data_pca = data[names_independent + names_dependent]
-
-    # Checking that all values are numeric and replacing according to specified method
-
-    if replace_NaN is not False:
-        filter_values(data_pca, replace_NaN = replace_NaN, verbose = verbose)
 
     # Checking if the dimensions of the dataframe allow for PCA
     if data_pca.shape[0] < data_pca.shape[1]:
@@ -312,21 +293,23 @@ def constrained_ordination(data_frame,
         (data_independent_variables.shape[0] < data_independent_variables.shape[1]):
         raise ValueError("Ordination method {} not possible with more variables than samples.".format(method))
 
-    try:
-        # Performing constrained ordination using function from scikit-bio.
-        if method == 'cca':
+    # Performing constrained ordination using function from scikit-bio.
+    if method == 'cca':
+        try:
             sci_ordination = sciord.cca(data_dependent_variables, data_independent_variables, scaling = n_comp)
-        elif method == 'rda':
+        except(TypeError,ValueError):
+            raise TypeError("Not all column values are numeric values. Consider standardizing data first.")
+    elif method == 'rda':
+        try:
             sci_ordination = sciord.rda(data_dependent_variables, data_independent_variables, scaling = n_comp)
-        else:
-            raise ValueError("Ordination method {} not a valid option.".format(method))
+        except(TypeError,ValueError):
+            raise TypeError("Not all column values are numeric values. Consider standardizing data first.")
+    else:
+        raise ValueError("Ordination method {} not a valid option.".format(method))
 
-        loadings_independent = sci_ordination.biplot_scores.to_numpy()[:,0:n_comp]
-        loadings_dependent = sci_ordination.features.to_numpy()[:,0:n_comp]
-        scores = sci_ordination.samples.to_numpy()[:,0:n_comp]
-
-    except(TypeError):
-        raise TypeError("Not all column values are numeric values. Consider standardizing data first.")
+    loadings_independent = sci_ordination.biplot_scores.to_numpy()[:,0:n_comp]
+    loadings_dependent = sci_ordination.features.to_numpy()[:,0:n_comp]
+    scores = sci_ordination.samples.to_numpy()[:,0:n_comp]
 
     if loadings_independent.shape[1]<n_comp:
         raise ValueError("Number of dependent variables too small.")
@@ -342,42 +325,9 @@ def constrained_ordination(data_frame,
 
     return results
 
-def check_data_frame(data_frame,
-                     inplace = False,
-                     ):
-    """Checking data on correct format.
-
-    Input
-    -----
-        data_frame: pd.DataFrame
-            quantities for data analysis given per sample
-
-    Output
-    ------
-        data: pd.DataFrame
-            copy of given dataframe with index set to sample name
-        cols: list
-            List of column names
-    """
-    if not isinstance(data_frame, pd.DataFrame):
-        raise ValueError("Calculation not possible with given data. \
-                          Data has to be a panda-DataFrame or Series \
-                          but is given as type {}".format(type(data_frame)))
-    else:
-        if inplace is False:
-            data = data_frame.copy()
-        else:
-            data = data_frame
-        cols = data.columns.to_list()
-        if name_sample in data.columns:
-            data.set_index(name_sample,inplace = True)
-            cols.remove(name_sample)
-
-    return data, cols
-
 def extract_variables(columns,
                       variables,
-                      name_variables = 'variables',
+                      name_variables = 'variables'
                       ):
     """Checking overlap of two given list.
 
@@ -399,237 +349,47 @@ def extract_variables(columns,
             list of strings present in both lists 'columns' and 'variables'
 
     """
-
-    if not isinstance(variables,list):
+    if isinstance(variables,list):
+        intersection = list(set(columns) & set(variables))
+        remainder = list(set(variables) - set(columns))
+        if len(intersection) == 0:
+            raise ValueError("No column names for '{}' identified in columns of dataframe.".format(name_variables))
+        elif len(intersection) < len(variables):
+            print("WARNING: not all column names for '{}' are found in dataframe.".format(name_variables))
+            print('----------------------------------------------------------------')
+            print("Columns used in analysis:", intersection)
+            print("Column names not identified in data:", remainder)
+            print('________________________________________________________________')
+    else:
         raise ValueError("List of column names for '{}' empty or in wrong format.".format(name_variables))
-
-    intersection,remainder,remainder_list1,remainder_list2 = compare_lists(columns,variables)
-
-    if len(intersection) == 0:
-        raise ValueError("No column names for '{}' identified in columns of dataframe.".format(name_variables))
-    elif len(intersection) < len(variables):
-        print("WARNING: not all column names for '{}' are found in dataframe.".format(name_variables))
-        print('----------------------------------------------------------------')
-        print("Columns used in analysis:", intersection)
-        print("Column names not identified in data:", remainder_list2)
-        print('________________________________________________________________')
-        
-    # if isinstance(variables,list):
-    #     intersection = list(set(columns) & set(variables))
-    #     remainder = list(set(variables) - set(columns))
-    #     if len(intersection) == 0:
-    #         raise ValueError("No column names for '{}' identified in columns of dataframe.".format(name_variables))
-    #     elif len(intersection) < len(variables):
-    #         print("WARNING: not all column names for '{}' are found in dataframe.".format(name_variables))
-    #         print('----------------------------------------------------------------')
-    #         print("Columns used in analysis:", intersection)
-    #         print("Column names not identified in data:", remainder)
-    #         print('________________________________________________________________')
-    # else:
-    #     raise ValueError("List of column names for '{}' empty or in wrong format.".format(name_variables))
 
     return intersection
 
-def filter_values(data_frame, 
-                  replace_NaN = 'remove', 
-                  drop_rows = [], 
-                  inplace = True,
-                  verbose = False):
 
-    """
-    Filtering values of dataframes for ordination to assure all are numeric.
-    
-    Ordination methods require all cells to be filled. This method checks the
-    provided data frame if values are missing/NaN or not numeric and handles
-    missing/NaN values accordingly. 
-       
-    Then removes select rows and mutates the cells containing NULL values based 
-    on the input parameters.
+def check_data_frame(data_frame):
+    """Checking data on correct format.
 
     Input
     -----
-        data_frame : pd.dataframe
-            Tabular data containing variables to be evaluated with standard
-            column names and rows of sample data.
-        replace_NaN : string or float, default "remove"
-            Keyword specifying how to handle missing/NaN/non-numeric values, options:
-                - remove: remove rows with missing values
-                - zero: replace values with 0.0
-                - average: replace the missing values with the average of the variable 
-                            (using all other available samples)
-                - median: replace the missing values with the median of the variable 
-                                        (using all other available samples)
-                - float-value: replace all empty cells with that numeric value
-        drop_rows : List, default [] (empty list)
-            List of rows that should be removed from dataframe.
-        inplace: bool, default True
-            If False, return a copy. Otherwise, do operation in place.
-        verbose : Boolean, The default is False.
-           Set to True to get messages in the Console about the status of the run code.
+        data_frame: pd.DataFrame
+            quantities for data analysis given per sample
 
     Output
     ------
-        data_filtered : pd.dataframe
-            Tabular data containing filtered data.
-    """
-    data,cols= check_data_frame(data_frame,inplace = inplace)
-
-    if verbose:
-        print("==============================================================================")
-        print('Perform filtering of values since ordinatin requires all values to be numeric.')
-
-    if len(drop_rows)>0:
-        data.drow(drop_rows, inplace = True)
-        if verbose:
-            print('The samples of rows {} have been removed'.format(drop_rows))
-
-    # Identifying which rows and columns contain any amount of NULL cells and putting them in a list.
-    NaN_rows = data[data.isna().any(axis=1)].index.tolist()
-    NaN_cols = data.columns[data.isna().any()].tolist()
-      
-    # If there are any rows containing NULL cells, the NULL values will be filter
-    if len(NaN_rows)>0:
-        if replace_NaN == 'remove':
-            data.drop(NaN_rows, inplace = True)
-            text = 'The sample row(s) have been removed since they contain NaN values: {}'.format(NaN_rows)
-        elif replace_NaN == 'zero':
-            set_NaN = 0.0
-            data.fillna(set_NaN, inplace = True)
-            text = 'The values of the empty cells have been set to zero (0.0)'
-        elif isinstance(replace_NaN, (float, int)):
-            set_NaN = float(replace_NaN)
-            data.fillna(set_NaN, inplace = True)
-            text = 'The values of the empty cells have been set to the value of {}'.format(set_NaN)
-        elif replace_NaN == "average":
-            for var in NaN_cols:
-                data[var] = data[var].fillna(data[var].mean(skipna = True))
-            text = 'The values of the empty cells have been replaced by the average of\
-                  the corresponding variables (using all other available samples).'
-        elif replace_NaN == "median":
-            for var in NaN_cols:
-                data[var] = data[var].fillna(data[var].median(skipna = True))
-            text = 'The values of the empty cells have been replaced by the median of\
-                  the corresponding variables (using all other available samples).'
-        else:
-            raise ValueError("Value of 'replace_NaN' unknown:", replace_NaN)
-        
-        if verbose:
-            print(text)
-    else:
-        if verbose:
-            print("No data to be filtered out.")
-        
-    return data
-
-def transform_values(data_frame,
-                     name_list = 'all',
-                     how = 'log_scale',
-                     log_scale_A = 1, 
-                     log_scale_B = 1,
-                     inplace = True,
-                     verbose = False,
-                     ):
-
-    """Function extracting data from dataframe for specified variables.
-
-    Args:
-    -------
-        data_frame: pandas.DataFrames
-            dataframe with the measurements
-        name_variables: string or list of strings, default 'all'
-            list of quantities (column names) to perfrom transformation on
-        how: string, default 'standardize'
-            Type of transformation:
-                * standardize
-                * log_scale: 
-                * center
-        inplace: bool, default True
-            If False, return a copy. Otherwise, do operation in place and return None.
-        verbose : Boolean, The default is False.
-           Set to True to get messages in the Console about the status of the run code.
-
-    Returns:
-    -------
         data: pd.DataFrame
-            dataframe with the measurements
-
-    Raises:
-    -------
-    None (yet).
-
-    Example:
-    -------
+            copy of given dataframe with index set to sample name
+        cols: list
+            List of column names
     """
-    data,cols= check_data_frame(data_frame,inplace = inplace)
-
-    if verbose:
-        print('==============================================================')
-        print(" Running function 'transform_values()' on data")
-        print('==============================================================')
-
-    if name_list == 'all':
-        intersection = list(set(cols) - set(setting_data))
-
+    if not isinstance(data_frame, pd.DataFrame):
+        raise ValueError("Calculation not possible with given data. \
+                          Data has to be a panda-DataFrame or Series \
+                          but is given as type {}".format(type(data_frame)))
     else:
-        intersection,remainder,remainder_list1,remainder_list2 = compare_lists(cols,name_list)
-        if len(intersection) < len(name_list):
-            print("WARNING: not all variables in name_list are found in dataframe.")
-            print('----------------------------------------------------------------')
-            print("Column names identified:", intersection)
-            print("Column names not identified in data:", remainder_list2)
-            print('________________________________________________________________')
+        data = data_frame.copy()
+        cols = data.columns.to_list()
+        if name_sample in data.columns:
+            data.set_index(name_sample,inplace = True)
+            cols.remove(name_sample)
 
-    for quantity in intersection:
-        if how == 'log_scale':
-            data[quantity] = np.log10(log_scale_A * data[quantity] + log_scale_B)
-        elif how == 'center':
-            data[quantity] =  data[quantity]-data[quantity].mean()
-        elif how == 'standardize':
-            data[quantity] = zscore(data[quantity].values)
-
-    return data
-
-# def transform(dataframe, Center = False, Standardize = True, LogScale = False, LogScale_A = 1, LogScale_B = 1, verbose = False):
-#     """A function that performs certain transformations on the input data based on the input parameters.
-
-#     Parameters
-#     ----------
-#     dataframe : Dataframe
-#         A dataframe containing data to be transformed.
-#     Center : Boolean, optional
-#         Parameter. When set to true, the data will be centered per variable, giving it an average of 0. The default is False.
-#     Standardize : Boolean, optional
-#         Parameter. When set to true, the data will be standardized per variable, giving it an average of 0 and a range between 0 and 1. The default is False.. The default is True.
-#     LogScale : Boolean or List, optional
-#         Parameter. Set to false to disable log transformation, set to True when wanting to log transform every variable. Otherwise provide a list of all variable column names you want to transform The default is False.
-#     LogScale_A : Integer or float, optional
-#         Parameter. Determines the method of Log transformation, where this is A in log10(Ax+B). The default is 1.
-#     LogScale_B : Interger or float, optional
-#        Parameter. Determines the method of Log transformation, where this is B in log10(Ax+B). The default is 1.
-#     verbose : Boolean, optional
-#          Set to True to get messages in the Console about the status of the run code. The default is False.
-
-#     Returns
-#     -------
-#     dataframe : Dataframe
-#         A dataframe containing the transformed input data.
-#     """
-#     # If the LogScale parameter is in the form of a list, log transform every column of which the name is in the list.
-#     if type(LogScale) == list:
-#         for Variable in LogScale:
-#             dataframe[Variable] = np.log10(LogScale_A * dataframe[Variable] + LogScale_B)
-#     # Otherwise, if the LogScale parameter is set to true, log scale every value in the dataframe.
-#     elif LogScale:
-#         if verbose: print("Data is being log scaled...")
-#         dataframe = np.log10(LogScale_A * dataframe + LogScale_B)
-    
-#     # If the Center parameter is true, but not the Standardize parameter, center the data by subtracting the mean of every column from its values.
-#     if Center and not Standardize:
-#         if verbose: print("Data is being centered...")
-#         dataframe = dataframe.apply(lambda col: col-col.mean())
-#     # If the Standardize parameter is true, standardize all columns.
-#     elif Standardize:
-#         if verbose: print("Data is being standardized...")
-#         dataframe = stats.zscore(dataframe, axis=0)
-    
-#     return(dataframe)
+    return data, cols
