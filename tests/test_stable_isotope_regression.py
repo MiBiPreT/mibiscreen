@@ -12,7 +12,7 @@ from mibipret.analysis.reduction.stable_isotope_regression import Lambda_regress
 from mibipret.analysis.reduction.stable_isotope_regression import Rayleigh_fractionation
 from mibipret.analysis.reduction.stable_isotope_regression import extract_isotope_data
 from mibipret.analysis.reduction.stable_isotope_regression import valid_indices
-from mibipret.data.data import example_data
+from mibipret.data.example_data import example_data
 
 
 class TestData:
@@ -26,7 +26,7 @@ class TestData:
     concentration_02 = np.array([0.05,0.075,0.11,0.13,0.15,0.04,0.04])
     delta_02 = np.array([35.,20.,10.,7.,5.,25.,35.])
 
-    data = example_data(with_units = False,standardize=True)
+    data = example_data(with_units = False)
 
     ### ---------------------------------------------------------------------------
 
