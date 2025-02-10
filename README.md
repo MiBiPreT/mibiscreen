@@ -1,5 +1,6 @@
 [![github repo badge](https://img.shields.io/badge/github-repo-000.svg?logo=github&labelColor=gray&color=blue)](https://github.com/MiBiPreT/mibipret)
 [![github license badge](https://img.shields.io/github/license/MiBiPreT/mibipret)](https://github.com/MiBiPreT/mibipret)
+[![PyPI version](https://badge.fury.io/py/mibipret.svg)](https://badge.fury.io/py/mibipret)
 [![RSD](https://img.shields.io/badge/rsd-mibipret-00a3e3.svg)](https://www.research-software.nl/software/mibipret)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10878799.svg)](https://doi.org/10.5281/zenodo.10878799)
 [![workflow cii badge](https://bestpractices.coreinfrastructure.org/projects/8711/badge)](https://bestpractices.coreinfrastructure.org/projects/8711)
@@ -22,6 +23,25 @@ A collection of routines for data analysis on contaminant site data with the goa
 
 ## Installation
 
+### Installation of stable release
+
+Use `pip` to install the most recent stable release of `mibipret` as follows:
+
+```console
+pip install mibipret
+```
+
+### Installation of most recent development version
+
+To install mibipret from the GitHub repository directly, do:
+
+```console
+git clone git@github.com:MiBiPreT/mibipret.git
+cd mibipret
+python -m pip install .
+```
+
+Note that this is the (possibly unstable) development version from the `main` branch. If you want a stable release, use the pip installation method instead.
 To install mibipret from GitHub repository, do:
 
 ```console
