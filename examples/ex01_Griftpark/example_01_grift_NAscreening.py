@@ -11,8 +11,9 @@
 # from visualize.activity import activity
 
 import mibipret.analysis.sample.screening_NA as na
-from mibipret.data.load_data import load_csv
 from mibipret.data.check_data import standardize
+from mibipret.data.load_data import load_csv
+
 #from mibipret.data.check_data import check_columns,check_units,check_values, standardize
 from mibipret.visualize.activity import activity
 

@@ -10,8 +10,9 @@
 # import data as md
 # from visualize.activity import activity
 
-from mibipret.data.load_data import load_excel
 from mibipret.data.check_data import standardize
+from mibipret.data.load_data import load_excel
+
 #from mibipret.data.check_data import check_columns,check_units,check_values, standardize
 
 # import mibipret.analysis.sample.screening_NA as na
