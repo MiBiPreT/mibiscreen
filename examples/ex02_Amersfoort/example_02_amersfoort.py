@@ -10,7 +10,9 @@
 # import data as md
 # from visualize.activity import activity
 
-import mibipret.data.data as md
+from mibipret.data.load_data import load_excel
+from mibipret.data.check_data import standardize
+#from mibipret.data.check_data import check_columns,check_units,check_values, standardize
 
 # import mibipret.analysis.sample.screening_NA as na
 # from mibipret.visualize.activity import activity
@@ -26,7 +28,7 @@ file_path = './amersfoort.xlsx'
 
 ###------------------------------------------------------------------------###
 ### Load and standardize data of environmental quantities/chemicals
-environment_raw,units = md.load_excel(file_path,
+environment_raw,units = load_excel(file_path,
                                       sheet_name = 'environment',
                                       verbose = verbose)
 
@@ -34,13 +36,13 @@ environment_raw,units = md.load_excel(file_path,
 # check_list = md.check_units(environment_raw,verbose = verbose)
 # environment_pure = md.check_values(environment_raw, verbose = verbose)
 
-environment,units = md.standardize(environment_raw,
+environment,units = standardize(environment_raw,
                                    reduce = True,
                                    verbose=verbose)
 
 ###------------------------------------------------------------------------###
 ### Load and standardize data of contaminants
-contaminants_raw,units = md.load_excel(file_path,
+contaminants_raw,units = load_excel(file_path,
                                        sheet_name = 'contaminants',
                                        verbose = verbose)
 
@@ -48,15 +50,15 @@ contaminants_raw,units = md.load_excel(file_path,
 # check_list = md.check_units(contaminants_raw,verbose = verbose)
 # contaminants_pure = md.check_values(contaminants_raw, verbose = verbose)
 
-contaminants,units = md.standardize(contaminants_raw,
+contaminants,units = standardize(contaminants_raw,
                                     reduce = True,
                                     verbose=verbose)
 
 ###------------------------------------------------------------------------###
 ### Load and standardize data of metabolites
-metabolites_raw,units = md.load_excel(file_path,
-                                      sheet_name = 'metabolites',
-                                      verbose = verbose)
+metabolites_raw,units = load_excel(file_path,
+                                    sheet_name = 'metabolites',
+                                    verbose = verbose)
 
 # column_names_known,column_names_unknown,column_names_standard = md.check_columns(metabolites_raw,
 #                                                                              check_metabolites = True,
@@ -69,10 +71,10 @@ metabolites_raw,units = md.load_excel(file_path,
 #                                    check_metabolites = True,
 #                                    verbose = verbose)
 
-metabolites,units = md.standardize(metabolites_raw,
-                                   reduce = True,
-                                   check_metabolites = True,
-                                   verbose=verbose)
+# metabolites,units = standardize(metabolites_raw,
+#                                 reduce = True,
+#                                 check_metabolites = True,
+#                                 verbose=verbose)
 
 # ###------------------------------------------------------------------------###
 # ### perform NA screening step by step
