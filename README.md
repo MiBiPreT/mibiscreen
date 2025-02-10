@@ -17,7 +17,7 @@ A Python package for prediction and analysis in Microbiome based Remediation. De
 | **Other best practices**           | &nbsp; |
 | Static analysis                    | [![workflow scq badge](https://sonarcloud.io/api/project_badges/measure?project=MiBiPreT_MiBiPreT&metric=alert_status)](https://sonarcloud.io/dashboard?id=MiBiPreT_MiBiPreT) |
 | Coverage                           | [![workflow scc badge](https://sonarcloud.io/api/project_badges/measure?project=MiBiPreT_MiBiPreT&metric=coverage)](https://sonarcloud.io/dashboard?id=MiBiPreT_MiBiPreT) |
-| Documentation                      | [![documentation](https://github.com/MiBiPreT/mibipret/actions/workflows/documentation.yml/badge.svg)](https://mibipret.github.io/mibipret) |
+| Documentation                      | [![documentation](https://github.com/MiBiPreT/mibipret/actions/workflows/documentation-deploy.yml/badge.svg)](https://mibipret.github.io/mibipret) |
 | **GitHub Actions**                 | &nbsp; |
 | Build                              | [![build](https://github.com/MiBiPreT/mibipret/actions/workflows/build.yml/badge.svg)](https://github.com/MiBiPreT/mibipret/actions/workflows/build.yml) |
 | Citation data consistency          | [![cffconvert](https://github.com/MiBiPreT/mibipret/actions/workflows/cffconvert.yml/badge.svg)](https://github.com/MiBiPreT/mibipret/actions/workflows/cffconvert.yml) |
