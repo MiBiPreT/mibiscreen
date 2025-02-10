@@ -162,6 +162,7 @@ exclude = [
     "venv",
     ".venv",
     "scripts",
+    "*.ipynb"
 ]
 lint.per-file-ignores = {}
 
