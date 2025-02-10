@@ -41,7 +41,7 @@ license = {file = "LICENSE"}
 name = "mibipret"
 readme = {file = "README.md", content-type = "text/markdown"}
 requires-python = ">=3.8"
-version = "0.1.0"
+version = "0.2.0"
 
 [project.optional-dependencies]
 dev = [
@@ -188,6 +188,3 @@ filename = "pyproject.toml"
 
 [[tool.bumpversion.files]]
 filename = "CITATION.cff"
-
-[[tool.bumpversion.files]]
-filename = "docs/conf.py"
