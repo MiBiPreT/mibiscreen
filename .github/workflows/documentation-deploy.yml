@@ -1,20 +1,14 @@
-name: documentation
+name: documentation-deploy
 
 permissions: write-all
 
-
 on:
-  push:
-    branches:
-    - main
-  pull_request:
-    branches:
-    - main
+  release:
+    types: [published]
 
 jobs:
-  build-docs:
+  build-docs-and-deploy:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
 
