@@ -65,7 +65,7 @@ def filter_values(data_frame,
         print('Perform filtering of values since ordination requires all values to be numeric.')
 
     if len(drop_rows)>0:
-        data.drow(drop_rows, inplace = True)
+        data.drop(drop_rows, inplace = True)
         if verbose:
             print('The samples of rows {} have been removed'.format(drop_rows))
 

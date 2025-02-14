@@ -10,7 +10,6 @@ import mibipret.data.names_data as names
 def extract_data(data_frame,
                  name_list,
                  keep_setting_data = True,
-                 inplace = False,
                  ):
     """Extracting data of specified variables from dataframe.
 
@@ -22,9 +21,6 @@ def extract_data(data_frame,
             list of column names to extract from dataframes
         keep_setting_data: bool, default True
             Whether to keep setting data in the DataFrame.
-            
-        inplace: Boolean, default False
-            Whether to modify the DataFrame rather than creating a new one.
 
     Returns:
     -------
@@ -41,11 +37,7 @@ def extract_data(data_frame,
 
     """
 
-    if inplace is False:
-        data = data_frame.copy()
-    else:
-        data = data_frame
-
+    data = data_frame.copy()
 
     inter_names,r_columns,r_name_list = compare_lists(data.columns.to_list(),name_list)
 
@@ -58,13 +50,8 @@ def extract_data(data_frame,
         inter1 = inter_settings + rim_names
     else:
         inter1 = inter_names
-
-    # print("HERE", inter1)
-    # print(data.shape)
-    data = data[inter1]
-    # print(data.shape)
-    
-    return data
+ 
+    return data[inter1]
 
 def merge_data(data_frames_list,
                how='outer',
