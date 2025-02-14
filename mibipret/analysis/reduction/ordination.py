@@ -125,7 +125,7 @@ def pca(data_frame,
         print('----------------------------------------------------------------')
         for i in range(len(percent_explained)):
             print('Principle component {} explains {}% of the total variance.'.format(i,percent_explained[i]))
-        print('\nThe correlation coefficient between PC1 and PC2 is {}.'.format(coef))
+        print('\nThe correlation coefficient between PC1 and PC2 is {:.2e}.'.format(coef))
         print('----------------------------------------------------------------')
 
     results = {"method": 'pca',
