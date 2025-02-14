@@ -6,10 +6,10 @@
 """
 
 import numpy as np
+
 # import pandas as pd
 import skbio.stats.ordination as sciord
 from sklearn import decomposition
-
 # from mibipret.data.names_data import name_sample
 from mibipret.data.check_data import check_data_frame
 

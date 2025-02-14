@@ -243,7 +243,7 @@ def ordination_plot(ordination_output,
 
     if isinstance(settings['title'],str):
         plt.title(settings['title'],fontsize = settings['label_fontsize'])
-        
+
     plt.tight_layout()
     if save_fig is not False:
         try:

@@ -7,29 +7,27 @@
 
 import numpy as np
 from scipy.stats import zscore
+from mibipret.data.check_data import check_data_frame
 
 # import sys
 # path = '/home/alraune/GitHub/MiBiPreT/mibipret/mibipret/'
 # sys.path.append(path) # append the path to module
-
 from mibipret.data.names_data import setting_data
-from mibipret.data.check_data import check_data_frame
 from mibipret.data.set_data import compare_lists
 
-def filter_values(data_frame, 
-                  replace_NaN = 'remove', 
-                  drop_rows = [], 
+
+def filter_values(data_frame,
+                  replace_NaN = 'remove',
+                  drop_rows = [],
                   inplace = True,
                   verbose = False):
+    """Filtering values of dataframes for ordination to assure all are numeric.
 
-    """
-    Filtering values of dataframes for ordination to assure all are numeric.
-    
     Ordination methods require all cells to be filled. This method checks the
     provided data frame if values are missing/NaN or not numeric and handles
-    missing/NaN values accordingly. 
-       
-    It then removes select rows and mutates the cells containing NULL values based 
+    missing/NaN values accordingly.
+
+    It then removes select rows and mutates the cells containing NULL values based
     on the input parameters.
 
     Input
@@ -41,9 +39,9 @@ def filter_values(data_frame,
             Keyword specifying how to handle missing/NaN/non-numeric values, options:
                 - remove: remove rows with missing values
                 - zero: replace values with 0.0
-                - average: replace the missing values with the average of the variable 
+                - average: replace the missing values with the average of the variable
                             (using all other available samples)
-                - median: replace the missing values with the median of the variable 
+                - median: replace the missing values with the median of the variable
                                         (using all other available samples)
                 - float-value: replace all empty cells with that numeric value
         drop_rows : List, default [] (empty list)
@@ -72,7 +70,7 @@ def filter_values(data_frame,
     # Identifying which rows and columns contain any amount of NULL cells and putting them in a list.
     NaN_rows = data[data.isna().any(axis=1)].index.tolist()
     NaN_cols = data.columns[data.isna().any()].tolist()
-      
+
     # If there are any rows containing NULL cells, the NULL values will be filtered
     if len(NaN_rows)>0:
         if replace_NaN == 'remove':
@@ -103,33 +101,34 @@ def filter_values(data_frame,
 
     if verbose:
         print(text)
-                
+
     return data
 
 def transform_values(data_frame,
                      name_list = 'all',
                      how = 'log_scale',
-                     log_scale_A = 1, 
+                     log_scale_A = 1,
                      log_scale_B = 1,
                      inplace = True,
                      verbose = False,
                      ):
-
     """Extracting data from dataframe for specified variables.
 
     Args:
     -------
         data_frame: pandas.DataFrames
             dataframe with the measurements
-        name_variables: string or list of strings, default 'all'
+        name_list: string or list of strings, default 'all'
             list of quantities (column names) to perfrom transformation on
-        name_standardize: Boolean, default "True"
-            If True, performs standardization of names in provided list "name_variables"
         how: string, default 'standardize'
             Type of transformation:
                 * standardize
-                * log_scale: 
+                * log_scale
                 * center
+        log_scale_A : Integer or float, default 1
+            Log transformation parameter A: log10(Ax+B).
+        log_scale_B : Integer or float, default 1
+            Log transformation parameter B: log10(Ax+B).
         inplace: bool, default True
             If False, return a copy. Otherwise, do operation in place and return None.
         verbose : Boolean, The default is False.
@@ -146,6 +145,7 @@ def transform_values(data_frame,
 
     Example:
     -------
+    To be added.
     """
     data,cols= check_data_frame(data_frame,inplace = inplace)
 
@@ -157,8 +157,8 @@ def transform_values(data_frame,
     if name_list == 'all':
         intersection = list(set(cols) - set(setting_data))
 
-    else:     
-        
+    else:
+
         intersection,remainder_list1,remainder_list2 = compare_lists(cols,name_list)
         if len(intersection) < len(name_list):
             print("WARNING: not all variables in name_list are found in dataframe.")

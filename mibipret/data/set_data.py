@@ -7,6 +7,7 @@
 import pandas as pd
 import mibipret.data.names_data as names
 
+
 def extract_data(data_frame,
                  name_list,
                  keep_setting_data = True,
@@ -36,7 +37,6 @@ def extract_data(data_frame,
     To be added.
 
     """
-
     data = data_frame.copy()
 
     inter_names,r_columns,r_name_list = compare_lists(data.columns.to_list(),name_list)
@@ -50,7 +50,7 @@ def extract_data(data_frame,
         inter1 = inter_settings + rim_names
     else:
         inter1 = inter_names
- 
+
     return data[inter1]
 
 def merge_data(data_frames_list,
