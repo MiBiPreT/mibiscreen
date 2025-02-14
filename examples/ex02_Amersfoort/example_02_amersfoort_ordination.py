@@ -5,7 +5,7 @@ Example of diagnostic plotting using ordination with contaminant data from Amers
 @author: Alraune Zech
 """
 
-import pandas as pd
+#import pandas as pd
 
 
 from mibipret.data.load_data import load_excel
@@ -14,7 +14,6 @@ from mibipret.data.check_data import standardize, standard_names
 
 # from mibipret.analysis.reduction.transformation import filter_values,transform_values
 from mibipret.analysis.reduction.ordination import pca,cca,rda
-
 from mibipret.visualize.ordination_plot import ordination_plot
 
 import sys
@@ -58,38 +57,42 @@ contaminants,units = standardize(contaminants_raw,
 
 
 data = merge_data([environment,contaminants],clean = True)
-variables_1 = ['pH','EC','Redox','DOC','nitrate','nitrite','sulfate',"Mn","Fe"]
-variables_2 = ['Sum GC']
-# variables = ['pH','EC','Redox','DOC','nitrate','nitrite','sulfate','Sum GC',"Mn","Fe"]
-# variables_standard = standard_names(variables) # standardize names
-# variables_standard = ['pH', 'EC', 'redoxpot', 'DOC', 'nitrate', 'nitrite', 'sulfate', 'manganese', 'iron2']
-
 #display(data)
-extract_data(data,
-             name_list = variables_1+variables_2,
+
+
+variables_1 = standard_names(['Sum GC'])
+variables_2 = standard_names(['nitrate','pH','nitrite','sulfate','Redox','EC','DOC',"Mn","Fe"])
+
+
+data_null = extract_data(data,
+             name_list = variables_1 + variables_2,
              keep_setting_data = True,
              inplace = True)
 
-#display(data)
-filter_values(data, 
+filter_values(data_null, 
               replace_NaN = 'remove', 
               inplace = True,
               verbose = True)
 
-#display(data)
-transform_values(data,
-                 name_list = variables_2,
+transform_values(data_null,
+                 name_list = variables_1,
                  how = 'log_scale',
                  inplace = True,
                  )
 
-transform_values(data,
+transform_values(data_null,
                   name_list = variables_1,
+                  how = 'standardize',
+                  inplace = True,
+                  )
+
+transform_values(data_null,
+                  name_list = variables_2,
                   how = 'standardize',
                   inplace = True,
                 )
 
-ordination_output = pca(data,
+ordination_output = pca(data_null,
                         independent_variables = variables_1+variables_2,
                         verbose = True)
 
