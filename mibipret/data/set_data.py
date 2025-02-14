@@ -7,7 +7,6 @@
 import pandas as pd
 import mibipret.data.names_data as names
 
-
 def extract_data(data_frame,
                  name_list,
                  keep_setting_data = True,
@@ -23,6 +22,7 @@ def extract_data(data_frame,
             list of column names to extract from dataframes
         keep_setting_data: bool, default True
             Whether to keep setting data in the DataFrame.
+            
         inplace: Boolean, default False
             Whether to modify the DataFrame rather than creating a new one.
 
@@ -48,19 +48,21 @@ def extract_data(data_frame,
 
 
     inter_names,r_columns,r_name_list = compare_lists(data.columns.to_list(),name_list)
+
     if len(inter_names)<len(name_list):
         print("Warning: Not all variables in name_list are identified in the data frame columns: ",r_name_list)
 
     if keep_setting_data:
-        # inter,r1,r2 = compare_lists(data_frame.columns.to_list(),names.setting_data+name_list)
-
         inter_settings,r1,r2 = compare_lists(data.columns.to_list(),names.setting_data)
         i1,rim_names,r2 = compare_lists(inter_names,names.setting_data)
         inter1 = inter_settings + rim_names
     else:
         inter1 = inter_names
 
+    # print("HERE", inter1)
+    # print(data.shape)
     data = data[inter1]
+    # print(data.shape)
     
     return data
 
@@ -105,6 +107,7 @@ def merge_data(data_frames_list,
     """
     if len(data_frames_list)<2:
         raise ValueError('Provide List of DataFrames.')
+
 
     data_merge = data_frames_list[0]
     for data_add in data_frames_list[1:]:

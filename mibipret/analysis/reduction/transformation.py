@@ -13,7 +13,7 @@ from scipy.stats import zscore
 # sys.path.append(path) # append the path to module
 
 from mibipret.data.names_data import setting_data
-from mibipret.data.check_data import check_data_frame, standard_names
+from mibipret.data.check_data import check_data_frame
 from mibipret.data.set_data import compare_lists
 
 def filter_values(data_frame, 
@@ -108,7 +108,6 @@ def filter_values(data_frame,
 
 def transform_values(data_frame,
                      name_list = 'all',
-                     name_standardize = True,
                      how = 'log_scale',
                      log_scale_A = 1, 
                      log_scale_B = 1,
@@ -158,16 +157,9 @@ def transform_values(data_frame,
     if name_list == 'all':
         intersection = list(set(cols) - set(setting_data))
 
-    else:
-        if name_standardize:
-            name_list_standard = standard_names(name_list,
-                                                standardize = True,
-                                                reduce = False,
-                                                verbose = False,                                           
-                                                ) # standardize names
-      
+    else:     
         
-        intersection,remainder_list1,remainder_list2 = compare_lists(cols,name_list_standard)
+        intersection,remainder_list1,remainder_list2 = compare_lists(cols,name_list)
         if len(intersection) < len(name_list):
             print("WARNING: not all variables in name_list are found in dataframe.")
             print('----------------------------------------------------------------')
