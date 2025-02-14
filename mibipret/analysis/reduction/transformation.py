@@ -19,7 +19,7 @@ from mibipret.data.set_data import compare_lists
 def filter_values(data_frame,
                   replace_NaN = 'remove',
                   drop_rows = [],
-                  inplace = True,
+                  inplace = False,
                   verbose = False):
     """Filtering values of dataframes for ordination to assure all are numeric.
 
@@ -95,7 +95,7 @@ def filter_values(data_frame,
             text = 'The values of the empty cells have been replaced by the median of\
                   the corresponding variables (using all other available samples).'
         else:
-            raise ValueError("Value of 'replace_NaN' unknown:", replace_NaN)
+            raise ValueError("Value of 'replace_NaN' unknown: {}".format(replace_NaN))
     else:
         text = 'No data to be filtered out.'
 
@@ -109,7 +109,7 @@ def transform_values(data_frame,
                      how = 'log_scale',
                      log_scale_A = 1,
                      log_scale_B = 1,
-                     inplace = True,
+                     inplace = False,
                      verbose = False,
                      ):
     """Extracting data from dataframe for specified variables.
@@ -158,7 +158,8 @@ def transform_values(data_frame,
         intersection = list(set(cols) - set(setting_data))
 
     else:
-
+        if isinstance(name_list, str):
+            name_list = [name_list]
         intersection,remainder_list1,remainder_list2 = compare_lists(cols,name_list)
         if len(intersection) < len(name_list):
             print("WARNING: not all variables in name_list are found in dataframe.")
@@ -174,5 +175,7 @@ def transform_values(data_frame,
             data[quantity] =  data[quantity]-data[quantity].mean()
         elif how == 'standardize':
             data[quantity] = zscore(data[quantity].values)
+        else:
+            raise ValueError("Value of 'how' unknown: {}".format(how))
 
     return data
