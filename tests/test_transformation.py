@@ -1,22 +1,17 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Feb 14 14:47:27 2025
+"""Tests for the mibipret.analysis.reduction.transformation module.
 
-@author: alraune
+@author: Alraune Zech
 """
 
-import pytest
 import numpy as np
-
-from mibipret.data.example_data import example_data
-
-import sys
-path = '/home/alraune/GitHub/MiBiPreT/mibipret/'
-sys.path.append(path) # append the path to module
-
+import pytest
+# import sys
+# path = '/home/alraune/GitHub/MiBiPreT/mibipret/'
+# sys.path.append(path) # append the path to module
 from mibipret.analysis.reduction.transformation import filter_values
 from mibipret.analysis.reduction.transformation import transform_values
+from mibipret.data.example_data import example_data
+
 
 class Test_Filtering:
     """Class for testing data filter for ordination."""
@@ -32,7 +27,6 @@ class Test_Filtering:
             - replace_NaN = 'remove'
             - verbose = False
         """
-            
         data_filter = filter_values(self.data)
 
         assert data_filter.shape[0] == self.data.shape[0]-1
@@ -43,8 +37,7 @@ class Test_Filtering:
 
         Check that routine provides filtered data frame for replacement option
         'zero'
-         """
-            
+        """
         data_filter = filter_values(self.data,
                                     replace_NaN = 'zero')
 
@@ -59,8 +52,7 @@ class Test_Filtering:
 
         Check that routine provides filtered data frame for replacement option
         float or integer value
-         """
-            
+        """
         data_filter = filter_values(self.data,
                                     replace_NaN = 1.0)
 
@@ -75,8 +67,7 @@ class Test_Filtering:
 
         Check that routine provides filtered data frame for replacement option
         'average'
-         """
-            
+        """
         data_filter = filter_values(self.data,
                                     replace_NaN = 'average')
 
@@ -91,8 +82,7 @@ class Test_Filtering:
 
         Check that routine provides filtered data frame for replacement option
         'median'
-         """
-            
+        """
         data_filter = filter_values(self.data,
                                     replace_NaN = 'median')
 
@@ -112,7 +102,6 @@ class Test_Filtering:
         Correct error message when keyword for replacement option 'replace_NaN'
         is not a valid option
         """
-
         replace_NaN = 'wrong option'
         with pytest.raises(ValueError,match="Value of 'replace_NaN' unknown: {}".format(replace_NaN)):
             filter_values(self.data,
@@ -126,7 +115,6 @@ class Test_Filtering:
             - replace_NaN = 'remove'
             - verbose = False
         """
-            
         data_filter = self.data.copy()
         filter_values(data_filter,
                       inplace = True)
@@ -139,7 +127,6 @@ class Test_Filtering:
 
         Check keyword 'drop_rows'
         """
-
         data_filter = filter_values(self.data,
                                     drop_rows = [4],
                                     )
@@ -171,11 +158,10 @@ class Test_Transformation:
     def test_transform_values_01(self):
         """Testing routine transform_values().
 
-        Check that routine provides correct tranformation results for 
+        Check that routine provides correct tranformation results for
         type of filtering: center
 
         """
-        
         data_trans = transform_values(self.data,
                          how = 'center',
                          )
@@ -187,11 +173,10 @@ class Test_Transformation:
     def test_transform_values_02(self):
         """Testing routine transform_values().
 
-        Check that routine provides correct tranformation results for 
+        Check that routine provides correct tranformation results for
         type of filtering: standard
 
         """
-        
         data_trans = transform_values(self.data,
                          how = 'standardize',
                          )
@@ -203,7 +188,7 @@ class Test_Transformation:
     def test_transform_values_03(self):
         """Testing routine transform_values().
 
-        Check that routine provides correct tranformation results for 
+        Check that routine provides correct tranformation results for
         log transformation on a single quantity
 
         """
@@ -221,7 +206,6 @@ class Test_Transformation:
         Correct error message when keyword for transformation option 'how'
         is not a valid option
         """
-
         how = 'wrong option'
         with pytest.raises(ValueError,match="Value of 'how' unknown: {}".format(how)):
             transform_values(self.data,
@@ -231,7 +215,7 @@ class Test_Transformation:
     def test_transform_values_05(self):
         """Testing routine transform_values().
 
-        Check that routine provides correct tranformation results for 
+        Check that routine provides correct tranformation results for
         log transformation on a single quantity
 
         """
@@ -251,13 +235,12 @@ class Test_Transformation:
         Check that routine provides Warning when a variable from the list
         is not identitied in the data frame
         """
-
         variables = ['nitrate', 'methane','benzene', 'wrong name']
         transform_values(self.data,
                          name_list = variables,
                          how = 'center',
                          )
-        
+
         out,err=capsys.readouterr()
         assert len(out)>0
 

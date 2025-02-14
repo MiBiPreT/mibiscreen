@@ -5,28 +5,19 @@ Example of diagnostic plotting using ordination with contaminant data from Amers
 @author: Alraune Zech
 """
 
-# from mibipret.visualize.ordination_plot import ordination_plot
-import sys
-#from mibipret.data.set_data import merge_data, extract_data
-# from mibipret.analysis.reduction.transformation import filter_values,transform_values
+# import sys
+# path = '/home/alraune/GitHub/MiBiPreT/mibipret/'
+# sys.path.append(path) # append the path to module
+
 from mibipret.analysis.reduction.ordination import pca
+from mibipret.analysis.reduction.transformation import filter_values
+from mibipret.analysis.reduction.transformation import transform_values
 from mibipret.data.check_data import standard_names
 from mibipret.data.check_data import standardize
 from mibipret.data.load_data import load_excel
-
-path = '/home/alraune/GitHub/MiBiPreT/mibipret/mibipret/analysis/reduction'
-sys.path.append(path) # append the path to module
-from transformation import filter_values
-from transformation import transform_values
-
-path = '/home/alraune/GitHub/MiBiPreT/mibipret/mibipret/data'
-sys.path.append(path) # append the path to module
-from set_data import extract_data
-from set_data import merge_data
-
-path = '/home/alraune/GitHub/MiBiPreT/mibipret/mibipret/visualize'
-sys.path.append(path) # append the path to module
-from ordination_plot import ordination_plot
+from mibipret.data.set_data import extract_data
+from mibipret.data.set_data import merge_data
+from mibipret.visualize.ordination_plot import ordination_plot
 
 ###------------------------------------------------------------------------###
 ### Script settings

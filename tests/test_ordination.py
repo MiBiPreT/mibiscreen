@@ -5,18 +5,16 @@
 
 import numpy as np
 import pytest
-
-from mibipret.data.example_data import example_data
-
-import sys
-path = '/home/alraune/GitHub/MiBiPreT/mibipret/'
-sys.path.append(path) # append the path to module
-
+# import sys
+# path = '/home/alraune/GitHub/MiBiPreT/mibipret/'
+# sys.path.append(path) # append the path to module
 from mibipret.analysis.reduction.ordination import cca
 from mibipret.analysis.reduction.ordination import constrained_ordination
 from mibipret.analysis.reduction.ordination import extract_variables
 from mibipret.analysis.reduction.ordination import pca
 from mibipret.analysis.reduction.ordination import rda
+from mibipret.data.example_data import example_data
+
 
 class Test_PCA:
     """Class for testing unconstrained ordination PCA."""
