@@ -8,10 +8,6 @@
 import numpy as np
 from scipy.stats import zscore
 from mibipret.data.check_data import check_data_frame
-
-# import sys
-# path = '/home/alraune/GitHub/MiBiPreT/mibipret/mibipret/'
-# sys.path.append(path) # append the path to module
 from mibipret.data.names_data import setting_data
 from mibipret.data.set_data import compare_lists
 

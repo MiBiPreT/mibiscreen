@@ -5,10 +5,6 @@ Example of diagnostic plotting using ordination with contaminant data from Amers
 @author: Alraune Zech
 """
 
-# import sys
-# path = '/home/alraune/GitHub/MiBiPreT/mibipret/'
-# sys.path.append(path) # append the path to module
-
 from mibipret.analysis.reduction.ordination import pca
 from mibipret.analysis.reduction.transformation import filter_values
 from mibipret.analysis.reduction.transformation import transform_values
