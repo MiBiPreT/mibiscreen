@@ -3,20 +3,14 @@
 @author: Alraune Zech
 """
 
-# import sys
-# path = '/home/alraune/GitHub/MiBiPreT/mibipret/mibipret/data/'
-# sys.path.append(path) # append the path to module
-# import analysis.sample.screening_NA as na
-# import data as md
-# from visualize.activity import activity
-
+from mibipret.data.check_data import check_columns
+from mibipret.data.check_data import check_units
+from mibipret.data.check_data import check_values
 from mibipret.data.check_data import standardize
 from mibipret.data.load_data import load_excel
 
-#from mibipret.data.check_data import check_columns,check_units,check_values, standardize
-
-# import mibipret.analysis.sample.screening_NA as na
-# from mibipret.visualize.activity import activity
+#import mibipret.analysis.sample.screening_NA as na
+#from mibipret.visualize.activity import activity
 
 ###------------------------------------------------------------------------###
 ### Script settings
@@ -25,7 +19,6 @@ verbose = True
 ###------------------------------------------------------------------------###
 ### File path settings
 file_path = './amersfoort.xlsx'
-#file_standard = './grift_BTEXNII_standard.csv'
 
 ###------------------------------------------------------------------------###
 ### Load and standardize data of environmental quantities/chemicals
@@ -33,9 +26,15 @@ environment_raw,units = load_excel(file_path,
                                       sheet_name = 'environment',
                                       verbose = verbose)
 
-# column_names_known,column_names_unknown,column_names_standard = md.check_columns(environment_raw, verbose = verbose)
-# check_list = md.check_units(environment_raw,verbose = verbose)
-# environment_pure = md.check_values(environment_raw, verbose = verbose)
+###------------------------------------------------------------------------###
+### Details of standardization process
+column_names_known,column_names_unknown,column_names_standard = check_columns(
+    environment_raw,
+    verbose = verbose)
+check_list = check_units(environment_raw,
+                         verbose = verbose)
+environment_pure = check_values(environment_raw,
+                                verbose = verbose)
 
 environment,units = standardize(environment_raw,
                                    reduce = True,
@@ -46,10 +45,6 @@ environment,units = standardize(environment_raw,
 contaminants_raw,units = load_excel(file_path,
                                        sheet_name = 'contaminants',
                                        verbose = verbose)
-
-# column_names_known,column_names_unknown,column_names_standard = md.check_columns(contaminants_raw, verbose = verbose)
-# check_list = md.check_units(contaminants_raw,verbose = verbose)
-# contaminants_pure = md.check_values(contaminants_raw, verbose = verbose)
 
 contaminants,units = standardize(contaminants_raw,
                                     reduce = True,

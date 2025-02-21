@@ -37,22 +37,21 @@ def extract_data(data_frame,
     To be added.
 
     """
-    inter_names,r_columns,r_name_list = compare_lists(data_frame.columns.to_list(),name_list)
+    data = data_frame.copy()
+
+    inter_names,r_columns,r_name_list = compare_lists(data.columns.to_list(),name_list)
+
     if len(inter_names)<len(name_list):
         print("Warning: Not all variables in name_list are identified in the data frame columns: ",r_name_list)
 
     if keep_setting_data:
-        # inter,r1,r2 = compare_lists(data_frame.columns.to_list(),names.setting_data+name_list)
-
-        inter_settings,r1,r2 = compare_lists(data_frame.columns.to_list(),names.setting_data)
+        inter_settings,r1,r2 = compare_lists(data.columns.to_list(),names.setting_data)
         i1,rim_names,r2 = compare_lists(inter_names,names.setting_data)
         inter1 = inter_settings + rim_names
     else:
         inter1 = inter_names
 
-    data = data_frame[inter1].copy()
-
-    return data
+    return data[inter1]
 
 def merge_data(data_frames_list,
                how='outer',
@@ -95,6 +94,7 @@ def merge_data(data_frames_list,
     """
     if len(data_frames_list)<2:
         raise ValueError('Provide List of DataFrames.')
+
 
     data_merge = data_frames_list[0]
     for data_add in data_frames_list[1:]:
