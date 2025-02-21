@@ -66,14 +66,11 @@ metabolites,units = standardize(metabolites_raw,
                                 verbose=verbose)
 
 metabolites_columns = check_columns(metabolites_raw,
-                                    check_metabolites = True,
-                                    verbose = verbose,)
+                                    verbose = verbose)
 metabolites_units_check = check_units(metabolites_raw,
-                                      check_metabolites = True,
                                       verbose = verbose)
 
 metabolites_pure = check_values(metabolites_raw,
-                                check_metabolites = True,
                                 verbose = verbose)
 
 ###------------------------------------------------------------------------###
