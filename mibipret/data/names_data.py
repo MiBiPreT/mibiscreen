@@ -96,7 +96,6 @@ name_2_ethylnaphtalene = '2_ethylnaphtalene'
 name_16_dimethylnaphtalene = '16_dimethylnaphtalene'
 name_26_dimethylnaphtalene = '26_dimethylnaphtalene'
 
-### todo: complete and potentially choose other names
 contaminants = dict(
     BTEX = [name_benzene,name_toluene,name_ethylbenzene, name_pm_xylene,
                 name_o_xylene, name_xylene],
@@ -112,6 +111,45 @@ contaminants = dict(
                 name_2_ethylnaphtalene,name_16_dimethylnaphtalene,name_26_dimethylnaphtalene],
 )
 
+### Standard names for a selection of metabolites
+name_phenol = "phenol"
+name_cinnamic_acid = "cinnamic_acid"
+name_benzoic_acid = "benzoic_acid"
+name_dimethyl_benzoic_acid = 'dimethyl_benzoic_acid'
+name_benzylacetate = 'benzylacetate'
+name_benzoylacetic_acid = "benzoylacetic_acid"
+name_p_coumaric_acid = "p-coumaric_acid"
+name_hydroxycinnamate = "hydroxycinnamate"
+name_acetylphenol = "acetylphenol"
+name_methyl_benzoic_acid = 'methyl_benzoic_acid'
+name_benzylsuccinic_acid = "benzylsuccinic_acid"
+name_3o_toluoyl_propionic_acid = "3o_toluoyl_propionic_acid"
+name_2methylindene = "2_methylindene"
+
+### Standard names for metabolite related quantities
+name_metabolites_conc = "metabolites_concentration"
+name_metabolites_variety = 'metabolites_variety'
+
+metabolites = [name_phenol,
+               name_cinnamic_acid,
+               name_benzoic_acid,
+               name_dimethyl_benzoic_acid,
+               name_benzylacetate,
+               name_benzoylacetic_acid,
+               name_p_coumaric_acid,
+               name_hydroxycinnamate,
+               name_acetylphenol,
+               name_methyl_benzoic_acid,
+               name_benzylsuccinic_acid,
+               name_3o_toluoyl_propionic_acid,
+               name_2methylindene,
+               ]
+
+### standard names/prefixes for isotopes:
+name_13C = 'delta_13C'
+name_2H = 'delta_2H'
+isotopes = ['delta_13C','delta_2H']
+
 ### Standard names for NA screening related quantities
 name_total_oxidators = "total_oxidators"
 name_total_reductors = "total_reductors"
@@ -123,15 +161,7 @@ name_intervention_traffic = 'intervention_traffic'
 name_intervention_number = 'intervention_number'
 name_intervention_contaminants = 'intervention_contaminants'
 
-### Standard names for metabolite related quantities
-name_metabolites_conc = "metabolites_concentration"
-name_metabolites_variety = 'metabolites_variety'
-
-### standard names/prefixes for isotopes:
-name_13C = 'delta_13C'
-name_2H = 'delta_2H'
-isotopes = ['delta_13C','delta_2H']
-
+### -----------------------------------------------------------------------------
 ### Dictionary with potential names of quantities to be replaced by standard name
 names_settings = {
     "sample": name_sample,
@@ -491,6 +521,22 @@ names_contaminants_analysis = {
     'intervention_contaminants': name_intervention_contaminants,
 }
 
+names_metabolites = {
+    "phenol": name_phenol,
+    'dimethyl_benzoic_acid': name_dimethyl_benzoic_acid,
+    'benzylacetate': name_benzylacetate,
+    "benzoylacetic_acid": name_benzoylacetic_acid,
+    "p-coumaric_acid": name_p_coumaric_acid,
+    "hydroxycinnamate": name_hydroxycinnamate,
+    "acetylphenol": name_acetylphenol,
+    'methyl_benzoic_acid': name_methyl_benzoic_acid,
+    "cinnamic_acid": name_cinnamic_acid,
+    "benzoic_acid": name_benzoic_acid,
+    "benzylsuccinic_acid": name_benzylsuccinic_acid,
+    "3o_toluoyl_propionic_acid": name_3o_toluoyl_propionic_acid,
+    "2methylindene": name_2methylindene,
+}
+
 names_metabolites_sum = {
     "metaboliteconcentration": name_metabolites_conc,
     "metabolite concentration": name_metabolites_conc,
@@ -570,11 +616,13 @@ names_isotopes = {
     'delta hydrogen2' : name_2H,
     }
 
+
 col_dict = {
     **names_settings,
     **names_environment,
     **names_chemicals,
     **names_contaminants,
     **names_contaminants_analysis,
+    **names_metabolites,
     **names_metabolites_sum,
 }
