@@ -5,9 +5,6 @@
 
 import numpy as np
 import pytest
-# import sys
-# path = '/home/alraune/GitHub/MiBiPreT/mibipret/'
-# sys.path.append(path) # append the path to module
 from mibipret.analysis.reduction.transformation import filter_values
 from mibipret.analysis.reduction.transformation import transform_values
 from mibipret.data.example_data import example_data
