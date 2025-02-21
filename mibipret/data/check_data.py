@@ -164,7 +164,7 @@ def check_data_frame(data_frame,
         else:
             data.set_index(names.name_sample,inplace = True)
 
-    elif isinstance(data, pd.Series):
+    if isinstance(data, pd.Series):
         cols = [data.name]
     else:
         cols = data.columns.to_list()
@@ -344,6 +344,13 @@ def check_units(data,
                     print("Warning: Check unit of {}!\n Given in {}, but must be per mille (e.g. {})."
                               .format(quantity,units[quantity][0],standard_units['permil'][0]))
 
+        if quantity in names.metabolites:
+            if str(units[quantity][0]).lower() not in standard_units['microgperl']:
+                col_check_list.append(quantity)
+                if verbose:
+                    print("Warning: Check unit of {}!\n Given in {}, but must be microgramm per liter (e.g. {})."
+                              .format(quantity,units[quantity][0],standard_units['microgperl'][0]))
+
     if verbose:
         print('________________________________________________________________')
         if len(col_check_list) == 0:
@@ -490,14 +497,11 @@ def standardize(data_frame,
     check_columns(data,
                   standardize = True,
                   reduce = reduce,
-                  check_metabolites = False,
-                  # check_metabolites = check_metabolites,
                   verbose = verbose)
 
     # general unit check
     units = data.drop(labels = np.arange(1,data.shape[0]))
     col_check_list = check_units(units,
-                                 check_metabolites = check_metabolites,
                                  verbose = verbose)
 
     # transform data to numeric values
