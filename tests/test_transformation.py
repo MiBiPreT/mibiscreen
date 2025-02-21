@@ -89,8 +89,6 @@ class Test_Filtering:
 
         assert np.all(test)
 
-        # else:
-        #     raise ValueError("Value of 'replace_NaN' unknown:", replace_NaN)
 
 
     def test_filter_06(self):
