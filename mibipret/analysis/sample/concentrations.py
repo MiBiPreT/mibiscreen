@@ -11,7 +11,7 @@ from mibipret.data.set_data import determine_quantities
 
 
 def total_concentration(
-        data,
+        data_frame,
         name_list = "all",
         verbose = False,
         include = False,
@@ -48,7 +48,7 @@ def total_concentration(
         print('==============================================================')
 
     ### check on correct data input format and extracting column names as list
-    data,cols= check_data_frame(data)
+    data,cols= check_data_frame(data_frame,inplace = include)
 
     ### sorting out which columns in data to use for summation of concentrations
     quantities = determine_quantities(cols,name_list = name_list, verbose = verbose)
@@ -76,7 +76,7 @@ def total_concentration(
     return tot_conc
 
 def total_count(
-        data,
+        data_frame,
         name_list = "all",
         threshold = 0.,
         verbose = False,
@@ -119,7 +119,7 @@ def total_count(
         raise ValueError("Threshold value '{}' not valid.".format(threshold))
 
     ### check on correct data input format and extracting column names as list
-    data,cols= check_data_frame(data)
+    data,cols= check_data_frame(data_frame,inplace = include)
 
     ### sorting out which column in data to use for summation of concentrations
     quantities = determine_quantities(cols,name_list = name_list, verbose = verbose)
