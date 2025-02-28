@@ -20,7 +20,7 @@ from mibipret.data.set_data import extract_data
 from mibipret.data.set_data import merge_data
 
 path_data = "./mibipret/data"
-# path_data = "../mibipret/data"
+#path_data = "../mibipret/data"
 
 class TestLoadData:
     """Class for testing data loading routines in data module of mibipret."""
@@ -195,7 +195,9 @@ class TestStandardNames:
                 * dictionary with transformation references
         """
         results = standard_names(self.names_mod + self.unknown,
-                                  standardize = False)
+                                  standardize = False,
+                                  verbose = True,
+                                  )
 
         assert results[0] == self.names_standard and results[1] == self.names_mod and \
                 results[2] == self.unknown and isinstance(results[3],dict)
@@ -261,6 +263,28 @@ class TestStandardNames:
         out,err=capsys.readouterr()
 
         assert len(out)>0
+
+    def test_standard_names_09(self,capsys):
+        """Testing routine standard_names().
+
+        Testing verbose flag for non-standard keyword settings.
+        """
+        standard_names(self.names_mod + self.unknown,
+                       standardize = False,
+                       reduce = True,
+                       verbose=True)
+        out,err=capsys.readouterr()
+
+        assert len(out)>0
+
+    def test_standard_names_10(self):
+        """Testing routine standard_names().
+
+        Testing Error if list contains values other than strings.
+        """
+        with pytest.raises(ValueError):
+            standard_names(['unknown_contaminant',7.0])
+
 
 
 class TestCheckDataFrame:

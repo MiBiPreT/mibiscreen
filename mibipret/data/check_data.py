@@ -433,7 +433,6 @@ def check_values(data_frame,
     return data
 
 def standardize(data_frame,
-                check_metabolites = False,
                 reduce = True,
                 store_csv = False,
                 verbose=True,
