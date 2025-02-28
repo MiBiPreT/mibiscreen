@@ -52,8 +52,6 @@ def total_concentration(
 
     ### sorting out which columns in data to use for summation of concentrations
     quantities = determine_quantities(cols,name_list = name_list, verbose = verbose)
-    if not quantities:
-        raise ValueError("No concentration on quantities {} given in data.".format(name_list))
 
     ### actually performing summation
     tot_conc = data[quantities].sum(axis = 1)
@@ -115,7 +113,7 @@ def total_count(
         print('==============================================================')
 
     threshold = float(threshold)
-    if not threshold>=0:
+    if threshold<0:
         raise ValueError("Threshold value '{}' not valid.".format(threshold))
 
     ### check on correct data input format and extracting column names as list
@@ -123,8 +121,6 @@ def total_count(
 
     ### sorting out which column in data to use for summation of concentrations
     quantities = determine_quantities(cols,name_list = name_list, verbose = verbose)
-    if not quantities:
-        raise ValueError("No concentration on quantities {} given in data.".format(name_list))
 
     ### actually performing count of values above threshold:
     total_count = (data[quantities]>threshold).sum(axis = 1)
