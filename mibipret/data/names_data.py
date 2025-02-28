@@ -18,7 +18,8 @@ name_aquifer = 'aquifer'
 setting_data = [name_sample,
                 name_observation_well,
                 name_well_type,
-                name_sample_depth]
+                name_sample_depth,
+                name_aquifer]
 
 ### Standard names for environmental parameters
 name_redox = "redoxpot"
