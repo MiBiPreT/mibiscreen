@@ -145,7 +145,6 @@ plt.figure(num=3)
 plt.bar(np.arange(len(metabolites_total.values)),np.sort(metabolites_total.values),label='all')
 plt.xlabel('Samples')
 plt.ylabel('Total concentration [ug/l]')
-# plt.yscale('log')
 # plt.legend()
 plt.title('Total concentration of metabolites per sample')
 
