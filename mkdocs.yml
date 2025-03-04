@@ -12,7 +12,7 @@ nav:
   - Introduction: introduction/introduction.md
   - Methods: 
     - Ordination: methods/ordination.md
-  - Development: getting-started/development.md
+  - Development: development/development.md
   - API Reference:
     - Data: reference/reference_data.md
     - Analysis: reference/reference_analysis.md
