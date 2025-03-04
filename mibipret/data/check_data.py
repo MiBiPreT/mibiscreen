@@ -298,7 +298,6 @@ def check_units(data,
         units = data.copy()
 
     units_in_data = set(map(lambda x: str(x).lower(), units.iloc[0,:].values))
-#    print(all_units,units_in_data)
     ### testing if provided data frame contains any unit
     test_unit = False
     for u in all_units:
