@@ -649,7 +649,7 @@ class TestDataCompareLists:
 
         assert len(out)>0
 
-class Test_determine_quantities:
+class TestDetermineQuantities:
     """Class for testing determine_quantities() of mibipret."""
 
     setting_data = ["sample_nr","obs_well","well_type","depth",'aquifer']

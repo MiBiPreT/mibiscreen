@@ -78,7 +78,6 @@ metabolites_pure = check_values(metabolites_raw,
 
 contaminants_total = total_concentration(contaminants,
                                          name_list = 'all',
-                                         # include = True,
                                          verbose = True)
 
 contaminants_BTEXIIN = total_concentration(contaminants,
@@ -102,7 +101,6 @@ plt.bar(np.arange(len(contaminants_BTEXIIN.values)),np.sort(contaminants_BTEXIIN
 plt.bar(np.arange(len(contaminants_BTEX.values)),np.sort(contaminants_BTEX.values),label='BTEX')
 plt.bar(np.arange(len(contaminants_BT.values)),np.sort(contaminants_BT.values),label='BT')
 plt.bar(np.arange(len(contaminants['toluene'].values)),np.sort(contaminants['toluene'].values),label='T')
-#plt.bar(np.arange(len(contaminants['benzene'].values)),np.sort(contaminants['benzene'].values),label='B')
 plt.xlabel('Samples')
 plt.ylabel('Total concentration [ug/l]')
 plt.yscale('log')

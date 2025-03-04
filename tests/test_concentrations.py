@@ -12,7 +12,7 @@ from mibipret.analysis.sample.concentrations import total_concentration
 from mibipret.analysis.sample.concentrations import total_count
 
 
-class Test_total_concentration:
+class TestTotalConcentration:
     """Class for testing analysis module on NA screening of mibipret."""
 
     columns1 = ['sample_nr', 'sulfate', 'benzene']
@@ -64,7 +64,7 @@ class Test_total_concentration:
         assert len(out)>0
 
 
-class Test_total_count:
+class TestTotalCount:
     """Class for testing analysis module on NA screening of mibipret."""
 
     columns1 = ['sample_nr', 'sulfate', 'benzene']
