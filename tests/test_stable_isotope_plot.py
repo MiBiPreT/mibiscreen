@@ -66,7 +66,7 @@ class TestStableIsotopePlot:
         fig, ax = Rayleigh_fractionation_plot(**self.results_Rayleigh)
 
         assert isinstance(fig,plt.Figure)
-        plt.close(fig)     
+        plt.close(fig)
 
     def test_Rayleigh_fractionation_plot_02(self,capsys):
         """Testing routine Rayleigh_fractionation_plot().
