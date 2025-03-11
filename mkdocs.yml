@@ -13,7 +13,7 @@ nav:
   - Methods: 
     - Ordination: methods/ordination.md
   - Application:
-    - Data pipeline: advanced/data_pipeline_template.md
+    - Data pipeline: application/data_pipeline_template.md
   - Development: development/development.md
   - API Reference:
     - Data: reference/reference_data.md
