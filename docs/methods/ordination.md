@@ -1,4 +1,4 @@
-# `mibipret` ordination
+# `mibipret` Ordination
 
 ## General
 
