@@ -11,6 +11,7 @@ nav:
   - Home: index.md
   - Introduction: introduction/introduction.md
   - Methods: 
+    - Overview: methods/overview.md
     - Data: methods/data.md
     - NA Screening: methods/na_screening.md
     - Ordination: methods/ordination.md
