@@ -18,6 +18,7 @@ from mibiscreen.analysis.reduction.stable_isotope_regression import extract_isot
 from mibiscreen.data.check_data import standardize
 from mibiscreen.data.load_data import load_csv
 
+<<<<<<< HEAD
 plt.close('all')
 
 # import sys
@@ -28,6 +29,8 @@ plt.close('all')
 # from analysis.reduction.stable_isotope_regression import Lambda_regression
 # from analysis.reduction.stable_isotope_regression import extract_isotope_data
 
+=======
+>>>>>>> 02c906b (update routine names on NA screening in examples)
 ###------------------------------------------------------------------------###
 ### Script settings
 verbose = True

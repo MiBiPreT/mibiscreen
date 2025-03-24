@@ -13,8 +13,6 @@ from mibiscreen.data.check_data import check_values
 from mibiscreen.data.check_data import standardize
 from mibiscreen.data.load_data import load_excel
 
-#import mibiscreen.analysis.sample.screening_NA as na
-#from mibiscreen.visualize.activity import activity
 
 ###------------------------------------------------------------------------###
 ### Script settings
@@ -159,25 +157,6 @@ plt.title('Total number of metabolites per sample')
 # plt.legend()
 
 ###------------------------------------------------------------------------###
-### Evaluation of intervention threshold exceedance
-
-# na_intervention_all = thresholds_for_intervention(contaminants,
-#                                               contaminant_group='all',
-#                                               verbose = verbose,
-#                                               )
-
-# na_intervention = thresholds_for_intervention(contaminants,
-#                                               contaminant_group='BTEXIIN',
-#                                               verbose = verbose,
-#                                               )
-
-
-# data_activity = [contaminants_total.values,
-#                  metabolites_count.values,
-#                  na_intervention['intervention_traffic'].values]
-
-###------------------------------------------------------------------------###
-###------------------------------------------------------------------------###
 ###------------------------------------------------------------------------###
 
 ###
@@ -190,26 +169,30 @@ plt.title('Total number of metabolites per sample')
 
 # e_bal = na.electron_balance(data,verbose = verbose)
 
-# na_traffic = na.NA_traffic(data,verbose = verbose)
+# na_traffic = na.sample_NA_traffic(data,verbose = verbose)
 
-# ###------------------------------------------------------------------------###
-# ### Evaluation of intervention threshold exceedance
+###------------------------------------------------------------------------###
+### Evaluation of intervention threshold exceedance
 
-# tot_cont = na.total_contaminant_concentration(data,verbose = verbose,contaminant_group='BTEXIIN')
+# tot_cont = co.total_contaminant_concentration(data,verbose = verbose,contaminant_group='BTEXIIN')
 
-# na_intervention = na.thresholds_for_intervention(data,verbose = verbose,contaminant_group='BTEXIIN')
+# na_intervention = co.thresholds_for_intervention(data,verbose = verbose,contaminant_group='BTEXIIN')
 
-# ###------------------------------------------------------------------------###
-# ### NA screening and evaluation of intervention threshold exceedance in one go
+# data_activity = [contaminants_total.values,
+#                  metabolites_count.values,
+#                  na_intervention['intervention_traffic'].values]
 
-# ### run full NA screening with results in separate DataFrame
+###------------------------------------------------------------------------###
+### NA screening and evaluation of intervention threshold exceedance in one go
+
+### run full NA screening with results in separate DataFrame
 # data_na = na.screening_NA(data,verbose = verbose)
 
-# ### run full NA screening with results added to data
-# na.screening_NA(data,inplace = True,verbose = verbose)
+### run full NA screening with results added to data
+# na.sample_NA_screening(data,include = True,verbose = verbose)
 
-# ###------------------------------------------------------------------------###
-# ### Create activity plot linking contaminant concentration to metabolite occurence
-# ### and NA screening
+###------------------------------------------------------------------------###
+### Create activity plot linking contaminant concentration to metabolite occurence
+### and NA screening
 
 # fig, ax = activity(data)
