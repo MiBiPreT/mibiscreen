@@ -23,7 +23,12 @@ def reductors(
     ):
     """Calculate the amount of electron reductors [mmol e-/l].
 
-    making use of imported molecular mass values for quantities in [mg/mmol]
+    It determines the amount of electrons availble from electron acceptors
+    (default: mobile dissolved oxygen, nitrate, and sulfate).
+
+    It relates concentrations to electrons using the stochimetry from the
+    chemical reactions producting electrons and the molecular mass values
+    for the quantities in [mg/mmol].
 
     Input
     -----
@@ -82,9 +87,10 @@ def oxidators(
     ):
     """Calculate the amount of electron oxidators [mmol e-/l].
 
-    Calculate the amount of electron oxidators in [mmol e-/l]
-    based on concentrations of contaminants, stiochiometric ratios of reactions,
-    contaminant properties (e.g. molecular masses in [mg/mmol])
+    Calculates the amount of electrons needed for oxidation of the contaminants.
+    It transformes the concentrations of contaminants to molar concentrations using
+    molecular masses in [mg/mmol] and further identifies number of electrons from
+    the chemical reactions using stiochiometric ratios
 
     alternatively: based on nitrogen and phosphate availability
 
@@ -160,7 +166,7 @@ def available_NP(
         verbose = False,
         **kwargs,
         ):
-    """Function calculating available nutrients.
+    """Calculating available nutrients.
 
     Approximating the amount of hydrocarbons that can be degraded based
     on the amount of nutrients (nitrogen and phosphate available)
@@ -217,10 +223,15 @@ def electron_balance(
         verbose = False,
         **kwargs,
         ):
-    """Decision if natural attenuation is taking place.
+    """Calculating electron balance between reductors and oxidators.
 
-    Function to calculate electron balance, based on electron availability
-    calculated from concentrations of contaminant and electron acceptors
+    Determines ratio between the amount of electrons available and those
+    needed for oxidation of the contaminants based on values determined by
+    the routines "reductors()" and "oxidators()".
+
+    Ratio higher then one indicates sufficient electrons available for degredation,
+    values smaller 1 indicates not sufficient supply of electrons to reduce
+    the present amount of contaminants.
 
     Input
     -----
@@ -270,16 +281,28 @@ def electron_balance(
 
     return e_bal
 
-def NA_traffic(
+def sample_NA_traffic(
         data_frame,
         include = False,
         verbose = False,
         **kwargs,
         ):
-    """Function evaluating if natural attenuation (NA) is ongoing.
+    """Evaluating availability of electrons for biodegredation interpreting electron balance.
 
-    Function to calculate electron balance, based on electron availability
+    Function builds on 'electron_balance()', based on electron availability
     calculated from concentrations of contaminant and electron acceptors.
+
+    Sufficient supply of electrons is a prerequite for biodegradation and thus the
+    potential of natural attenuation (NA) as remediation strategy. The functions
+    interprets the electron balance giving it a traffic light of:
+        - green: amount of electrons available for (bio-)degradation is higher than
+                 amount needed for degrading present contaminant mass/concentration
+            --> potential for natural attenuation
+        - yellow: electron balance unknown because data is not sufficient
+            --> more information needed
+        - red: amount of electrons available for (bio-)degradation is lower than
+                 amount needed for degrading present contaminant mass/concentration
+            --> limited potential for natural attenuation
 
     Input
     -----
@@ -298,7 +321,7 @@ def NA_traffic(
     """
     if verbose:
         print('==============================================================')
-        print(" Running function 'NA_traffic()' on data")
+        print(" Running function 'sample_NA_traffic()' on data")
         print('==============================================================')
 
     ### check on correct data input format and extracting column names as list
@@ -334,7 +357,7 @@ def NA_traffic(
 
     return NA_traffic
 
-def screening_NA(
+def sample_NA_screening(
     data_frame,
     ea_group = 'ONS',
     contaminant_group = "BTEXIIN",
@@ -343,10 +366,24 @@ def screening_NA(
     verbose = False,
     **kwargs,
     ):
-    """Calculate the amount of electron reductors [mmol e-/l].
+    """Screening of NA potential for each sample in one go.
 
-    making use of imported molecular mass values for quantities in [mg/mmol]
+    Determines for each sample, the availability of electrons for (bio)degradation of
+    contaminants from concentrations of (mobile dissolved) electron acceptors
+    (default: oxygen, nitrate, sulfate). It puts them into relation to electrons
+    needed for degradation using contaminant concentrations. Resulting electron
+    balance is linked to a color flag/traffic light indicating status:
+        - green: amount of electrons available for (bio-)degradation is higher than
+                 amount needed for degrading present contaminant mass/concentration
+            --> potential for natural attenuation
+        - yellow: electron balance unknown because data is not sufficient
+            --> more information needed
+        - red: amount of electrons available for (bio-)degradation is lower than
+                 amount needed for degrading present contaminant mass/concentration
+            --> limited potential for natural attenuation
 
+        Sufficient supply of electrons is a prerequite for biodegradation and thus the
+    potential of natural attenuation (NA) as remediation strategy.
     Input
     -----
         data_frame: pd.DataFrame
@@ -376,7 +413,7 @@ def screening_NA(
     """
     if verbose:
         print('==============================================================')
-        print(" Running function 'screening_NA()' on data")
+        print(" Running function 'sample_NA_screening()' on data")
         print('==============================================================')
 
     ### check on correct data input format and extracting column names as list
@@ -394,7 +431,7 @@ def screening_NA(
     e_bal = electron_balance(data,
                              include = include,
                              verbose = verbose)
-    na_traffic = NA_traffic(data,
+    na_traffic = sample_NA_traffic(data,
                             contaminant_group = contaminant_group,
                             include = include,
                             verbose = verbose)

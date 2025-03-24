@@ -9,13 +9,13 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from mibiscreen.analysis.sample.screening_NA import NA_traffic
 from mibiscreen.analysis.sample.screening_NA import available_NP
 from mibiscreen.analysis.sample.screening_NA import electron_balance
 from mibiscreen.analysis.sample.screening_NA import oxidators
 from mibiscreen.analysis.sample.screening_NA import reductors
-from mibiscreen.analysis.sample.screening_NA import screening_NA
 from mibiscreen.data.example_data import example_data
+from mibiscreen.analysis.sample.screening_NA import sample_NA_screening
+from mibiscreen.analysis.sample.screening_NA import sample_NA_traffic
 
 
 class TestReductors:
@@ -25,7 +25,8 @@ class TestReductors:
     data_empty = pd.Series(
                         data = np.arange(4),
                         name = 'empyt_data',
-                        dtype=float)
+                        dtype = float
+                        )
 
     columns = ['sample_nr', 'sulfate', 'benzene']
     units = [' ','mg/L', 'ug/L']
@@ -286,77 +287,77 @@ class TestNATraffic:
                         axis =1)
 
 
-    def test_NA_traffic_01(self):
-        """Testing routine NA_traffic().
+    def test_sample_NA_traffic_01(self):
+        """Testing routine sample_NA_traffic().
 
         Correct calculation of NA traffic light based on electron balance.
         When data does not contain electron balance (has to be calculated
         from reductors and oxidators).
         """
         na_traffic_test = ['green','red','red','green']
-        na_traffic = NA_traffic(self.data)
+        na_traffic = sample_NA_traffic(self.data)
 
         assert np.all(na_traffic.values == na_traffic_test)
 
-    def test_NA_traffic_02(self):
-        """Testing routine NA_traffic().
+    def test_sample_NA_traffic_02(self):
+        """Testing routine sample_NA_traffic().
 
         Correct calculation of NA traffic light based on electron balance when
         dataframe contains values of electron_balance.
         """
         na_traffic_test = ['green','red','red','green']
-        na_traffic = NA_traffic(self.data_na)
+        na_traffic = sample_NA_traffic(self.data_na)
 
         assert np.all(na_traffic.values == na_traffic_test)
 
-    def test_NA_traffic_03(self,capsys):
-        """Testing routine NA_traffic().
+    def test_sample_NA_traffic_03(self,capsys):
+        """Testing routine sample_NA_traffic().
 
         Testing 'include' option adding calculated values as column to data.
         """
         data_test = self.data_na.copy()
-        NA_traffic(data_test,include = True)
+        sample_NA_traffic(data_test,include = True)
         assert data_test.shape[1] == self.data_na.shape[1]+1
 
-    def test_NA_traffic_04(self,capsys):
-        """Testing routine NA_traffic().
+    def test_sample_NA_traffic_04(self,capsys):
+        """Testing routine sample_NA_traffic().
 
         Testing verbose flag.
         """
-        NA_traffic(self.data,verbose=True)
+        sample_NA_traffic(self.data,verbose=True)
         out,err=capsys.readouterr()
 
         assert len(out)>0
 
 class TestScreeningNA:
-    """Class for testing screening_NA analysis module on NA screening of mibipret."""
+    """Class for testing sample_NA_screening analysis module on NA screening of mibipret."""
 
     data = example_data(with_units = False)
 
-    def test_screening_NA_01(self):
-        """Testing routine screening_NA().
+    def test_sample_NA_screening_01(self):
+        """Testing routine sample_NA_screening().
 
         Correct calculation of total amount of reductors.
         """
-        na_data = screening_NA(self.data)
+        na_data = sample_NA_screening(self.data)
 
         assert na_data.shape == (4,7)
 
-    def test_screening_NA_02(self):
-        """Testing routine screening_NA().
+    def test_sample_NA_screening_02(self):
+        """Testing routine sample_NA_screening().
 
         Correct calculation of total amount of reductors.
         """
-        na_data = screening_NA(self.data,nutrient=True)
+        na_data = sample_NA_screening(self.data,nutrient=True)
 
         assert na_data.shape == (4,8)
 
-    def test_screening_NA_03(self,capsys):
-        """Testing routine screening_NA().
+    def test_sample_NA_screening_03(self,capsys):
+        """Testing routine sample_NA_screening().
 
         Testing verbose flag.
         """
-        screening_NA(self.data,verbose=True)
+        sample_NA_screening(self.data,verbose=True)
         out,err=capsys.readouterr()
 
         assert len(out)>0
