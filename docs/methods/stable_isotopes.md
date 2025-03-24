@@ -1,4 +1,4 @@
-# `mibipret` Stable Isotope Analysis
+# `mibiscreen` Stable Isotope Analysis
 
 ## General
 

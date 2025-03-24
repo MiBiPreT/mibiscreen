@@ -1,4 +1,4 @@
-# `mibipret` Natural Attenuation Screening
+# `mibiscreen` Natural Attenuation Screening
 
 ## General
 
@@ -40,7 +40,7 @@ Data analysis provides decision support information in the form of *traffic ligh
 * fair chance with yellow light, 
 * no chance with a red light. 
 
-In case of an yellow traffic light, additional information is needed.
+In case of a yellow traffic light, additional information is needed.
 
 ### Requirements
 
@@ -61,6 +61,7 @@ For each sample location, first a distinction is made between aerobic and anaero
 
 #### Step 2
 Possibilities for natural attenuation are limited under anaerobic conditions. Monitoring is necessary to determine whether natural degradation occurs. Thus, determine
+
 * concentrations over time 
 * redox over time and/or space
 
@@ -68,6 +69,7 @@ Possibilities for natural attenuation are limited under anaerobic conditions. Mo
 
 The traffic light assessment is not given per well, but for the **entire location** since it involves considerations of trends. 
 Traffic light is determined based on:
+
 * type of contaminant
 * whether concentrations decrease over time or 
 * whether a relationship exists between BTEX and the redox conditions
@@ -95,19 +97,19 @@ Calculation of electron balance are based on the redox reactions, including stoc
 Electrons are consumed through reduction. The reduction reactions for oxygen,
 nitrate, and sulfate are:
 
-* Oxygen: $4 e^- + 4 H^+ + 1 O_2 \rightarrow  H_2 O $
-* Nitrate: $ 5e^- + 6 H^+ + 1 NO_3^- \rightarrow 3 H_2O + 0.5 N_2 $
-* Sulfate: $ 8e^- + 9 H^+ 1 SO_4^{2-} \rightarrow 4H_2O + 1HS^{-} $
+* Oxygen: $4 e^- + 4 H^+ + 1 O_2 \rightarrow  H_2 O$
+* Nitrate: $5e^- + 6 H^+ + 1 NO_3^- \rightarrow 3 H_2O + 0.5 N_2$
+* Sulfate: $8e^- + 9 H^+ 1 SO_4^{2-} \rightarrow 4H_2O + 1HS^{-}$
 
 Electrons are produced during oxidation of contaminants. Reactions included for selected, typically abundant contaminants are:
 
-* Benzene: $12 H_2O + 1 C_6H_6  \rightarrow 6CO_2 + 30 H^+ + 30e^- $
-* Toluene: $14 H_2O + 1 C_7H_8  \rightarrow 7CO_2 + 36 H^+ + 36e^- $
-* Ethylbenzene: $16 H_2O + 1 C_8H_{10}  \rightarrow 8CO_2 + 42 H^+ + 42e^- $
-* Xylene: $16 H_2O + 1 C_8H_{10}  \rightarrow 8CO_2 + 42 H^+ + 42e^- $
-* Indene: $18 H_2O + 1 C_9H_{8}  \rightarrow 9CO_2 + 44 H^+ + 44e^- $
-* Indane: $18 H_2O + 1 C_9H_{10}  \rightarrow 9CO_2 + 46 H^+ + 46e^- $
-* Naphtalene: $20 H_2O + 1 C_{10}H_{8}  \rightarrow 10CO_2 + 48 H^+ + 48e^- $
+* Benzene: $12 H_2O + 1 C_6H_6  \rightarrow 6CO_2 + 30 H^+ + 30e^-$
+* Toluene: $14 H_2O + 1 C_7H_8  \rightarrow 7CO_2 + 36 H^+ + 36e^-$
+* Ethylbenzene: $16 H_2O + 1 C_8H_{10}  \rightarrow 8CO_2 + 42 H^+ + 42e^-$
+* Xylene: $16 H_2O + 1 C_8H_{10}  \rightarrow 8CO_2 + 42 H^+ + 42e^-$
+* Indene: $18 H_2O + 1 C_9H_{8}  \rightarrow 9CO_2 + 44 H^+ + 44e^-$
+* Indane: $18 H_2O + 1 C_9H_{10}  \rightarrow 9CO_2 + 46 H^+ + 46e^-$
+* Naphtalene: $20 H_2O + 1 C_{10}H_{8}  \rightarrow 10CO_2 + 48 H^+ + 48e^-$
 
 Concentrations of the contaminants and redox conditions are divided by their molar mass to transform to molar concentrations.
 The total number of electrons is then calculated based on the stoichiometric relation for one liter of solution. Number of electrons 
@@ -115,7 +117,7 @@ are added up for all reductors and oxidators per sample location.
 
 ### Visualization
 
-The routine `activity()`: provides a visualization of the NA screening in combination with metabolite analysis. 
+The routine `activity()` provides a visualization of the NA screening in combination with metabolite analysis. 
 The activity plot shows the scatter of the total number of metabolites versus the total concentration of contaminants per sample with color
 coding of NA traffic lights: red/yellow/green corresponding to no natural attenuation going on (red), limited/unknown NA activity (yellow) 
 or active natural attenuation (green).

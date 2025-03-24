@@ -1,4 +1,4 @@
-# `mibipret` Data handling
+# `mibiscreen` Data handling
 
 ## General
 

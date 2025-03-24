@@ -1,4 +1,4 @@
-# `mibiscreen` ordination
+# `mibiscreen` Ordination
 
 ## General
 
@@ -100,7 +100,7 @@ Note that logarithmic transformation is performed before standardization or cent
 since logarithms give no solution for negative values.
 
 [not yet implemented] 
-Samples or variables can be designated as supplementary. Then the values will not considered during ordnation analysis, but their scores and loadings relative to the axes will be determined for visualization.  After performing the ordination analysis, data can be scaled or transformed again, for the purpose of plotting preferences. Scaling can be focused on either variable or sample distance. 
+Samples or variables can be designated as supplementary. Then the values will not be considered during ordination analysis, but their scores and loadings relative to the axes will be determined for visualization.  After performing the ordination analysis, data can be scaled or transformed again, for the purpose of plotting preferences. Scaling can be focused on either variable or sample distance. 
 
 ## References
 
