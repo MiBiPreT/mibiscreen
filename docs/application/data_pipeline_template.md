@@ -59,7 +59,8 @@ This stage ensures that processed data is accurate, complete, and meets requirem
 
 #### Examples:
 - Checking if any contaminant are missing calculated isotope ratios baed on Raliegh equation exist for isoptoppe analysis. 
-  - Validating all the concentration values are positive numbers.  
+- Validating all the concentration values are positive numbers.  
+
 - Monitoring real-time streaming data for sudden spikes in API errors (if we want to recive redox data of Grift park constructed wetlan from online server)
 
 ## 6. Data Analytics & Delivery (Insights & Output)
@@ -73,21 +74,25 @@ At this stage, we extract insights from processed data, either through graphs or
 
 
 ## End-to-End Example of the Data Pipeline
-1. **Ingestion:**
+
+After [installing mibipret](../index.md), the following python code can be executed from the root directory of the mibipret repository.
+
+### 1. Ingestion:
+
 ```python
 from mibipret.data.load_data import load_csv
 from mibipret.data.load_data import load_excel
 
 # load data from csv file
-file_path = 'path/to/data/data.csv'
-data_raw,units = load_csv(file_path,verbose=False)
+griftpark_file_path = "./examples/ex01_Griftpark/grift_BTEXIIN.csv
+data_raw,units = load_csv(griftpark_file_path,verbose=False)
 
 # load data from excel file per sheet 
-file_path = 'path/to/data/data.xlsx'
-environment_raw,units = load_excel(file_path, sheet_name = 'environment', verbose = verbose)
+amersfoort_file_path = "./examples/ex02_Amersfoort/amersfoort.xlsx
+environment_raw,units = load_excel(amersfoort_file_path, sheet_name = 'environment', verbose = False)
 ```
     
-2. **Preprocessing:(Cleaning and Standardization)**
+### 2. Preprocessing:(Cleaning and Standardization)
 
 ```Python
 from mibipret.data.check_data import standardize
@@ -96,40 +101,43 @@ from mibipret.data.check_data import standardize
 data, units = standardize(data_raw, reduce = True, verbose=False)
 ```
 
-3. **Transformation:(processing and enrichment)**
-```python
- # For NA screening, stochiometric equations are used to analyze electron balance, here is how to perform NA screening step by step:
- import mibipret.analysis.sample.screening_NA as na
- #Calculation of number of electrons for reduction
- #Returns pandas-Series with total amount of electron reductors per well in [mmol e-/l]:
-    tot_reduct = na.reductors(data,verbose = True,ea_group = 'ONSFe')                               
+### 3. Transformation:(processing and enrichment)
 
+```python
+# For NA screening, stochiometric equations are used to analyze electron balance, here is how to perform NA screening step by step:
+import mibipret.analysis.sample.screening_NA as na
+#Calculation of number of electrons for reduction
+#Returns pandas-Series with total amount of electron reductors per well in [mmol e-/l]:
+tot_reduct = na.reductors(data,verbose = True,ea_group = 'ONSFe')
 
 #Calculation of number of electrons needed for oxidation
 #Returns pandas-Series with total amount of oxidators per well in [mmol e-/l]:
-    tot_oxi = na.oxidators(data,verbose = True, contaminant_group='BTEXIIN')                              
-
+tot_oxi = na.oxidators(data,verbose = True, contaminant_group='BTEXIIN')
 
 #Calculation of number of electron balance
 #Returns pandas-Series with ratio of reductors to oxidators. If value below 1, available electrons for reduction are not sufficient for reaction and thus NA is potentially not taking place:
-    e_bal = na.electron_balance(data,verbose = True)                               
+e_bal = na.electron_balance(data,verbose = True)
 
 # Evaluation of intervention threshold exceedance
 #Calculation of total concentration of contaminants/specified group of contaminants
 #Returns pandas-Series with total concentrations of contaminants per well in [ug/l]:
-    tot_cont = na.total_contaminant_concentration(data,verbose = True,contaminant_group='BTEXIIN')                             
- 
- # If you want to perform complete NA screening and evaluation of intervention threshold exceedance in one go:
- data_na = na.screening_NA(data,verbose = True)
+tot_cont = na.total_contaminant_concentration(data,verbose = True,contaminant_group='BTEXIIN')
 
- # It is also possible to run full NA screening with results added to data using argument (inplace = True):
- na.screening_NA(data,inplace = True,verbose = False)
+# If you want to perform complete NA screening and evaluation of intervention threshold exceedance in one go:
+data_na = na.screening_NA(data,verbose = True)
+
+# It is also possible to run full NA screening with results added to data using argument (inplace = True):
+na.screening_NA(data,inplace = True,verbose = False)
 ```
-4. **Storage:**
-`Not available`
+### 4. Storage:
 
-5. **Validation & Monitoring for Each Data Analysis Module**
-This is intended task to do but not implemented yet.
+!!! Warning
+    Mibipret does not have support for file storage
+
+### 5. Validation & Monitoring for Each Data Analysis Module
+
+!!! Warning
+    This is intended behaviour but has not been implemented yet.
 
 ```python
 # we use the `options` function to check what types of analyses/modeling/visualization/reports we can do on the dataset
@@ -141,7 +149,8 @@ mibipret.decision_support.options(st_sample_data, func=mibipret.visualize.traffi
 # Row 4-19 and 28-39 have these columns defined, you can apply the function on these rows.
 ```
 
-6. **Analytics:** 
+### 6. Analytics:
+
 ```python
 # Calculation of "traffic light" based on electron balance
 # Returns pandas-Series with traffic light (red/yellow/green) if NA is taking place based on electron balance. Red corresponds to a electron balance below 1 where available electrons for reduction are not sufficient and thus NA is potentially not taking place:
