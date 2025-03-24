@@ -2,8 +2,8 @@
 
 ## General
 
-`stable_isotope_regression` provides tools for stable isotope analysis by linear regression, including calculation and visualization. 
-[Polerecky, 2023]:
+`stable_isotope_regression` provides tools for stable isotope analysis by linear regression, including calculation and visualization 
+[Polerecky, 2023].
 
 ## Keeling regression: 
 
@@ -13,7 +13,7 @@ Results can be visualized with the function `Keeling_plot()`. Its input is strea
 
 ## Lambda regression: 
 
-Applying the routine `Lambda_regression()` provides *Lambda* value based on linear regression: The Lambda values relates the $\delta 13C$ versus $\delta 2H$ signatures of a chemical compound. Relative changes in the ratio can indicate the occurrence of specific enzymatic degradation reactions. The analysis is based on a linear regression of the hydrogen versus carbon isotope signatures. The parameter of interest, the Lambda values is the slope of the the linear trend line. 
+Applying the routine `Lambda_regression()` provides *Lambda* value based on linear regression: The Lambda values relates the δ13C versus δ2H signatures of a chemical compound. Relative changes in the ratio can indicate the occurrence of specific enzymatic degradation reactions. The analysis is based on a linear regression of the hydrogen versus carbon isotope signatures. The parameter of interest, the Lambda values is the slope of the the linear trend line. 
 
 Results can be visualized with the routine `Lambda_plot()`. It shows the δ13C versus δ2H signatures of a chemical compound. Its input is streamlined with the output created by the analysis routine.
 
@@ -23,5 +23,7 @@ Rayleigh fractionation analysis using `Rayleigh_fractionation()` is a common app
 
 Results can be visualized with `Rayleigh_fractionation_plot()` whose input is streamlined with the output created by the analysis routine.
 
+## References
 
+Polerecky, L. (2023), Basic quantities and applications of stable isotopes Reader accompanying Lecture 1 of the course "Stable Isotopes in Earth Sciences (GEO4-1443)", Utrecht University
 
