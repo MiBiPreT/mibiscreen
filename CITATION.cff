@@ -1,7 +1,7 @@
 # YAML 1.2
 ---
 cff-version: "1.2.0"
-title: "mibipret"
+title: "mibiscreen"
 authors:
   -
     family-names: Zech
@@ -21,8 +21,8 @@ authors:
     orcid: "https://orcid.org/0000-0002-8928-7831"
 date-released: 2024-03-26
 doi: 10.5281/zenodo.10878799
-version: "0.2.1"
-repository-code: "https://github.com/MiBiPreT/mibipret"
+version: "0.3.0"
+repository-code: "https://github.com/MiBiPreT/mibiscreen"
 keywords:
   - bioremediation
   - contaminant data analysis

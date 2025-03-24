@@ -13,15 +13,15 @@ data provided on personal basis
 
 import matplotlib.pyplot as plt
 import numpy as np
-from mibipret.analysis.reduction.stable_isotope_regression import Lambda_regression
-from mibipret.analysis.reduction.stable_isotope_regression import extract_isotope_data
-from mibipret.data.check_data import standardize
-from mibipret.data.load_data import load_csv
+from mibiscreen.analysis.reduction.stable_isotope_regression import Lambda_regression
+from mibiscreen.analysis.reduction.stable_isotope_regression import extract_isotope_data
+from mibiscreen.data.check_data import standardize
+from mibiscreen.data.load_data import load_csv
 
 plt.close('all')
 
 # import sys
-# path = '/home/alraune/GitHub/MiBiPreT/mibipret/mibipret/'
+# path = '/home/alraune/GitHub/MiBiPreT/mibiscreen/mibiscreen/'
 # sys.path.append(path)
 # from data.data import load_csv
 # from data.data import standardize

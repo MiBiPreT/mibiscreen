@@ -6,16 +6,16 @@ Example of diagnostic plotting using ordination with contaminant data from Amers
 """
 
 
-from mibipret.analysis.reduction.ordination import cca
-from mibipret.analysis.reduction.ordination import rda
-from mibipret.analysis.reduction.transformation import filter_values
-from mibipret.analysis.reduction.transformation import transform_values
-from mibipret.data.check_data import standard_names
-from mibipret.data.check_data import standardize
-from mibipret.data.load_data import load_excel
-from mibipret.data.set_data import extract_data
-from mibipret.data.set_data import merge_data
-from mibipret.visualize.ordination_plot import ordination_plot
+from mibiscreen.analysis.reduction.ordination import cca
+from mibiscreen.analysis.reduction.ordination import rda
+from mibiscreen.analysis.reduction.transformation import filter_values
+from mibiscreen.analysis.reduction.transformation import transform_values
+from mibiscreen.data.check_data import standard_names
+from mibiscreen.data.check_data import standardize
+from mibiscreen.data.load_data import load_excel
+from mibiscreen.data.set_data import extract_data
+from mibiscreen.data.set_data import merge_data
+from mibiscreen.visualize.ordination_plot import ordination_plot
 
 ###------------------------------------------------------------------------###
 ### Script settings

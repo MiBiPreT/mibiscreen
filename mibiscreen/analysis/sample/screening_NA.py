@@ -7,7 +7,7 @@
 
 import numpy as np
 import pandas as pd
-import mibipret.data.names_data as names
+import mibiscreen.data.names_data as names
 from .properties import properties
 
 

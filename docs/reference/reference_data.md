@@ -1,3 +1,3 @@
-# `mibipret.data` API reference
+# `mibiscreen.data` API reference
 
-::: mibipret.data
+::: mibiscreen.data

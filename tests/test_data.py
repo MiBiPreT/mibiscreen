@@ -1,29 +1,28 @@
-"""Tests for the mibipret.data module.
+"""Tests for the mibiscreen.data module.
 
 @author: Alraune Zech
 """
 import numpy as np
 import pandas as pd
 import pytest
-from mibipret.data.check_data import check_columns
-from mibipret.data.check_data import check_data_frame
-from mibipret.data.check_data import check_units
-from mibipret.data.check_data import check_values
-from mibipret.data.check_data import standard_names
-from mibipret.data.check_data import standardize
-from mibipret.data.example_data import example_data
-from mibipret.data.load_data import load_csv
-from mibipret.data.load_data import load_excel
-from mibipret.data.set_data import compare_lists
-from mibipret.data.set_data import determine_quantities
-from mibipret.data.set_data import extract_data
-from mibipret.data.set_data import merge_data
+from mibiscreen.data.check_data import check_columns
+from mibiscreen.data.check_data import check_data_frame
+from mibiscreen.data.check_data import check_units
+from mibiscreen.data.check_data import check_values
+from mibiscreen.data.check_data import standard_names
+from mibiscreen.data.check_data import standardize
+from mibiscreen.data.example_data import example_data
+from mibiscreen.data.load_data import load_csv
+from mibiscreen.data.load_data import load_excel
+from mibiscreen.data.set_data import compare_lists
+from mibiscreen.data.set_data import determine_quantities
+from mibiscreen.data.set_data import extract_data
+from mibiscreen.data.set_data import merge_data
 
-path_data = "./mibipret/data"
-#path_data = "../mibipret/data"
+path_data = "./mibiscreen/data"
 
 class TestLoadData:
-    """Class for testing data loading routines in data module of mibipret."""
+    """Class for testing data loading routines in data module of mibiscreen."""
 
     def test_load_csv_01(self):
         """Testing routine load_csv().
@@ -97,7 +96,7 @@ class TestLoadData:
 
 
 class TestExampleData:
-    """Class for testing example data of data module of mibipret."""
+    """Class for testing example data of data module of mibiscreen."""
 
     def test_example_data_01(self):
         """Testing correct loading of example data as pandas data frame."""
@@ -354,7 +353,7 @@ class TestCheckDataColumns:
     """Testing routines on checking and standardizing data.
 
     Class for testing routines on checking and standardizing data
-    in data module of mibipret.
+    in data module of mibiscreen.
     """
 
     columns = ['sample_nr', 'obs_well', 'depth', 'pH', 'redoxpot', 'sulfate',\
@@ -412,7 +411,7 @@ class TestCheckDataColumns:
 
 
 class TestCheckDataUnits:
-    """Class for testing data module of mibipret."""
+    """Class for testing data module of mibiscreen."""
 
     columns = ['sample_nr', 'obs_well', 'depth', 'pH', 'redoxpot', 'sulfate',\
                 'methane', 'iron2', 'benzene', 'naphthalene']
@@ -513,7 +512,7 @@ class TestCheckDataUnits:
 
 
 class TestCheckDataValues:
-    """Class for testing data module of mibipret."""
+    """Class for testing data module of mibiscreen."""
 
     data_00 = example_data(with_units = True)
 
@@ -554,7 +553,7 @@ class TestCheckDataValues:
         assert data_01.shape[0] == self.data_00.shape[0]-1
 
 class TestDataStandardize:
-    """Class for testing data module of mibipret."""
+    """Class for testing data module of mibiscreen."""
 
     columns = ['sample_nr', 'obs_well', 'depth', 'pH', 'redoxpot', 'sulfate',\
                 'methane', 'iron2', 'benzene', 'naphthalene']
@@ -625,7 +624,7 @@ class TestDataStandardize:
         assert len(out)>0
 
 class TestDataCompareLists:
-    """Class for testing data module of mibipret."""
+    """Class for testing data module of mibiscreen."""
 
     list1 = ['test1','test2']
     list2 =  ['test1','test3']
@@ -650,7 +649,7 @@ class TestDataCompareLists:
         assert len(out)>0
 
 class TestDetermineQuantities:
-    """Class for testing determine_quantities() of mibipret."""
+    """Class for testing determine_quantities() of mibiscreen."""
 
     setting_data = ["sample_nr","obs_well","well_type","depth",'aquifer']
     list1 = ['pH', 'sulfate','benzene']
@@ -759,7 +758,7 @@ class TestDetermineQuantities:
 
 
 class TestDataExtract:
-    """Class for testing data module of mibipret."""
+    """Class for testing data module of mibiscreen."""
 
     columns = ['sample_nr', 'obs_well', 'pH', 'sulfate','benzene']
     s00 = ['2000-001', 'B-MLS1-3-12',7.23,  23, 263]
@@ -827,7 +826,7 @@ class TestDataExtract:
         assert set(data.columns) == {'sample_nr', 'obs_well', 'sulfate','benzene'} and len(out)>0
 
 class TestDataMerge:
-    """Class for testing data module of mibipret."""
+    """Class for testing data module of mibiscreen."""
 
     columns = ['sample_nr', 'obs_well', 'pH', 'sulfate','benzene']
     s01 = ['2000-001', 'B-MLS1-3-12']

@@ -1,3 +1,3 @@
-# `mibipret.analysis` API reference
+# `mibiscreen.analysis` API reference
 
-::: mibipret.analysis
+::: mibiscreen.analysis

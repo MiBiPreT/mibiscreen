@@ -1,19 +1,19 @@
-"""Tests for the stable isotope regression plots in mibipret.visualize module.
+"""Tests for the stable isotope regression plots in mibiscreen.visualize module.
 
 @author: Alraune Zech
 """
 
 import matplotlib.pyplot as plt
 import numpy as np
-from mibipret.visualize.stable_isotope_plots import Keeling_plot
-from mibipret.visualize.stable_isotope_plots import Lambda_plot
+from mibiscreen.visualize.stable_isotope_plots import Keeling_plot
+from mibiscreen.visualize.stable_isotope_plots import Lambda_plot
 
 # import pytest
-from mibipret.visualize.stable_isotope_plots import Rayleigh_fractionation_plot
+from mibiscreen.visualize.stable_isotope_plots import Rayleigh_fractionation_plot
 
 
 class TestStableIsotopePlot:
-    """Class for testing stable isotope regression plots of mibipret."""
+    """Class for testing stable isotope regression plots of mibiscreen."""
 
     results_Lambda = {
         'delta_C': np.array([-26.5, -26.2, -25.2, -25.7]),

@@ -1,22 +1,22 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Testing analysis module on isotope regression of mibipret.
+"""Testing analysis module on isotope regression of mibiscreen.
 
 @author: Alraune Zech
 """
 
 import numpy as np
 import pytest
-from mibipret.analysis.reduction.stable_isotope_regression import Keeling_regression
-from mibipret.analysis.reduction.stable_isotope_regression import Lambda_regression
-from mibipret.analysis.reduction.stable_isotope_regression import Rayleigh_fractionation
-from mibipret.analysis.reduction.stable_isotope_regression import extract_isotope_data
-from mibipret.analysis.reduction.stable_isotope_regression import valid_indices
-from mibipret.data.example_data import example_data
+from mibiscreen.analysis.reduction.stable_isotope_regression import Keeling_regression
+from mibiscreen.analysis.reduction.stable_isotope_regression import Lambda_regression
+from mibiscreen.analysis.reduction.stable_isotope_regression import Rayleigh_fractionation
+from mibiscreen.analysis.reduction.stable_isotope_regression import extract_isotope_data
+from mibiscreen.analysis.reduction.stable_isotope_regression import valid_indices
+from mibiscreen.data.example_data import example_data
 
 
 class TestData:
-    """Class for testing data module of mibipret."""
+    """Class for testing data module of mibiscreen."""
 
     delta_13C_01 = np.array([-26.5, -26.2, -25.2, -25.7])
     delta_2H_01 = np.array([-77., -75., -51., -61.])

@@ -10,14 +10,14 @@ used for biodegredation and bioremediation analysis.
 
 import numpy as np
 import pandas as pd
-import mibipret.data.names_data as names
-from mibipret.data.unit_settings import standard_units
+import mibiscreen.data.names_data as names
+from mibiscreen.data.unit_settings import standard_units
 
 
 def example_data(data_type = 'all',
                  with_units = False,
                  ):
-    """Function provinging test data for mibipret data analysis.
+    """Function provinging test data for mibiscreen data analysis.
 
     Args:
     -------

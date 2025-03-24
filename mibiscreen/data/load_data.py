@@ -47,7 +47,7 @@ def load_excel(
        This function can be called with the file path of the example data as
        argument using:
 
-        >>> from mibipret.data import load_excel
+        >>> from mibiscreen.data import load_excel
         >>> load_excel(example_data.xlsx)
 
     """
@@ -114,7 +114,7 @@ def load_csv(
        This function can be called with the file path of the example data as
        argument using:
 
-        >>> from mibipret.data import load_excel
+        >>> from mibiscreen.data import load_excel
         >>> load_excel(example_data.csv)
 
     """

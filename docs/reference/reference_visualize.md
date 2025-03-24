@@ -1,3 +1,3 @@
-# `mibipret.visualize` API reference
+# `mibiscreen.visualize` API reference
 
-::: mibipret.visualize
+::: mibiscreen.visualize

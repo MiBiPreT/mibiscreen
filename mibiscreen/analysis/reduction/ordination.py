@@ -8,7 +8,7 @@
 import numpy as np
 import skbio.stats.ordination as sciord
 from sklearn import decomposition
-from mibipret.data.check_data import check_data_frame
+from mibiscreen.data.check_data import check_data_frame
 
 
 def pca(data_frame,

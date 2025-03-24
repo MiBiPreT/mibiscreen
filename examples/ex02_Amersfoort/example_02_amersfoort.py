@@ -5,16 +5,16 @@
 
 import matplotlib.pyplot as plt
 import numpy as np
-from mibipret.analysis.sample.concentrations import total_concentration
-from mibipret.analysis.sample.concentrations import total_count
-from mibipret.data.check_data import check_columns
-from mibipret.data.check_data import check_units
-from mibipret.data.check_data import check_values
-from mibipret.data.check_data import standardize
-from mibipret.data.load_data import load_excel
+from mibiscreen.analysis.sample.concentrations import total_concentration
+from mibiscreen.analysis.sample.concentrations import total_count
+from mibiscreen.data.check_data import check_columns
+from mibiscreen.data.check_data import check_units
+from mibiscreen.data.check_data import check_values
+from mibiscreen.data.check_data import standardize
+from mibiscreen.data.load_data import load_excel
 
-#import mibipret.analysis.sample.screening_NA as na
-#from mibipret.visualize.activity import activity
+#import mibiscreen.analysis.sample.screening_NA as na
+#from mibiscreen.visualize.activity import activity
 
 ###------------------------------------------------------------------------###
 ### Script settings

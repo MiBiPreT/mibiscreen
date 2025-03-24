@@ -1,9 +1,9 @@
-site_name: Mibipret
+site_name: mibiscreen
 site_description: Prediction tool for Microbiome based Remediation
 site_author: Alraune Zech, Sona Aseyednezhad, Robin Richardson, Jaro Camphuijsen 
-site_url: https://MiBiPreT.github.io/mibipret
-repo_name: MiBiPreT/mibipret 
-repo_url: https://github.com/MiBiPreT/mibipret 
+site_url: https://MiBiPreT.github.io/mibiscreen
+repo_name: MiBiPreT/mibiscreen 
+repo_url: https://github.com/MiBiPreT/mibiscreen 
 edit_uri: "edit/main/docs/"
 copyright: Copyright &copy; 2024 Alraune Zech, Sona Aseyednezhad, Robin Richardson, Jaro Camphuijsen
 
@@ -84,7 +84,8 @@ markdown_extensions:
       alternate_style: true
   - attr_list
   - smarty
-
+  - pymdownx.arithmatex:
+      generic: true
 
 extra_css:
   - assets/custom.css
@@ -92,8 +93,10 @@ extra_css:
 extra_javascript:
   - assets/fontawesome.min.js
   - assets/solid.min.js
+  - javascripts/mathjax.js
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
 
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/MiBiPreT/mibipret
+      link: https://github.com/MiBiPreT/mibiscreen
