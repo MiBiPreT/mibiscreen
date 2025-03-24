@@ -7,7 +7,7 @@
 [![fair-software.eu](https://img.shields.io/badge/fair--software.eu-%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F-green)](https://fair-software.eu)
 [![workflow scq badge](https://sonarcloud.io/api/project_badges/measure?project=MiBiPreT_MiBiPreT&metric=alert_status)](https://sonarcloud.io/dashboard?id=MiBiPreT_MiBiPreT)
 [![workflow scc badge](https://sonarcloud.io/api/project_badges/measure?project=MiBiPreT_MiBiPreT&metric=coverage)](https://sonarcloud.io/dashboard?id=MiBiPreT_MiBiPreT)
-[![documentation](https://github.com/MiBiPreT/mibiscreen/actions/workflows/documentation-deploy.yml/badge.svg)](https://mibiscreen.github.io/mibiscreen)
+[![documentation](https://github.com/MiBiPreT/mibiscreen/actions/workflows/documentation-deploy.yml/badge.svg)](https://mibipret.github.io/mibiscreen)
 [![build](https://github.com/MiBiPreT/mibiscreen/actions/workflows/build.yml/badge.svg)](https://github.com/MiBiPreT/mibiscreen/actions/workflows/build.yml)
 [![cffconvert](https://github.com/MiBiPreT/mibiscreen/actions/workflows/cffconvert.yml/badge.svg)](https://github.com/MiBiPreT/mibiscreen/actions/workflows/cffconvert.yml)
 [![sonarcloud](https://github.com/MiBiPreT/mibiscreen/actions/workflows/sonarcloud.yml/badge.svg)](https://github.com/MiBiPreT/mibiscreen/actions/workflows/sonarcloud.yml)

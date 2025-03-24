@@ -307,7 +307,7 @@ def check_units(data,
     if not test_unit:
         raise ValueError("Error: The second line in the dataframe is supposed\
                          to specify the units. No units were detected in this\
-                         line, check https://mibiscreen.github.io/mibiscreen/ Data\
+                         line, check https://mibipret.github.io/mibiscreen/ Data\
                          documentation.")
 
     # standardize column names (as it might not has happened for data yet)
