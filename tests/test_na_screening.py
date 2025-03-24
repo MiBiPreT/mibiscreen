@@ -17,7 +17,8 @@ from mibiscreen.analysis.sample.screening_NA import reductors
 from mibiscreen.analysis.sample.screening_NA import screening_NA
 from mibiscreen.analysis.sample.screening_NA import thresholds_for_intervention
 from mibiscreen.analysis.sample.screening_NA import total_contaminant_concentration
-from mibiscreen.data.example_data import example_data  #, check_values
+from mibiscreen.data.example_data import example_data
+
 
 class TestNA:
     """Class for testing analysis module on NA screening of mibiscreen."""
