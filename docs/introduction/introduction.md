@@ -2,13 +2,13 @@
 
 ## General
 
-Contaminated sites pose a risk to humands and the environment. Innovative cleaning technologies are needed to remediate these sites and remove contaminants such as petroleum hydrocarbons (PHC), cyanides and hexachlorocyclohexane (HCH).
+Contaminated sites pose a risk to humans and the environment. Innovative cleaning technologies are needed to remediate these sites and remove contaminants such as petroleum hydrocarbons (PHC), cyanides and hexachlorocyclohexane (HCH).
 
 Conventional methods of contaminated site remediation are often costly and upkeep intensive. Bioremediation is an alternative of particular interest, as it degrades contaminants on-site. Assessment of ongoing biodegradation is an important step to check the feasibility for bioremediation. Similarly, modeling the fate of contaminants is key for understanding the processes involved and predicting bioremediation in the field. 
 
-Detailed data analysis of field measurements, such as sampling data on contaminant concentrations, environmental conditions (such as pH), geo-chemical parameters (such as concentrations of oxygen, nitrate, sulfate etc) is the starting point for identifying the status of the site, assessing feasibility of bioremediation and designing remediation options. For instance, multivariate statistical analysis of field observation data can provide guidance on feasibility of bioremediation by evaluating the amount of biodegradation taking place. 
+**Detailed data analysis of field measurements**, such as sampling data on contaminant concentrations, environmental conditions (such as pH), geo-chemical parameters (such as concentrations of oxygen, nitrate, sulfate etc) is the starting point for identifying the status of the site, assessing feasibility of bioremediation and designing remediation options. For instance, multivariate statistical analysis of field observation data can provide guidance on feasibility of bioremediation by evaluating the amount of biodegradation taking place. 
 
-Numerical simulation can provide valuable knowledge on the processes occurring on site, like groundwater flow and contaminant transport including geo-chemical processes like adsorption and biodegradation. Combining simulations on groundwater flow, contaminant transport and chemical reactions allows making predictions on amounts, locations and time scales of biodegradation as well as measures of bioremediation. A combination of (statistical) data-analysis of observational data with predictions by numerical simulations, is a promising option for decision support on bioremediation for field sites. 
+**Numerical simulation** can provide valuable knowledge on the processes occurring on site, like groundwater flow and contaminant transport including geo-chemical processes like adsorption and biodegradation. Combining simulations on groundwater flow, contaminant transport and chemical reactions allows making predictions on amounts, locations and time scales of biodegradation as well as measures of bioremediation. A combination of (statistical) data-analysis of observational data with predictions by numerical simulations, is a promising option for decision support on bioremediation for field sites. 
 
 The purpose of this package is to process, analyse and visualize biogeochemical and hydrogeological (field) data relevant for biodegredation and bioremediation. `mibiret` is the central repository within the GitHub organization MiBiPreT for data handling, basic data analysis and diagnostic plotting.
 
@@ -18,7 +18,7 @@ The purpose of this package is to process, analyse and visualize biogeochemical 
 
 ## Bioremediation
 
-Bioremediation uses living organisms (including bacteria) to digest and neutralize environmental contaminants. Like the microbiome in the gut, which supports the body in digesting food, microbiomes at contaminanted sites can degrade organic contaminant in soil and groundwater.
+Bioremediation uses living organisms (including bacteria) to digest and neutralize environmental contaminants. Like the microbiome in the gut, which supports the body in digesting food, microbiomes at contaminated sites can degrade organic contaminant in soil and groundwater.
 
 Processes relevant for general biodegradation and bioremediation prediction are:
 
