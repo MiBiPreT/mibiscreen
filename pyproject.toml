@@ -38,10 +38,10 @@ keywords = [
     "contaminant transport",
 ]
 license = {file = "LICENSE"}
-name = "mibipret"
+name = "mibiscreen"
 readme = {file = "README.md", content-type = "text/markdown"}
 requires-python = ">=3.8"
-version = "0.2.1"
+version = "0.3.0"
 
 [project.optional-dependencies]
 dev = [
@@ -68,29 +68,29 @@ doc = [
 ]
 
 [project.urls]
-Repository = "https://github.com/MiBiPreT/mibipret"
-Issues = "https://github.com/MiBiPreT/mibipret/issues"
-Changelog = "https://github.com/MiBiPreT/mibipret/CHANGELOG.md"
+Repository = "https://github.com/MiBiPreT/mibiscreen"
+Issues = "https://github.com/MiBiPreT/mibiscreen/issues"
+Changelog = "https://github.com/MiBiPreT/mibiscreen/CHANGELOG.md"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 
 [tool.coverage.run]
 branch = true
-source = ["mibipret"]
+source = ["mibiscreen"]
 command_line = "-m pytest"
 
 [tool.isort]
 lines_after_imports = 2
 force_single_line = 1
 no_lines_before = ["FUTURE", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
-known_first_party = "mibipret"
-src_paths = ["mibipret", "tests"]
+known_first_party = "mibiscreen"
+src_paths = ["mibiscreen", "tests"]
 line_length = 120
 
 # For completeness, until we move to an src-based layout
 [tool.setuptools.packages.find]
-include = ["mibipret*"]
+include = ["mibiscreen*"]
 exclude = ["tests*"]
 
 [tool.tox]
@@ -174,15 +174,15 @@ target-version = "py39"
 line-length = 120
 
 [tool.ruff.lint.isort]
-known-first-party = ["mibipret"]
+known-first-party = ["mibiscreen"]
 force-single-line = true
 no-lines-before = ["future","standard-library","third-party","first-party","local-folder"]
 
 [tool.bumpversion]
-current_version = "0.2.1"
+current_version = "0.3.0"
 
 [[tool.bumpversion.files]]
-filename = "mibipret/__init__.py"
+filename = "mibiscreen/__init__.py"
 
 [[tool.bumpversion.files]]
 filename = "pyproject.toml"

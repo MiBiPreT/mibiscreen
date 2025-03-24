@@ -6,10 +6,10 @@
 """
 import numpy as np
 import pandas as pd
-import mibipret.data.names_data as names
-from mibipret.data.unit_settings import all_units
-from mibipret.data.unit_settings import standard_units
-from mibipret.data.unit_settings import units_env_cond
+import mibiscreen.data.names_data as names
+from mibiscreen.data.unit_settings import all_units
+from mibiscreen.data.unit_settings import standard_units
+from mibiscreen.data.unit_settings import units_env_cond
 
 to_replace_list = ["-",'--','',' ','  ']
 to_replace_value = np.nan
@@ -307,7 +307,8 @@ def check_units(data,
     if not test_unit:
         raise ValueError("Error: The second line in the dataframe is supposed\
                          to specify the units. No units were detected in this\
-                         line, check www.mibipretdocs.nl/dataloading.")
+                         line, check https://mibiscreen.github.io/mibiscreen/ Data\
+                         documentation.")
 
     # standardize column names (as it might not has happened for data yet)
     check_columns(units,standardize = True, verbose = False)

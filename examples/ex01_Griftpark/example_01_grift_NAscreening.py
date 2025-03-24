@@ -4,18 +4,18 @@
 """
 
 
-# path = '/home/alraune/GitHub/MiBiPreT/mibipret/mibipret/'
+# path = '/home/alraune/GitHub/MiBiPreT/mibiscreen/mibiscreen/'
 # sys.path.append(path) # append the path to module
 # import analysis.sample.screening_NA as na
 # import data.data as md
 # from visualize.activity import activity
 
-import mibipret.analysis.sample.screening_NA as na
-from mibipret.data.check_data import standardize
-from mibipret.data.load_data import load_csv
+import mibiscreen.analysis.sample.screening_NA as na
+from mibiscreen.data.check_data import standardize
+from mibiscreen.data.load_data import load_csv
 
-#from mibipret.data.check_data import check_columns,check_units,check_values, standardize
-from mibipret.visualize.activity import activity
+#from mibiscreen.data.check_data import check_columns,check_units,check_values, standardize
+from mibiscreen.visualize.activity import activity
 
 ###------------------------------------------------------------------------###
 ### Script settings

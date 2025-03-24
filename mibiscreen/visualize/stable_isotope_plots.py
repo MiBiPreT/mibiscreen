@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Linear regression plots for stable isotope analysis in mibipret.
+"""Linear regression plots for stable isotope analysis in mibiscreen.
 
 @author: Alraune Zech
 """

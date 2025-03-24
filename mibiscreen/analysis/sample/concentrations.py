@@ -6,8 +6,8 @@
 """
 
 
-from mibipret.data.check_data import check_data_frame
-from mibipret.data.set_data import determine_quantities
+from mibiscreen.data.check_data import check_data_frame
+from mibiscreen.data.set_data import determine_quantities
 
 
 def total_concentration(

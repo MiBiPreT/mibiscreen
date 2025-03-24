@@ -1,13 +1,13 @@
-"""Tests for the mibipret.analysis.reduction.transformation module.
+"""Tests for the mibiscreen.analysis.reduction.transformation module.
 
 @author: Alraune Zech
 """
 
 import numpy as np
 import pytest
-from mibipret.analysis.reduction.transformation import filter_values
-from mibipret.analysis.reduction.transformation import transform_values
-from mibipret.data.example_data import example_data
+from mibiscreen.analysis.reduction.transformation import filter_values
+from mibiscreen.analysis.reduction.transformation import transform_values
+from mibiscreen.data.example_data import example_data
 
 
 class Test_Filtering:

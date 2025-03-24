@@ -1,4 +1,4 @@
-# `mibipret` ordination
+# `mibiscreen` ordination
 
 ## General
 

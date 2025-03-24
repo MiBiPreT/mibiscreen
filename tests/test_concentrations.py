@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Testing analysis module on NA screening of mibipret.
+"""Testing analysis module on NA screening of mibiscreen.
 
 @author: Alraune Zech
 """
@@ -8,12 +8,12 @@
 import numpy as np
 import pandas as pd
 import pytest
-from mibipret.analysis.sample.concentrations import total_concentration
-from mibipret.analysis.sample.concentrations import total_count
+from mibiscreen.analysis.sample.concentrations import total_concentration
+from mibiscreen.analysis.sample.concentrations import total_count
 
 
 class TestTotalConcentration:
-    """Class for testing analysis module on NA screening of mibipret."""
+    """Class for testing analysis module on NA screening of mibiscreen."""
 
     columns1 = ['sample_nr', 'sulfate', 'benzene']
     s01 = ['2000-001', 748, 263]
@@ -65,7 +65,7 @@ class TestTotalConcentration:
 
 
 class TestTotalCount:
-    """Class for testing analysis module on NA screening of mibipret."""
+    """Class for testing analysis module on NA screening of mibiscreen."""
 
     columns1 = ['sample_nr', 'sulfate', 'benzene']
     s01 = ['2000-001', 748, 263]
