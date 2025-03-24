@@ -21,6 +21,7 @@ The purpose of this package is to process, analyse and visualize biogeochemical 
 Bioremediation uses living organisms (including bacteria) to digest and neutralize environmental contaminants. Like the microbiome in the gut, which supports the body in digesting food, microbiomes at contaminanted sites can degrade organic contaminant in soil and groundwater.
 
 Processes relevant for general biodegradation and bioremediation prediction are:
+
 + hydrogeological flow and transport: this includes groundwater flow driven by hydraulic gradients, advective transport of contaminant, diffusion and dispersion
 + transformation and phase transition processes: dissolution, volatilization, adsorption/retardation, decay
 + biochemical processes: chemical reaction and microbial degradation
@@ -31,6 +32,7 @@ Modeling all these processes at the same time, requires a high level of model de
 ## Example Field data
 
 We gathered field data from two sites for development and testing of implemented routines on field sample data:
+
 * the Griftpark site [Faber, 2023]
 * the VetGas Amersfoort site [van Leeuwen et al., 2020, 2022]
 
@@ -39,6 +41,7 @@ Both sites are heavily contaminated with petroleum hydrocarbons. Sampling campai
 ## Structure
 
 The core elements and folders for users of `mibipret` are:
+
 * The folder `mibipret` contains the main functionality split up into folders for:
     * `data`
     * `analysis` 
@@ -47,4 +50,11 @@ The core elements and folders for users of `mibipret` are:
   * Griftpark: `ex01_Griftpark`
   * Vetgas Amersfoort: `ex02_Amersfoort`
 
+## References
+
+[Faber, S. C. (2023). Field investigations and reactive transport modelling of biodegradingcoal tar compounds at a complex former manufactured gas plant. Utrecht Studies in Earth Sciences (USES), 289.](https://dspace.library.uu.nl/handle/1874/431206)
+
+[van Leeuwen, J. A., N. Hartog, J. Gerritse, C. Gallacher, R. Helmus, O. Brock, J. R. Parsons, and S. M. Hassanizadeh, (2020) The dissolution and microbial degradation of mobile aromatic hydrocarbons from a Pintsch gas tar DNAPL source zone, Science of The Total Environment, 722, 137,797](https://doi.org/10.1016/j.scitotenv.2020.137797).
+
+[van Leeuwen, J. A., J. Gerritse, N. Hartog, S. Ertl, J. R. Parsons, and S. M. Hassanizadeh, (2022) Anaerobic degradation of benzene and other aromatic hydrocarbons in a tar-derived plume: Nitrate versus iron reducing conditions, Journal of Contaminant Hydrology, 248, 104,006](https://doi.org/10.1016/j.jconhyd.2022.104006)
 
