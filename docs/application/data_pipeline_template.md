@@ -93,40 +93,46 @@ environment_raw,units = load_excel(amersfoort_file_path, sheet_name = 'environme
 ```
     
 ### 2. Preprocessing:(Cleaning and Standardization)
+Runs all checks on data, i.e. column names (check_columns()), data format (check_data_frame()), units (check_units()), names (standard_names()) and values (check_values()) in one go and returns transformed data with standard column names and valueas in numerical type where possible. Data is reduced to those columns containing known quantities if reduce=true.
 
 ```Python
 from mibipret.data.check_data import standardize
-
-# Runs all checks on data, i.e. column names (check_columns()), data format (check_data_frame()), units (check_units()), names (standard_names()) and values (check_values()) in one go and returns transformed data with standard column names and valueas in numerical type where possible. Data is reduced to those columns containing known quantities if reduce=true.
 data, units = standardize(data_raw, reduce = True, verbose=False)
 ```
 
 ### 3. Transformation:(processing and enrichment)
+For NA screening, stochiometric equations are used to analyze electron balance, here is how to perform NA screening step by step:
+#### Calculation of number of electrons for reduction
+Returns pandas-Series with total amount of electron reductors per well in [mmol e-/l]:
+```python
+import mibipret.analysis.sample.screening_NA as na
+tot_reduct = na.reductors(data,verbose = True,ea_group = 'ONSFe')
+```
+
+#### Calculation of number of electrons needed for oxidation
+Returns pandas-Series with total amount of oxidators per well in [mmol e-/l]:
 
 ```python
-# For NA screening, stochiometric equations are used to analyze electron balance, here is how to perform NA screening step by step:
-import mibipret.analysis.sample.screening_NA as na
-#Calculation of number of electrons for reduction
-#Returns pandas-Series with total amount of electron reductors per well in [mmol e-/l]:
-tot_reduct = na.reductors(data,verbose = True,ea_group = 'ONSFe')
-
-#Calculation of number of electrons needed for oxidation
-#Returns pandas-Series with total amount of oxidators per well in [mmol e-/l]:
 tot_oxi = na.oxidators(data,verbose = True, contaminant_group='BTEXIIN')
+```
 
-#Calculation of number of electron balance
-#Returns pandas-Series with ratio of reductors to oxidators. If value below 1, available electrons for reduction are not sufficient for reaction and thus NA is potentially not taking place:
+#### Calculation of number of electron balance
+Returns pandas-Series with ratio of reductors to oxidators. If value below 1, available electrons for reduction are not sufficient for reaction and thus NA is potentially not taking place:
+```python
 e_bal = na.electron_balance(data,verbose = True)
-
-# Evaluation of intervention threshold exceedance
-#Calculation of total concentration of contaminants/specified group of contaminants
-#Returns pandas-Series with total concentrations of contaminants per well in [ug/l]:
+```
+### Evaluation of intervention threshold exceedance
+#### Calculation of total concentration of contaminants/specified group of contaminants
+Returns pandas-Series with total concentrations of contaminants per well in [ug/l]:
+```python
 tot_cont = na.total_contaminant_concentration(data,verbose = True,contaminant_group='BTEXIIN')
-
-# If you want to perform complete NA screening and evaluation of intervention threshold exceedance in one go:
+```
+If you want to perform complete NA screening and evaluation of intervention threshold exceedance in one go:
+```python
 data_na = na.screening_NA(data,verbose = True)
-
-# It is also possible to run full NA screening with results added to data using argument (inplace = True):
+```
+It is also possible to run full NA screening with results added to data using argument (inplace = True):
+```python
 na.screening_NA(data,inplace = True,verbose = False)
 ```
 ### 4. Storage:
@@ -135,13 +141,13 @@ na.screening_NA(data,inplace = True,verbose = False)
     Mibipret does not have support for file storage
 
 ### 5. Validation & Monitoring for Each Data Analysis Module
+ we use the `options` function to check what types of analyses/modeling/visualization/reports we can do on the dataset
+if func argument is provided, it will check whether this function is possible and if not what else is needed
 
 !!! Warning
     This is intended behaviour but has not been implemented yet.
 
 ```python
-# we use the `options` function to check what types of analyses/modeling/visualization/reports we can do on the dataset
-# if func argument is provided, it will check whether this function is possible and if not what else is needed
 mibipret.decision_support.options(st_sample_data, func=mibipret.visualize.traffic3d)
 
 # To perform mibipret.visualize.traffic3d you need to run mibipret.analysis.na_screening
@@ -150,22 +156,27 @@ mibipret.decision_support.options(st_sample_data, func=mibipret.visualize.traffi
 ```
 
 ### 6. Analytics:
+#### Calculation of "traffic light" based on electron balance
+Returns pandas-Series with traffic light (red/yellow/green) if NA is taking place based on electron balance. Red corresponds to a electron balance below 1 where available electrons for reduction are not sufficient and thus NA is potentially not taking place:
 
 ```python
-# Calculation of "traffic light" based on electron balance
-# Returns pandas-Series with traffic light (red/yellow/green) if NA is taking place based on electron balance. Red corresponds to a electron balance below 1 where available electrons for reduction are not sufficient and thus NA is potentially not taking place:
 na_traffic = na.NA_traffic(data,verbose = True)
+```
+#### Calculation of "traffic light" for threshold exceedance
+Returns pandas-DataFrame (similar to input data, including well specification) with intervention threshold exceedance analysis:
+traffic light if well requires intervention (red/yellow/green)
+number of contaminants exceeding the intervention value
+list of contaminants above the threshold of intervention
 
-# Calculation of "traffic light" for threshold exceedance
-# Returns pandas-DataFrame (similar to input data, including well specification) with intervention threshold exceedance analysis:
-# traffic light if well requires intervention (red/yellow/green)
-# number of contaminants exceeding the intervention value
-# list of contaminants above the threshold of intervention
+```python 
 na_intervention = na.thresholds_for_intervention(data,verbose = True,contaminant_group='BTEXIIN')
 display(na_intervention)
+```
 
-# Activity plot
+#### Activity plot
+Create activity plot linking contaminant concentration to metabolite occurence based on NA screening.
+
+```python 
 from mibipret.visualize.activity import activity
-# Create activity plot linking contaminant concentration to metabolite occurence based on NA screening
 fig, ax = activity(data)
 ```
