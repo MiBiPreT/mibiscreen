@@ -1,4 +1,4 @@
-"""Documentation about mibipret."""
+"""Documentation about mibiscreen."""
 import logging
 
 logging.getLogger(__name__).addHandler(logging.NullHandler())

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Testing analysis module on NA screening of mibipret.
+"""Testing analysis module on NA screening of mibiscreen.
 
 @author: Alraune Zech
 """
@@ -8,21 +8,19 @@
 import numpy as np
 import pandas as pd
 import pytest
-from mibipret.analysis.sample.screening_NA import NA_traffic
-from mibipret.analysis.sample.screening_NA import available_NP
-from mibipret.analysis.sample.screening_NA import check_data
-from mibipret.analysis.sample.screening_NA import electron_balance
-from mibipret.analysis.sample.screening_NA import oxidators
-from mibipret.analysis.sample.screening_NA import reductors
-from mibipret.analysis.sample.screening_NA import screening_NA
-from mibipret.analysis.sample.screening_NA import thresholds_for_intervention
-from mibipret.analysis.sample.screening_NA import total_contaminant_concentration
-from mibipret.data.example_data import example_data  #, check_values
-
-#path_data = "./mibipret/d"
+from mibiscreen.analysis.sample.screening_NA import NA_traffic
+from mibiscreen.analysis.sample.screening_NA import available_NP
+from mibiscreen.analysis.sample.screening_NA import check_data
+from mibiscreen.analysis.sample.screening_NA import electron_balance
+from mibiscreen.analysis.sample.screening_NA import oxidators
+from mibiscreen.analysis.sample.screening_NA import reductors
+from mibiscreen.analysis.sample.screening_NA import screening_NA
+from mibiscreen.analysis.sample.screening_NA import thresholds_for_intervention
+from mibiscreen.analysis.sample.screening_NA import total_contaminant_concentration
+from mibiscreen.data.example_data import example_data  #, check_values
 
 class TestNA:
-    """Class for testing analysis module on NA screening of mibipret."""
+    """Class for testing analysis module on NA screening of mibiscreen."""
 
     # data, units = standardize(example_data(),verbose = False)
     data = example_data(with_units = False)

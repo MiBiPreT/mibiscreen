@@ -1,4 +1,4 @@
-"""Tests for the ordination plots in mibipret.visualize module.
+"""Tests for the ordination plots in mibiscreen.visualize module.
 
 @author: Alraune Zech
 """
@@ -6,11 +6,11 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import pytest
-from mibipret.visualize.ordination_plot import ordination_plot
+from mibiscreen.visualize.ordination_plot import ordination_plot
 
 
 class TestOrdinationPlot:
-    """Class for testing ordination plots of mibipret."""
+    """Class for testing ordination plots of mibiscreen."""
 
     pca_output_01 = {
         'method': 'pca',

@@ -1,4 +1,4 @@
-"""Tests for the activity plot in mibipret.visualize module.
+"""Tests for the activity plot in mibiscreen.visualize module.
 
 @author: Alraune Zech
 """
@@ -7,14 +7,14 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import pytest
-from mibipret.data.names_data import name_metabolites_variety
-from mibipret.data.names_data import name_na_traffic_light
-from mibipret.data.names_data import name_total_contaminants
-from mibipret.visualize.activity import activity
+from mibiscreen.data.names_data import name_metabolites_variety
+from mibiscreen.data.names_data import name_na_traffic_light
+from mibiscreen.data.names_data import name_total_contaminants
+from mibiscreen.visualize.activity import activity
 
 
 class TestActivity:
-    """Class for testing activity plot of mibipret."""
+    """Class for testing activity plot of mibiscreen."""
 
     meta = [41,33,47,20,36]
     conc = [13132.,11695.,4101.,498.,2822]

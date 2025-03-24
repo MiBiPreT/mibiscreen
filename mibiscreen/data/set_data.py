@@ -5,8 +5,8 @@
 @author: Alraune Zech
 """
 import pandas as pd
-import mibipret.data.names_data as names
-from mibipret.data.check_data import check_data_frame
+import mibiscreen.data.names_data as names
+from mibiscreen.data.check_data import check_data_frame
 
 
 def determine_quantities(cols,

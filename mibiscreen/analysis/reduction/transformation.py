@@ -7,9 +7,9 @@
 
 import numpy as np
 from scipy.stats import zscore
-from mibipret.data.check_data import check_data_frame
-from mibipret.data.names_data import setting_data
-from mibipret.data.set_data import compare_lists
+from mibiscreen.data.check_data import check_data_frame
+from mibiscreen.data.names_data import setting_data
+from mibiscreen.data.set_data import compare_lists
 
 
 def filter_values(data_frame,
