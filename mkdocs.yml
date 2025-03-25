@@ -93,7 +93,7 @@ extra_css:
 extra_javascript:
   - assets/fontawesome.min.js
   - assets/solid.min.js
-  - javascripts/mathjax.js
+  - assets/mathjax.js
   - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
 
 extra:
