@@ -1,4 +1,5 @@
-# `mibiscreen` ordination
+# `mibiscreen` Ordination
+
 
 ## General
 
@@ -44,7 +45,6 @@ Constrained ordination maximizes correlation between the independent and depende
 variables. The implemented methods RDA and CCA are canonical ordination techniques, made to 
 detect patterns in the dependent variables by the independent variables. 
 
-
 RDA bases its axes on the same principles as PCA, by maximizing the total variance 
 for each axis. Like PCA, it is used when the assumed relationship between the
 independent and dependent variables is linear. 
@@ -55,6 +55,11 @@ It is used when the assumed relationship between the data is unimodal, i.e. the 
 having a probability distribution with a single peak. 
 
 ### Ordination plots
+
+Results of all ordination analysis can be visualized with `plot ordination_plot()`.
+It creates ordination plot based on the results of the ordination analysis routines 
+`pca()`, `cca()`, or `rda()`. The output of the analysis routines is streamlined and 
+can directly be used as input to the visualization routine.
 
 The two plot axis represent the two main axis identified by the ordination methods. 
 The first ordination axis is oriented horizontally and the second vertically. 
@@ -84,6 +89,7 @@ site scores are displayed in constrained methods, they are called a triplot.
 ### Data Transformation
 
 There are various ways to transform the data before ordination analysis:
+
 * centered: for each sample value of a variable $x_i$ the mean of the variable over all samples
 $\mu$ is subtracted: $z_i = x_i − \mu$
 * standardize: $z_i = \frac{x_i - \mu}{\sigma}$ where $\sigma$ is the standard deviation 
@@ -95,10 +101,12 @@ Note that logarithmic transformation is performed before standardization or cent
 since logarithms give no solution for negative values.
 
 [not yet implemented] 
-Samples or variables can be designated as supplementary. Then the values will not
-considered during ordnation analysis, but their scores and loadings relative to 
-the axes will be determined for visualization. 
-After performing the ordination analysis, data can be scaled or transformed again, 
-for the purpose of plotting preferences. Scaling can be focused on either variable 
-or sample distance. 
+Samples or variables can be designated as supplementary. Then the values will not be considered during ordination analysis, but their scores and loadings relative to the axes will be determined for visualization.  After performing the ordination analysis, data can be scaled or transformed again, for the purpose of plotting preferences. Scaling can be focused on either variable or sample distance. 
 
+## References
+
+Anderson, M. J., and T. J. Willis (2003), Canonical analysis of principal coordinates: A useful method of constrained ordination for ecology, Ecology, 84, 511–525, doi:10.1890/0012-9658.
+
+Bakker, J. (2023), Diagnostic and Multivariate Statistical Tool for Bioremediation Modelling, Bsc Thesis, Department of Earth Science, Utrecht University
+
+ter Braak, C. J. F., (1995) Ordination, pp. 91–173, 2 ed., Cambridge University Press.
