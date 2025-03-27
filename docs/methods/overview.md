@@ -11,17 +11,19 @@ Results can be visualized in an activity plot.
 [More on Natural Attenuation Screening](na_screening.md)
 
 ## Threshold concentrations
-Routines for identifying threshold concentrations allows evaluating if a site poses a risk and which contaminant is exceeding regulatory limits. When concentrations of of contaminants are provided in tabular (standard) form the routine `total_contaminant_concentration()` provides the total amount or that of a selected subgroup of contaminants for each sample. The function `thresholds_for_intervention()` identifies for each sample those contaminants that exceed intervention thresholds. Again a traffic light system (red/yellow/green) indicates if the sample requires intervention. It further provides the number of contaminants exceeding the intervention value and a list of contaminants above the threshold of intervention.
+Routines for identifying threshold concentrations allows evaluating if a site poses a risk and which contaminant is exceeding regulatory limits. When concentrations of contaminants are provided in tabular (standard) form the routine `total_contaminant_concentration()` provides the total amount or that of a selected subgroup of contaminants for each sample. The function `thresholds_for_intervention()` identifies for each sample those contaminants that exceed intervention thresholds. Again a traffic light system (red/yellow/green) indicates if the sample requires intervention. It further provides the number of contaminants exceeding the intervention value and a list of contaminants above the threshold of intervention.
+
+[More on Concentrations](concentrations.md)
 
 ## Metabolite analysis 
-Evaluating the occurrence of metabolites can serve as indicator for ongoing biodegradation. When metabolite data is provided in tabular (standard) form
-the routines `total_concentration()` and `total_count()` can be used to determine the total amount per sample (in microgram) and the total amount of
-quantities exceeding a certain threshold value, e.g. exceeding zero concentration for identifying the total number of observed metabolites. The gained information can be stored in the data frame and used for visualization in an activity plot. 
+Evaluating the occurrence of metabolites can serve as indicator for ongoing biodegradation. When metabolite data is provided in tabular (standard) form the routines `total_concentration()` and `total_count()` from the general concentration analysis can be used to determine the total amount per sample (in microgram) and the total amount of quantities exceeding a certain threshold value, e.g. exceeding zero concentration for identifying the total number of observed metabolites. The gained information can be stored in the data frame and used for visualization in an activity plot. 
+
+[More on (metabolite) Concentrations](concentrations.md)
 
 ## Stable isotope analysis
 Performing linear regression of stable isotope measurements, particularly of carbon 13 and deuterium for particular contaminants can provide information on changes of in the contaminant source or the occurrence of specific enzymatic degradation reactions. 
 
-  [More on stable isotope analysis](stable_isotopes.md)
+[More on stable isotope analysis](stable_isotopes.md)
 
 ##  Multivariate statistical analysis: Ordination
 Workflows for multivariate statistical analysis of observational data (contaminant concentrations, habitat conditions,

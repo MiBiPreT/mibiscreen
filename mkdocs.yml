@@ -14,6 +14,7 @@ nav:
     - Overview: methods/overview.md
     - Data: methods/data.md
     - NA Screening: methods/na_screening.md
+    - Concentrations: methods/concentrations.md
     - Ordination: methods/ordination.md
     - Stable Isotope Analysis: methods/stable_isotopes.md
   - Development: development/development.md
