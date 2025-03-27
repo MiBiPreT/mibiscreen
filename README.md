@@ -45,7 +45,7 @@ Note that this is the (possibly unstable) development version from the `main` br
 
 ## Documentation
 
-Include a link to your project's full documentation here.
+You can find the project's full documentation [here](https://mibipret.github.io/mibiscreen/).
 
 ## Contributing
 
