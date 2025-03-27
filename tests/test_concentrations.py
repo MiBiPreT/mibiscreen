@@ -8,11 +8,11 @@
 import numpy as np
 import pandas as pd
 import pytest
-from mibiscreen.analysis.sample.concentrations import total_concentration
-from mibiscreen.analysis.sample.concentrations import total_count
 from mibiscreen.analysis.sample.concentrations import thresholds_for_intervention
+from mibiscreen.analysis.sample.concentrations import total_concentration
 from mibiscreen.analysis.sample.concentrations import total_contaminant_concentration
-from mibiscreen.data.example_data import example_data  
+from mibiscreen.analysis.sample.concentrations import total_count
+from mibiscreen.data.example_data import example_data
 
 
 class TestTotalConcentration:

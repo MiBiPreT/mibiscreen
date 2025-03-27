@@ -5,10 +5,10 @@
 @author: Alraune Zech
 """
 
-from mibiscreen.data.check_data import check_data_frame
-from mibiscreen.data.set_data import determine_quantities
 import numpy as np
 import mibiscreen.data.names_data as names
+from mibiscreen.data.check_data import check_data_frame
+from mibiscreen.data.set_data import determine_quantities
 from mibiscreen.data.set_data import extract_settings
 from .properties import properties
 

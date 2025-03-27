@@ -13,7 +13,6 @@ from mibiscreen.data.check_data import check_values
 from mibiscreen.data.check_data import standardize
 from mibiscreen.data.load_data import load_excel
 
-
 ###------------------------------------------------------------------------###
 ### Script settings
 verbose = True

@@ -8,14 +8,13 @@
 import numpy as np
 import pandas as pd
 import pytest
-
 from mibiscreen.analysis.sample.screening_NA import available_NP
 from mibiscreen.analysis.sample.screening_NA import electron_balance
 from mibiscreen.analysis.sample.screening_NA import oxidators
 from mibiscreen.analysis.sample.screening_NA import reductors
-from mibiscreen.data.example_data import example_data
 from mibiscreen.analysis.sample.screening_NA import sample_NA_screening
 from mibiscreen.analysis.sample.screening_NA import sample_NA_traffic
+from mibiscreen.data.example_data import example_data
 
 
 class TestReductors:
