@@ -3,25 +3,13 @@
 @author: Alraune Zech
 """
 
-<<<<<<< HEAD
-
-# path = '/home/alraune/GitHub/MiBiPreT/mibiscreen/mibiscreen/'
-# sys.path.append(path) # append the path to module
-# import analysis.sample.screening_NA as na
-# import data.data as md
-# from visualize.activity import activity
-
-import mibiscreen.analysis.sample.screening_NA as na
 import mibiscreen.analysis.sample.concentrations as co
+import mibiscreen.analysis.sample.screening_NA as na
 from mibiscreen.data.check_data import standardize
 from mibiscreen.data.load_data import load_csv
 
 #from mibiscreen.data.check_data import check_columns,check_units,check_values, standardize
 from mibiscreen.visualize.activity import activity
-
-###------------------------------------------------------------------------###
-### Script settings
-
 
 ###------------------------------------------------------------------------###
 ### File path settings
