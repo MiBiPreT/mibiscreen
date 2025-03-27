@@ -10,6 +10,8 @@ copyright: Copyright &copy; 2024 Alraune Zech, Sona Aseyednezhad, Robin Richards
 nav:
   - Home: index.md
   - Introduction: introduction/introduction.md
+  - Application: 
+    - Data pipeline: application/data_pipeline_template.md
   - Methods: 
     - Overview: methods/overview.md
     - Data: methods/data.md
@@ -17,6 +19,8 @@ nav:
     - Concentrations: methods/concentrations.md
     - Ordination: methods/ordination.md
     - Stable Isotope Analysis: methods/stable_isotopes.md
+  - Application:
+    - Data pipeline: application/data_pipeline_template.md
   - Development: development/development.md
   - API Reference:
     - Data: reference/reference_data.md
@@ -94,7 +98,7 @@ extra_css:
 extra_javascript:
   - assets/fontawesome.min.js
   - assets/solid.min.js
-  - javascripts/mathjax.js
+  - assets/mathjax.js
   - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
 
 extra:
