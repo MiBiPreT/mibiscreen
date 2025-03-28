@@ -18,16 +18,6 @@ from mibiscreen.analysis.reduction.stable_isotope_regression import extract_isot
 from mibiscreen.data.check_data import standardize
 from mibiscreen.data.load_data import load_csv
 
-plt.close('all')
-
-# import sys
-# path = '/home/alraune/GitHub/MiBiPreT/mibiscreen/mibiscreen/'
-# sys.path.append(path)
-# from data.data import load_csv
-# from data.data import standardize
-# from analysis.reduction.stable_isotope_regression import Lambda_regression
-# from analysis.reduction.stable_isotope_regression import extract_isotope_data
-
 ###------------------------------------------------------------------------###
 ### Script settings
 verbose = True

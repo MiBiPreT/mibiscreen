@@ -114,7 +114,7 @@ def activity(
                    )
     if "y" in well_color:
         ax.scatter([], [],
-                   label="limited/unknown",
+                   label="unknown",
                    c="y",
                    s = settings['markersize'],
                    ec = settings['ec'],

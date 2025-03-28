@@ -8,8 +8,7 @@
 import numpy as np
 from scipy.stats import zscore
 from mibiscreen.data.check_data import check_data_frame
-from mibiscreen.data.names_data import setting_data
-from mibiscreen.data.set_data import compare_lists
+from mibiscreen.data.set_data import determine_quantities
 
 
 def filter_values(data_frame,
@@ -143,28 +142,17 @@ def transform_values(data_frame,
     -------
     To be added.
     """
-    data,cols= check_data_frame(data_frame,inplace = inplace)
-
     if verbose:
         print('==============================================================')
         print(" Running function 'transform_values()' on data")
         print('==============================================================')
 
-    if name_list == 'all':
-        intersection = list(set(cols) - set(setting_data))
+    data,cols= check_data_frame(data_frame,inplace = inplace)
+    quantities, remainder = determine_quantities(cols,
+                                      name_list = name_list,
+                                      verbose = verbose)
 
-    else:
-        if isinstance(name_list, str):
-            name_list = [name_list]
-        intersection,remainder_list1,remainder_list2 = compare_lists(cols,name_list)
-        if len(intersection) < len(name_list):
-            print("WARNING: not all variables in name_list are found in dataframe.")
-            print('----------------------------------------------------------------')
-            print("Column names identified:", intersection)
-            print("Column names not identified in data:", remainder_list2)
-            print('________________________________________________________________')
-
-    for quantity in intersection:
+    for quantity in quantities:
         if how == 'log_scale':
             data[quantity] = np.log10(log_scale_A * data[quantity] + log_scale_B)
         elif how == 'center':
