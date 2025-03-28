@@ -13,82 +13,93 @@ def determine_quantities(cols,
          name_list = 'all',
          verbose = False,
          ):
-    """Determine quantities to analyse.
+    """Select a subset of column names (from DataFrame).
 
     Input
     -----
         cols: list
-            Names of quantities from pd.DataFrame)
-        name_ist: str or list, dafault is 'all'
-            either short name for group of quantities to use, such as:
-                    - 'all' (all qunatities given in data frame except settings)
+            Names of quantities (column names) from pd.DataFrame
+        name_list: str or list of str, default is 'all'
+            quantities to extract from column names.
+
+            If a list of strings is provided, these will be selected from the list of column names (col)
+            If a string is provided, this is a short name for a specific group of quantities:
+                - 'all' (all quantities given in data frame except settings)
+                - short name for group of contaminants:
                     - 'BTEX' (for benzene, toluene, ethylbenzene, xylene)
                     - 'BTEXIIN' (for benzene, toluene, ethylbenzene, xylene,
                                   indene, indane and naphthaline)
                     - 'all_cont' (for all contaminant in name list)
-            or list of strings with names of quantities to use
+                - short name for group of geochemicals:
+                    - 'environmental_conditions'
+                    - 'chemical_composition'
+                    - 'ONS':  non reduced electron acceptors (oxygen, nitrate, sulfate)
+                    - 'ONSFe': selected electron acceptors  (oxygen, nitrate, sulfate + iron II)
+                    - 'all_ea': all potential electron acceptors (non reduced & reduced)
+                    - 'NP': nutrients (nitrate, nitrite, phosphate)
+                See also file mibiscreen/data/name_data for lists of quantities
         verbose: Boolean
             verbose flag (default False)
 
     Output
     ------
         quantities: list
-            list of strings with names of quantities to use and present in data
+            list of strings with names of selected quantities present in dataframe
+        remainder: list
+            list of strings with names of selected quantities not present in dataframe
 
     """
     if name_list == 'all':
         ### choosing all column names except those of settings
-        quantities = list(set(cols) - set(names.setting_data))
+        list_names = list(set(cols) - set(names.settings))
         if verbose:
-            print("All data columns except for those with settings will be considered.")
-        remainder_list2 = []
-
-    elif isinstance(name_list, list): # choosing specific list of column names except those of settings
-        quantities,remainder_list1,remainder_list2 = compare_lists(cols,name_list)
-
-    elif isinstance(name_list, str) and (name_list in names.contaminants.keys()):
-        if verbose:
-            print("Choosing specific group of contaminants:", name_list)
-
-        contaminants = names.contaminants[name_list].copy()
-
-        # handling of xylene isomeres
-        if (names.name_o_xylene in cols) and (names.name_pm_xylene in cols):
-            contaminants.remove(names.name_xylene)
-
-        quantities,remainder_list1,remainder_list2 = compare_lists(cols,contaminants)
-
-    elif isinstance(name_list, str) and (name_list in names.electron_acceptors.keys()):
-        if verbose:
-            print("Choosing specific group of electron acceptors:", name_list)
-
-        electron_acceptors = names.electron_acceptors[name_list].copy()
-
-        quantities,remainder_list1,remainder_list2 = compare_lists(cols,electron_acceptors)
+            print("Selecting all data columns except for those with settings.")
 
     elif isinstance(name_list, str):
-        quantities,remainder_list1,remainder_list2 = compare_lists(cols,[name_list])
+        if name_list in names.contaminants.keys():
+            verbose_text = "Selecting specific group of contaminants:"
+            list_names = names.contaminants[name_list].copy()
+            if (names.name_o_xylene in cols) and (names.name_pm_xylene in cols):
+                list_names.remove(names.name_xylene) # handling of xylene isomeres
+
+        elif name_list in names.geochemicals.keys():
+            verbose_text = "Selecting specific group of geochemicals:"
+            list_names = names.geochemicals[name_list].copy()
+
+        else:
+            verbose_text = "Selecting single quantity:"
+            list_names = [name_list]
 
         if verbose:
-            print("Choosing single quantity:", name_list)
+            print(verbose_text,*name_list,sep='\n')
+
+    elif isinstance(name_list, list): # choosing specific list of column names except those of settings
+        if not all(isinstance(item, str) for item in name_list):
+            raise ValueError("Keyword 'name_list' needs to be a string or a list of strings.")
+        list_names = name_list
+        if verbose:
+            print("Selecting all names from provided list.")
 
     else:
         raise ValueError("Keyword 'name_list' needs to be a string or a list of strings.")
+
+    quantities,remainder_list1,remainder_list2 = compare_lists(cols,list_names)
 
     if not quantities:
         raise ValueError("No quantities from name list '{}' provided in data.\
                          Presumably data not in standardized format. \
                          Run 'standardize()' first.".format(name_list))
 
+    if verbose:
+        print("Selected set of quantities: ", *quantities,sep='\n')
+
     if remainder_list2:
         print("WARNING: quantities from name list not in data:", *remainder_list2,sep='\n')
         print("Maybe data not in standardized format. Run 'standardize()' first.")
         print("_________________________________________________________________")
 
-    if verbose:
-        print("Selected set of quantities: ", *quantities,sep='\n')
 
-    return quantities
+    return quantities,remainder_list2
 
 def extract_settings(data_frame,
                      verbose = False,
@@ -119,7 +130,7 @@ def extract_settings(data_frame,
     ### check on correct data input format and extracting column names as list
     data,cols= check_data_frame(data_frame,inplace = False)
 
-    settings,r1,r2 = compare_lists(cols,names.setting_data)
+    settings,r1,r2 = compare_lists(cols,names.settings)
 
     if verbose:
         print("Settings available in data: ", settings)
@@ -162,12 +173,12 @@ def extract_data(data_frame,
     ### check on correct data input format and extracting column names as list
     data,cols= check_data_frame(data_frame,inplace = False)
 
-    quantities = determine_quantities(cols,
+    quantities, remainder = determine_quantities(cols,
                                       name_list = name_list,
                                       verbose = verbose)
 
     if keep_setting_data:
-        settings,r1,r2 = compare_lists(cols,names.setting_data)
+        settings,r1,r2 = compare_lists(cols,names.settings)
         i1,quantities_without_settings,r2 = compare_lists(quantities,settings)
         columns_names = settings + quantities_without_settings
 

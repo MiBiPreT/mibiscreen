@@ -670,7 +670,7 @@ class TestDetermineQuantities:
 
         Testing functionality of routine in standard settings.
         """
-        quantities = determine_quantities(cols = self.cols1,
+        quantities, remainder = determine_quantities(cols = self.cols1,
                                           verbose = True)
 
         assert set(quantities) == set(self.list1)
@@ -680,7 +680,7 @@ class TestDetermineQuantities:
 
         Testing functionality when specific list is provided.
         """
-        quantities = determine_quantities(cols = self.cols2,
+        quantities, remainder = determine_quantities(cols = self.cols2,
                                           name_list = self.list2,
                                           verbose = True)
 
@@ -693,7 +693,7 @@ class TestDetermineQuantities:
         Testing functionality when specific list is provided which
         also contains names not in the list of column names.
         """
-        quantities = determine_quantities(cols = self.cols2,
+        quantities, remainder = determine_quantities(cols = self.cols2,
                                           name_list = self.list3,
                                           verbose = False)
 
@@ -705,7 +705,7 @@ class TestDetermineQuantities:
 
         Testing functionality for short notation of selection of contaminants.
         """
-        quantities = determine_quantities(cols = self.cols4,
+        quantities, remainder = determine_quantities(cols = self.cols4,
                                           name_list = 'BTEX',
                                           verbose = False)
 
@@ -717,7 +717,7 @@ class TestDetermineQuantities:
 
         Testing functionality for short notation of selection of electron acceptors.
         """
-        quantities = determine_quantities(cols = self.cols5,
+        quantities, remainder = determine_quantities(cols = self.cols5,
                                           name_list = 'all_ea',
                                           verbose = False)
 
@@ -730,7 +730,7 @@ class TestDetermineQuantities:
 
         Testing functionality of routines in standard settings.
         """
-        quantities = determine_quantities(cols = self.cols2,
+        quantities, remainder = determine_quantities(cols = self.cols2,
                                           name_list = 'benzene',
                                           verbose = True)
 
