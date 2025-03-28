@@ -57,7 +57,7 @@ def total_concentration(
     data,cols= check_data_frame(data_frame,inplace = include)
 
     ### sorting out which columns in data to use for summation of concentrations
-    quantities = determine_quantities(cols,name_list = name_list, verbose = verbose)
+    quantities, remainder = determine_quantities(cols,name_list = name_list, verbose = verbose)
 
     ### actually performing summation
     # try:
@@ -176,7 +176,7 @@ def total_count(
     data,cols= check_data_frame(data_frame,inplace = include)
 
     ### sorting out which column in data to use for summation of concentrations
-    quantities = determine_quantities(cols,name_list = name_list, verbose = verbose)
+    quantities, remainder = determine_quantities(cols,name_list = name_list, verbose = verbose)
 
     ### actually performing count of values above threshold:
     try:
@@ -244,7 +244,7 @@ def thresholds_for_intervention(
     data,cols= check_data_frame(data_frame,inplace = include)
 
     ### sorting out which columns in data to evaluate
-    quantities = determine_quantities(cols,
+    quantities, remainder = determine_quantities(cols,
                                       name_list = contaminant_group,
                                       verbose = verbose)
 

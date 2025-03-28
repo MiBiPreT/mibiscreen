@@ -131,7 +131,7 @@ class TestOxidators:
         include available nutrients.
         """
         tot_oxi_test = 6.669283330069978
-        tot_oxi = np.sum(oxidators(self.data,nutrient = True))
+        tot_oxi = np.sum(oxidators(self.data,nutrients = True))
 
         assert (tot_oxi - tot_oxi_test)<1e-5
 
