@@ -23,7 +23,8 @@ standard_units = dict(
     millivolt = ["mV","mv"],
     meter = ['m',"meter"],
     microsimpercm = ['uS/cm','us/cm'],
-    permil = ['permil','mur','‰','per mil','per mill','per mille','permill','permille','promille']
+    permil = ['permil','mur','‰','per mil','per mill','per mille','permill','permille','promille'],
+    count = ['nr','number','count']
     )
 
 all_units = [item for sublist in list(standard_units.values()) for item in sublist]
