@@ -6,12 +6,12 @@
 """
 
 import numpy as np
+import pandas as pd
 from scipy.stats import zscore
 from mibiscreen.data.check_data import check_data_frame
 from mibiscreen.data.names_data import setting_data
 from mibiscreen.data.set_data import compare_lists
 
-import pandas as pd
 pd.set_option('mode.use_inf_as_na', True)
 
 def filter_values(data_frame,
