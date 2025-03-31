@@ -10,6 +10,8 @@ from scipy.stats import zscore
 from mibiscreen.data.check_data import check_data_frame
 from mibiscreen.data.set_data import determine_quantities
 
+import pandas as pd
+pd.set_option('mode.use_inf_as_na', True)
 
 def filter_values(data_frame,
                   replace_NaN = 'remove',
