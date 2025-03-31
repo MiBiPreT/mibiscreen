@@ -7,12 +7,12 @@
 import os.path
 import numpy as np
 import pandas as pd
-
+import logging
+logger = logging.getLogger(__name__)
 
 def load_excel(
         file_path = None,
         sheet_name = 0,
-        verbose = False,
         store_provenance = False,
         **kwargs,
         ):
@@ -24,8 +24,6 @@ def load_excel(
             Name of the path to the file
         sheet_name: int
             Number of the sheet in the excel file to load
-        verbose: Boolean
-            verbose flag
         store_provenance: Boolean
             To add!
         **kwargs: optional keyword arguments to pass to pandas' routine
@@ -67,24 +65,22 @@ def load_excel(
 
     units = data.drop(labels = np.arange(1,data.shape[0]))
 
-    if verbose:
-        print('==============================================================')
-        print(" Running function 'load_excel()' on data file ", file_path)
-        print('==============================================================')
-        print("Unit of quantities:")
-        print('-------------------')
-        print(units)
-        print('________________________________________________________________')
-        print("Loaded data as pandas DataFrame:")
-        print('--------------------------------')
-        print(data)
-        print('================================================================')
+    logger.info('==============================================================')
+    logger.info(" Running function 'load_excel()' on data file ", file_path)
+    logger.info('==============================================================')
+    logger.info("Unit of quantities:")
+    logger.info('-------------------')
+    logger.info(units)
+    logger.info('________________________________________________________________')
+    logger.info("Loaded data as pandas DataFrame:")
+    logger.info('--------------------------------')
+    logger.info(data)
+    logger.info('================================================================')
 
     return data, units
 
 def load_csv(
         file_path = None,
-        verbose = False,
         store_provenance = False,
         ):
     """Function to load data from csv file.
@@ -93,8 +89,6 @@ def load_csv(
     -------
         file_path: str
             Name of the path to the file
-        verbose: Boolean
-            verbose flag
         store_provenance: Boolean
             To add!
 
@@ -128,17 +122,16 @@ def load_csv(
         data = pd.read_csv(file_path, sep=";", encoding="unicode_escape")
     units = data.drop(labels = np.arange(1,data.shape[0]))
 
-    if verbose:
-        print('================================================================')
-        print(" Running function 'load_csv()' on data file ", file_path)
-        print('================================================================')
-        print("Units of quantities:")
-        print('-------------------')
-        print(units)
-        print('________________________________________________________________')
-        print("Loaded data as pandas DataFrame:")
-        print('--------------------------------')
-        print(data)
-        print('================================================================')
+    logger.info('================================================================')
+    logger.info(" Running function 'load_csv()' on data file ", file_path)
+    logger.info('================================================================')
+    logger.info("Units of quantities:")
+    logger.info('-------------------')
+    logger.info(units)
+    logger.info('________________________________________________________________')
+    logger.info("Loaded data as pandas DataFrame:")
+    logger.info('--------------------------------')
+    logger.info(data)
+    logger.info('================================================================')
 
     return data, units
