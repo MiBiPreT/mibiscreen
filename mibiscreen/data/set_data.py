@@ -83,7 +83,7 @@ def determine_quantities(cols,
     else:
         raise ValueError("Keyword 'name_list' needs to be a string or a list of strings.")
 
-    quantities,remainder_list1,remainder_list2 = compare_lists(cols,list_names)
+    quantities,_,remainder_list2 = compare_lists(cols,list_names)
 
     if not quantities:
         raise ValueError("No quantities from name list '{}' provided in data.\
@@ -173,12 +173,12 @@ def extract_data(data_frame,
     ### check on correct data input format and extracting column names as list
     data,cols= check_data_frame(data_frame,inplace = False)
 
-    quantities, remainder = determine_quantities(cols,
+    quantities, _ = determine_quantities(cols,
                                       name_list = name_list,
                                       verbose = verbose)
 
     if keep_setting_data:
-        settings,r1,r2 = compare_lists(cols,names.settings)
+        settings,_,_ = compare_lists(cols,names.settings)
         i1,quantities_without_settings,r2 = compare_lists(quantities,settings)
         columns_names = settings + quantities_without_settings
 

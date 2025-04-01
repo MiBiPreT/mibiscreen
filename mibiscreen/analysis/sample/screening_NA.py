@@ -56,7 +56,7 @@ def reductors(
     data,cols= check_data_frame(data_frame,inplace = include)
 
     ### sorting out which columns in data to use for summation of electrons available
-    quantities,remainder = determine_quantities(cols,name_list = ea_group, verbose = verbose)
+    quantities,_ = determine_quantities(cols,name_list = ea_group, verbose = verbose)
 
     ### actually performing summation
     try:
@@ -120,7 +120,7 @@ def oxidators(
     data,cols= check_data_frame(data_frame,inplace = include)
 
     ### sorting out which columns in data to use for summation of electrons available
-    quantities,remainder = determine_quantities(cols,name_list = contaminant_group, verbose = verbose)
+    quantities,_ = determine_quantities(cols,name_list = contaminant_group, verbose = verbose)
 
     try:
         tot_oxi = 0.

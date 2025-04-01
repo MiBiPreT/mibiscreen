@@ -148,7 +148,7 @@ def transform_values(data_frame,
         print('==============================================================')
 
     data,cols= check_data_frame(data_frame,inplace = inplace)
-    quantities, remainder = determine_quantities(cols,
+    quantities, _ = determine_quantities(cols,
                                       name_list = name_list,
                                       verbose = verbose)
 
