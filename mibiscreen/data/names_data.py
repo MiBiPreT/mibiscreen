@@ -15,11 +15,11 @@ name_well_type = "well_type"
 name_sample_depth = "depth"
 name_aquifer = 'aquifer'
 
-setting_data = [name_sample,
-                name_observation_well,
-                name_well_type,
-                name_sample_depth,
-                name_aquifer]
+settings = [name_sample,
+            name_observation_well,
+            name_well_type,
+            name_sample_depth,
+            name_aquifer]
 
 ### Standard names for environmental parameters
 name_redox = "redoxpot"
@@ -30,13 +30,12 @@ name_NOPC = "NOPC"
 name_DOC = "DOC"
 
 name_oxygen = 'oxygen' #o2
-name_nitrite = 'nitrite' #no2
+name_nitrate = 'nitrate' #no3
 name_sulfate = 'sulfate' #"so4"
 name_ironII = "iron2" #"fe_II"
 name_manganese = 'manganese' #"mn_II"
 name_methane = 'methane' #"ch4"
-
-name_nitrate = 'nitrate' #no3
+name_nitrite = 'nitrite' #no2
 name_sulfide = 'sulfide' #"s2min"
 name_ammonium = 'ammonium' #"nh4+"
 name_phosphate = 'phosphate' # "po4"
@@ -49,19 +48,19 @@ name_potassium = 'potassium'
 name_calcium = 'calcium'
 name_acetate = 'acetate'
 
-environmental_conditions = [name_redox,name_pH,name_EC,name_pE,name_NOPC]
-
-chemical_composition = [
-    name_oxygen, name_nitrate, name_sulfate, name_ironII, name_manganese,
-    name_methane, name_nitrite, name_sulfide, name_ammonium, name_phosphate,
-    name_chloride,name_bromide,name_fluoride,name_sodium,name_magnesium,
-    name_potassium,name_calcium,name_acetate,name_DOC]
-
-electron_acceptors = dict(
-    ONS = [name_oxygen, name_nitrate, name_sulfate],
-    ONSFe = [name_oxygen, name_nitrate, name_sulfate, name_ironII],
+geochemicals = dict(
+    environmental_conditions = [name_redox,name_pH,name_EC,name_pE,name_NOPC],
+    chemical_composition = [
+        name_oxygen, name_nitrate, name_sulfate, name_ironII, name_manganese,
+        name_methane, name_nitrite, name_sulfide, name_ammonium, name_phosphate,
+        name_chloride,name_bromide,name_fluoride,name_sodium,name_magnesium,
+        name_potassium,name_calcium,name_acetate,name_DOC],
+#electron_acceptors = dict(
+    ONS = [name_oxygen, name_nitrate, name_sulfate], # non reduced electron acceptors
+    ONSFe = [name_oxygen, name_nitrate, name_sulfate, name_ironII], # selected electron acceptors
     all_ea = [name_oxygen, name_nitrate, name_sulfate,
-               name_ironII, name_manganese, name_methane]
+               name_ironII, name_manganese, name_methane], # all electron acceptors
+    NP = [name_nitrate, name_nitrite, name_phosphate], # nutrients
 )
 
 ### Standard names for main contaminants
