@@ -8,7 +8,6 @@
 import numpy as np
 import pandas as pd
 import pytest
-from mibiscreen.analysis.sample.screening_NA import available_NP
 from mibiscreen.analysis.sample.screening_NA import electron_balance
 from mibiscreen.analysis.sample.screening_NA import oxidators
 from mibiscreen.analysis.sample.screening_NA import reductors
@@ -124,19 +123,8 @@ class TestOxidators:
 
         assert (tot_oxi - tot_oxi_test)<1e-5
 
-    def test_oxidators_03(self):
-        """Testing routine oxidators().
 
-        Correct calculation of total amount of oxidators with option to
-        include available nutrients.
-        """
-        tot_oxi_test = 6.669283330069978
-        tot_oxi = np.sum(oxidators(self.data,nutrients = True))
-
-        assert (tot_oxi - tot_oxi_test)<1e-5
-
-
-    def test_oxidators_04(self):
+    def test_oxidators_03s(self):
         """Testing routine oxidators().
 
         Correct handling when no contaminant data is provided.
@@ -145,7 +133,7 @@ class TestOxidators:
             oxidators(self.data_empty)
 
 
-    def test_oxidators_05(self):
+    def test_oxidators_04(self):
         """Testing routine oxidators().
 
         Correct handling when unknown group of contaminants are provided.
@@ -153,13 +141,13 @@ class TestOxidators:
         with pytest.raises(ValueError):
             oxidators(self.data,contaminant_group = 'test')
 
-    def test_oxidators_06(self):
+    def test_oxidators_05(self):
         """Testing Error message that given data type not defined."""
         with pytest.raises(ValueError):  #, match = "Data not in standardized format. Run 'standardize()' first."):
             oxidators(self.data_nonstandard)
 
 
-    def test_oxidators_07(self):
+    def test_oxidators_06(self):
         """Testing routine oxidators().
 
         Testing inplace option adding calculated values as column to data.
@@ -169,7 +157,7 @@ class TestOxidators:
         assert data_test.shape[1] == self.data.shape[1]+1
 
 
-    def test_oxidators_08(self,capsys):
+    def test_oxidators_07(self,capsys):
         """Testing routine oxidators().
 
         Testing verbose flag.
@@ -179,51 +167,6 @@ class TestOxidators:
 
         assert len(out)>0
 
-class TestAvailableNP:
-    """Class for testing available_NP analysis module on NA screening of mibipret."""
-
-    data = example_data(with_units = False)
-    data_empty = pd.Series(
-                        data = np.arange(4),
-                        name = 'empyt_data',
-                        dtype=float)
-
-    def test_available_NP_01(self):
-        """Testing routine available_NP().
-
-        Correct calculation of total amount of nutrients.
-        """
-        NP_avail_test = 92.56
-        NP_avail = np.sum(available_NP(self.data))
-
-        assert (NP_avail - NP_avail_test)<1e-5
-
-    def test_available_NP_02(self):
-        """Testing routine available_NP().
-
-        Check that routine returns Error when nutrient data is not provided.
-        """
-        with pytest.raises(ValueError):
-            available_NP(self.data_empty)
-
-    def test_available_NP_03(self):
-        """Testing routine available_NP().
-
-        Testing inplace option adding calculated values as column to data.
-        """
-        data_test = self.data.copy()
-        available_NP(data_test,include = True)
-        assert data_test.shape[1] == self.data.shape[1]+1
-
-    def test_available_NP_04(self,capsys):
-        """Testing routine available_NP().
-
-        Testing verbose flag.
-        """
-        available_NP(self.data,verbose=True)
-        out,err=capsys.readouterr()
-
-        assert len(out)>0
 
 class TestElectronBalance:
     """Class for testing electron_balance analysis module on NA screening of mibipret."""
@@ -342,16 +285,7 @@ class TestScreeningNA:
 
         assert na_data.shape == (4,7)
 
-    def test_sample_NA_screening_02(self):
-        """Testing routine sample_NA_screening().
-
-        Correct calculation of total amount of reductors.
-        """
-        na_data = sample_NA_screening(self.data,nutrient=True)
-
-        assert na_data.shape == (4,8)
-
-    def test_sample_NA_screening_03(self,capsys):
+    def test_sample_NA_screening_02(self,capsys):
         """Testing routine sample_NA_screening().
 
         Testing verbose flag.
