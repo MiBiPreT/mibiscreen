@@ -179,7 +179,7 @@ def extract_data(data_frame,
 
     if keep_setting_data:
         settings,_,_ = compare_lists(cols,names.settings)
-        i1,quantities_without_settings,r2 = compare_lists(quantities,settings)
+        i1,quantities_without_settings,_ = compare_lists(quantities,settings)
         columns_names = settings + quantities_without_settings
 
     else:
