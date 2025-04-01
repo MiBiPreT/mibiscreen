@@ -337,7 +337,7 @@ def sample_NA_screening(
         print('==============================================================')
 
     ### check on correct data input format and extracting column names as list
-    data,cols= check_data_frame(data_frame,inplace = include)
+    data,_= check_data_frame(data_frame,inplace = include)
 
     tot_reduct = reductors(data,
                            ea_group = ea_group,

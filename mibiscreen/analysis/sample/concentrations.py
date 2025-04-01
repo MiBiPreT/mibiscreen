@@ -205,7 +205,6 @@ def thresholds_for_intervention(
         contaminant_group = "BTEXIIN",
         include = False,
         verbose = False,
-        **kwargs,
         ):
     """Function to evalute intervention threshold exceedance.
 
@@ -254,7 +253,7 @@ def thresholds_for_intervention(
 
     nr_samples = data.shape[0] # number of samples
     traffic_nr = np.zeros(nr_samples,dtype=int)
-    traffic_list = [[] for i in range(nr_samples)]
+    traffic_list = [[] for _ in range(nr_samples)]
 
     try:
         for cont in quantities:
