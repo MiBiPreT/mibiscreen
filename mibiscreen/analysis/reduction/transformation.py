@@ -144,15 +144,32 @@ def transform_values(data_frame,
     -------
     To be added.
     """
+<<<<<<< HEAD
+=======
+    data,cols= check_data_frame(data_frame,inplace = inplace)
+    ### sorting out which columns in data to use for summation of concentrations
+    quantities = determine_quantities(cols,name_list = name_list, verbose = verbose)
+
+>>>>>>> 8b26bef (adapt filtering making constrained ordination run for Amersfoort example data)
     if verbose:
         print('==============================================================')
         print(" Running function 'transform_values()' on data")
         print('==============================================================')
 
+<<<<<<< HEAD
     data,cols= check_data_frame(data_frame,inplace = inplace)
     quantities, _ = determine_quantities(cols,
                                       name_list = name_list,
                                       verbose = verbose)
+=======
+    # intersection,remainder_list1,remainder_list2 = compare_lists(cols,name_list)
+    # if len(intersection) < len(name_list):
+    #     print("WARNING: not all variables in name_list are found in dataframe.")
+    #     print('----------------------------------------------------------------')
+    #     print("Column names identified:", intersection)
+    #     print("Column names not identified in data:", remainder_list2)
+    #     print('________________________________________________________________')
+>>>>>>> 8b26bef (adapt filtering making constrained ordination run for Amersfoort example data)
 
     for quantity in quantities:
         if how == 'log_scale':
