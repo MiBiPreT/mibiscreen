@@ -6,10 +6,9 @@ Example of diagnostic plotting using ordination with contaminant data from Amers
 """
 
 
+from mibiscreen.analysis.reduction.ordination import cca
 from mibiscreen.analysis.reduction.ordination import pca
-
-# from mibiscreen.analysis.reduction.ordination import cca
-# from mibiscreen.analysis.reduction.ordination import rda
+from mibiscreen.analysis.reduction.ordination import rda
 from mibiscreen.analysis.reduction.transformation import filter_values
 from mibiscreen.analysis.reduction.transformation import transform_values
 from mibiscreen.analysis.sample.concentrations import total_concentration
@@ -80,84 +79,119 @@ cont_selected['TB_ratio'] = TB_ratio
 
 contaminant_group_analysis = list(cont_selected.columns)
 contaminant_group_analysis.remove('sample_nr')
-###------------------------------------------------------------------------###
+
 ### concatenate all relevant data
 data_ordination = merge_data([geochem_selected,cont_selected,dna],clean = True)
 
-# Identifying which rows and columns contain any amount of NULL cells and putting them in a list.
-data = data_ordination
-NaN_rows = data[data.isna().any(axis=1)].index.tolist()
-NaN_cols = data.columns[data.isna().any()].tolist()
+data_ordination.to_excel('./ordination_data.xlsx')
+###------------------------------------------------------------------------###
+# Data preprocessing (filtering and transformation) for RDA
 
-filter_values(data_ordination,
+data_pcr = data_ordination.copy()
+
+filter_values(data_pcr,
               replace_NaN = 'zero',
               inplace = True,
               verbose = True)
 
-transform_values(data_ordination,
-                  # name_list = variables_1,
+# if (part of) data is log-transformed (before standardization):
+# transform_values(data_pcr,
+#                  name_list = variables_dna,
+#                  how = 'log_scale',
+#                  inplace = True,
+#                  )
+
+transform_values(data_pcr,
+                 how = 'standardize',
+                 inplace = True,
+                 )
+
+###------------------------------------------------------------------------###
+# Data preprocessing (filtering and transformation) for CCA
+
+data_cca = data_ordination.copy()
+
+filter_values(data_cca,
+              replace_NaN = 'average',  #'remove' #'zero'
+              inplace = True,
+              verbose = True)
+
+transform_values(data_cca,
+                 name_list = variables_dna,
+                 how = 'log_scale',
+                 inplace = True,
+                 )
+
+###------------------------------------------------------------------------###
+# Data preprocessing (filtering and transformation) for RDA
+
+data_rda = data_ordination.copy()
+
+filter_values(data_rda,
+              replace_NaN = 'zero', #7a
+              # replace_NaN = 'average', #7b
+              # replace_NaN = 'remove', #7c
+              inplace = True,
+              verbose = True)
+
+### if (part of) data is log-transformed (before standardization):
+transform_values(data_rda,
+                  name_list = variables_dna,
+                  how = 'log_scale',
+                  inplace = True,
+                  )
+
+transform_values(data_rda,
                   how = 'standardize',
                   inplace = True,
                   )
 
-# # transform_values(data_ordination,
-# #                  name_list = variables_1,
-# #                  how = 'log_scale',
-# #                  inplace = True,
-# #                  )
+###------------------------------------------------------------------------###
+### perform PCA and plot results
 
-# # transform_values(data_ordination,
-# #                   # name_list = variables_1,
-# #                   how = 'standardize',
-# #                   inplace = True,
-# #                   )
-
-# # transform_values(data_ordination,
-# #                  name_list = variables_2,
-# #                  how = 'standardize',
-# #                  inplace = True,
-# #                  )
-
-ordination_output = pca(data_ordination,
+pca_output = pca(data_pcr,
                         independent_variables = contaminant_group_analysis + geochemicals_group,
                         dependent_variables = variables_dna,
                         verbose = True)
 
-fig, ax = ordination_plot(ordination_output=ordination_output,
+fig, ax = ordination_plot(ordination_output=pca_output,
                 plot_scores = False,
                 plot_loadings = True,
                 rescale_loadings_scores = False,
                 title = "Unconstrained Ordination PCA",
-                axis_ranges = [-0.2,0.4,-0.4,0.6],
-                # save_fig = 'PCA_dna.png',
+                # axis_ranges = [-0.2,0.4,-0.4,0.6],
+                # save_fig = 'pca_dna.png',
                 )
 
-# # # ordination_output = cca(data_ordination,
-# #                         independent_variables = variables_2,
-# #                         dependent_variables = variables_1,
-# #                         verbose = True)
+###------------------------------------------------------------------------###
+### perform CCA and plot results
 
-# # fig, ax = ordination_plot(ordination_output=ordination_output,
-# #                 plot_scores = True,
-# #                 plot_loadings = True,
-# #                 rescale_loadings_scores = True,
-# #                 title ="Constrained Ordination CCA",
-# #                 # plot_scores = False,
-# #                 # axis_ranges = [-0.6,0.8,-0.8,1.0],
-# #                 # save_fig = 'save3.png',
-# #                 )
+cca_output = cca(data_cca,
+                  independent_variables = contaminant_group_analysis + geochemicals_group,
+                  dependent_variables = variables_dna,
+                  verbose = True)
 
-# # ordination_output = rda(data_ordination,
-# #                         independent_variables = variables_2,
-# #                         dependent_variables = variables_1,
-# #                         verbose = True)
+fig, ax = ordination_plot(ordination_output=cca_output,
+                plot_scores = False,
+                plot_loadings = True,
+                rescale_loadings_scores = False,
+                title ="Constrained Ordination CCA",
+                # save_fig = 'cca_dna.png',
+                )
 
-# # fig, ax = ordination_plot(ordination_output=ordination_output,
-# #                 plot_scores = True,
-# #                 plot_loadings = True,
-# #                 rescale_loadings_scores = True,
-# #                 title = "Constrained Ordination RDA",
-# #                 # plot_scores = False,
-# #                 # axis_ranges = [-0.6,0.8,-0.8,1.0],
-# #                 # save_fig = 'save3.png',
-# #                 )
+# ###------------------------------------------------------------------------###
+# ### perform RDA and plot results
+
+rda_output = rda(data_rda,
+                  independent_variables = contaminant_group_analysis + geochemicals_group,
+                  dependent_variables = variables_dna,
+                  verbose = True)
+
+fig, ax = ordination_plot(ordination_output=rda_output,
+                plot_scores = False,
+                plot_loadings = True,
+                rescale_loadings_scores = False,
+                title = "Constrained Ordination RDA",
+                # axis_ranges = [-0.6,0.8,-0.8,1.0],
+                # save_fig = 'rda_dna.png',
+                )
