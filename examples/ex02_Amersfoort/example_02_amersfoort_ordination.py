@@ -8,6 +8,7 @@ Example of diagnostic plotting using ordination with contaminant data from Amers
 from mibiscreen.analysis.reduction.ordination import pca
 from mibiscreen.analysis.reduction.transformation import filter_values
 from mibiscreen.analysis.reduction.transformation import transform_values
+from mibiscreen.analysis.sample.concentrations import total_contaminant_concentration
 from mibiscreen.data.check_data import standard_names
 from mibiscreen.data.check_data import standardize
 from mibiscreen.data.load_data import load_excel
@@ -45,12 +46,15 @@ contaminants,units = standardize(contaminants_raw,
                                   verbose = verbose)
 
 
+total_contaminant_concentration(contaminants,
+                                include = True,
+                                verbose = verbose)
+
 data = merge_data([environment,contaminants],clean = True)
 #display(data)
 
-
 ###------------------------------------------------------------------------###
-variables_1 = standard_names(['Sum GC'])
+variables_1 = standard_names(['total_contaminants'])
 variables_2 = standard_names(['nitrate','pH','nitrite','sulfate','Redox','EC','DOC',"Mn","Fe"])
 
 

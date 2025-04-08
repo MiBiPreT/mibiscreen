@@ -17,6 +17,7 @@ from mibiscreen.data.load_data import load_excel
 from mibiscreen.data.set_data import compare_lists
 from mibiscreen.data.set_data import determine_quantities
 from mibiscreen.data.set_data import extract_data
+from mibiscreen.data.set_data import extract_settings
 from mibiscreen.data.set_data import merge_data
 
 path_data = "./mibiscreen/data"
@@ -669,7 +670,7 @@ class TestDetermineQuantities:
 
         Testing functionality of routine in standard settings.
         """
-        quantities = determine_quantities(cols = self.cols1,
+        quantities, remainder = determine_quantities(cols = self.cols1,
                                           verbose = True)
 
         assert set(quantities) == set(self.list1)
@@ -679,7 +680,7 @@ class TestDetermineQuantities:
 
         Testing functionality when specific list is provided.
         """
-        quantities = determine_quantities(cols = self.cols2,
+        quantities, remainder = determine_quantities(cols = self.cols2,
                                           name_list = self.list2,
                                           verbose = True)
 
@@ -692,7 +693,7 @@ class TestDetermineQuantities:
         Testing functionality when specific list is provided which
         also contains names not in the list of column names.
         """
-        quantities = determine_quantities(cols = self.cols2,
+        quantities, remainder = determine_quantities(cols = self.cols2,
                                           name_list = self.list3,
                                           verbose = False)
 
@@ -704,7 +705,7 @@ class TestDetermineQuantities:
 
         Testing functionality for short notation of selection of contaminants.
         """
-        quantities = determine_quantities(cols = self.cols4,
+        quantities, remainder = determine_quantities(cols = self.cols4,
                                           name_list = 'BTEX',
                                           verbose = False)
 
@@ -716,7 +717,7 @@ class TestDetermineQuantities:
 
         Testing functionality for short notation of selection of electron acceptors.
         """
-        quantities = determine_quantities(cols = self.cols5,
+        quantities, remainder = determine_quantities(cols = self.cols5,
                                           name_list = 'all_ea',
                                           verbose = False)
 
@@ -729,7 +730,7 @@ class TestDetermineQuantities:
 
         Testing functionality of routines in standard settings.
         """
-        quantities = determine_quantities(cols = self.cols2,
+        quantities, remainder = determine_quantities(cols = self.cols2,
                                           name_list = 'benzene',
                                           verbose = True)
 
@@ -751,11 +752,28 @@ class TestDetermineQuantities:
 
         Testing correct handling if keyword name_list not correcty provided.
         """
-        with pytest.raises(ValueError,match = "Keyword 'name_list' in correct format"):
+        with pytest.raises(ValueError,match = "Keyword 'name_list' needs to be a string or a list of strings."):
             determine_quantities(cols = self.cols2,
                                  name_list = 7.0,
                                  )
 
+
+class TestExtractSettings:
+    """Class for testing data module of mibipret."""
+
+    columns =  ['sample_nr', 'obs_well', 'depth', 'well_type', 'aquifer', 'sulfate','benzene']
+    s00 = ['2000-001', 'B-MLS1-3-12',4.,'B-MLS1',2 ,7.23, 263]
+    data4extract = pd.DataFrame(data = [s00],columns = columns)
+
+    def test_extract_data_01(self,capsys):
+        """Testing routine extract_data().
+
+        Testing functionality of routines in standard settings.
+        """
+        data = extract_settings(self.data4extract, verbose = True)
+        out,err=capsys.readouterr()
+
+        assert set(data.columns) == {'sample_nr', 'obs_well', 'depth', 'well_type', 'aquifer'}  and len(out)>0
 
 class TestDataExtract:
     """Class for testing data module of mibiscreen."""

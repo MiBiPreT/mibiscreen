@@ -315,7 +315,7 @@ def check_units(data,
     col_check_list= []
 
     for quantity in units.columns:
-        if quantity in names.chemical_composition:
+        if quantity in names.geochemicals['chemical_composition']:
             if str(units[quantity][0]).lower() not in standard_units['mgperl']:
                 col_check_list.append(quantity)
                 if verbose:
