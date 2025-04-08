@@ -1,5 +1,5 @@
 ---
-name: 'Data Handling: Missing quantity'
+name: 'Report missing quantity in data handling'
 about: Allow users to report quantities, such as contaminants, metabolites, etc, that
   are not in the list of standard quantities identified by the data handling routines
 title: Missing quantity report
