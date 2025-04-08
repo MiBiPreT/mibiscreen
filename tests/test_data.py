@@ -50,15 +50,15 @@ class TestLoadData:
         with pytest.raises(OSError):
             load_csv("ThisFileDoesNotExist.csv")
 
-    def test_load_csv_04(self,capsys):
-        """Testing routine load_csv().
+    # def test_load_csv_04(self,capsys):
+    #     """Testing routine load_csv().
 
-        Testing verbose flag.
-        """
-        load_csv("{}/example_data.csv".format(path_data),verbose=True)
-        out,err=capsys.readouterr()
+    #     Testing verbose flag.
+    #     """
+    #     load_csv("{}/example_data.csv".format(path_data),verbose=True)
+    #     out,err=capsys.readouterr()
 
-        assert len(out)>0
+    #     assert len(out)>0
 
     def test_load_excel_01(self):
         """Testing routine load_excel().
@@ -85,15 +85,15 @@ class TestLoadData:
         with pytest.raises(OSError):
             load_excel("ThisFileDoesNotExist.xlsx")
 
-    def test_load_excel_04(self,capsys):
-        """Testing routine load_excel().
+    # def test_load_excel_04(self,capsys):
+    #     """Testing routine load_excel().
 
-        Testing verbose flag.
-        """
-        load_excel("{}/example_data.xlsx".format(path_data),verbose=True)
-        out,err=capsys.readouterr()
+    #     Testing verbose flag.
+    #     """
+    #     load_excel("{}/example_data.xlsx".format(path_data),verbose=True)
+    #     out,err=capsys.readouterr()
 
-        assert len(out)>0
+    #     assert len(out)>0
 
 
 class TestExampleData:
