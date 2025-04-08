@@ -226,7 +226,7 @@ class TestNATraffic:
 
     data_na = pd.concat([pd.Series(data = [11.819184,0.525160, 0.347116, 15.265349], name = 'total_reductors'),
                          pd.Series(data = [1.5663,3.70051, 3.00658, 2.09641], name = 'total_oxidators')],
-                        axis =1)
+                        axis=1)
 
 
     def test_sample_NA_traffic_01(self):
