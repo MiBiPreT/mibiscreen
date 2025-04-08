@@ -74,7 +74,8 @@ class TestReductors:
         """
         data_test = self.data.copy()
         reductors(data_test,include = True)
-        assert data_test.shape[1] == self.data.shape[1]+1
+        assert data_test.shape[1] == self.data.shape[1]+1 and "total_reductors" in data_test.columns
+
 
     def test_reductors_06(self,capsys):
         """Testing routine reductors().
@@ -154,7 +155,7 @@ class TestOxidators:
         """
         data_test = self.data.copy()
         oxidators(data_test,include = True)
-        assert data_test.shape[1] == self.data.shape[1]+1
+        assert data_test.shape[1] == self.data.shape[1]+1 and "total_oxidators" in data_test.columns
 
 
     def test_oxidators_07(self,capsys):
@@ -207,7 +208,7 @@ class TestElectronBalance:
         """
         data_test = self.data_na.copy()
         electron_balance(data_test,include = True)
-        assert data_test.shape[1] == self.data_na.shape[1]+1
+        assert data_test.shape[1] == self.data_na.shape[1]+1 and 'e_balance' in data_test.columns
 
     def test_electron_balance_04(self,capsys):
         """Testing routine electron_balance().
@@ -218,6 +219,7 @@ class TestElectronBalance:
         out,err=capsys.readouterr()
 
         assert len(out)>0
+
 
 class TestNATraffic:
     """Class for testing NA_traffic analysis module on NA screening of mibipret."""
@@ -259,7 +261,7 @@ class TestNATraffic:
         """
         data_test = self.data_na.copy()
         sample_NA_traffic(data_test,include = True)
-        assert data_test.shape[1] == self.data_na.shape[1]+1
+        assert data_test.shape[1] == self.data_na.shape[1]+1 and "na_traffic_light" in data_test.columns
 
     def test_sample_NA_traffic_04(self,capsys):
         """Testing routine sample_NA_traffic().
