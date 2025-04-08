@@ -64,7 +64,7 @@ class TestTotalConcentration:
     def test_total_concentration_04(self):
         """Testing routine total_concentration().
 
-        Correct handling when keywork 'name_colum' is not correctly provided.
+        Correct handling when keyword 'name_column' is not correctly provided.
         """
         with pytest.raises(ValueError):
             total_concentration(self.data1,
