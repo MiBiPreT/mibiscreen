@@ -5,9 +5,9 @@
 
 import numpy as np
 import pytest
+from mibiscreen.analysis.reduction.ordination import _extract_variables
 from mibiscreen.analysis.reduction.ordination import cca
 from mibiscreen.analysis.reduction.ordination import constrained_ordination
-from mibiscreen.analysis.reduction.ordination import extract_variables
 from mibiscreen.analysis.reduction.ordination import pca
 from mibiscreen.analysis.reduction.ordination import rda
 from mibiscreen.data.example_data import example_data
@@ -243,11 +243,9 @@ class Test_Constrained_Ordination:
     def test_constrained_ordination_03(self):
         """Testing routine constrained_ordination().
 
-        Correct error message when data is not in normalized form/i.e.
-        values in data-frame columns are not numerics.
+        Correct error message when zero-value rows (empty data samples) in variables.
         """
-        with pytest.raises(TypeError,
-           match="Not all column values are numeric values. Consider standardizing data first."):
+        with pytest.raises(ValueError):
             constrained_ordination(self.data,
                                    independent_variables = self.environment,
                                    dependent_variables = self.species_mod,
@@ -256,14 +254,16 @@ class Test_Constrained_Ordination:
 
     # def test_constrained_ordination_04(self):
     #     """Testing routine constrained_ordination().
+    #     Correct error message when data is not in normalized form/i.e.
+    #     values in data-frame columns are not numerics.
 
-    #     Correct error message when number of dependent variables is too small.
     #     """
-    #     with pytest.raises(ValueError,match="Number of dependent variables too small."):
+    #     with pytest.raises(TypeError,
+    #         match="Not all column values are numeric values. Consider standardizing data first."):
     #         constrained_ordination(self.data,
-    #                                independent_variables = self.environment,
-    #                                dependent_variables = self.species_short,
-    #                                )
+    #                                 independent_variables = self.environment,
+    #                                 dependent_variables = self.species_mod,
+    #                                 )
 
 
 class TestExtractVariables:
@@ -278,7 +278,7 @@ class TestExtractVariables:
 
         Correct identification overlap between the two provided lists
         """
-        intersection = extract_variables(self.cols,self.environment_00)
+        intersection = _extract_variables(self.cols,self.environment_00)
 
         assert np.all(set(intersection) == set(self.environment_00[:-1]))
 
@@ -288,7 +288,7 @@ class TestExtractVariables:
         Testing the warning that not all variables in the variables list
         are detected in columns list
         """
-        extract_variables(self.cols,self.environment_00)
+        _extract_variables(self.cols,self.environment_00)
         out,err=capsys.readouterr()
 
         assert len(out)>0
@@ -300,7 +300,7 @@ class TestExtractVariables:
         and columns list.
         """
         with pytest.raises(ValueError):
-            extract_variables(self.cols,['Sulfate'])
+            _extract_variables(self.cols,['Sulfate'])
 
     def test_extract_variables_04(self):
         """Testing routine extract_variables().
@@ -308,4 +308,4 @@ class TestExtractVariables:
         Correct error message when argument 'variables' is not a list
         """
         with pytest.raises(ValueError):
-            extract_variables(self.cols,np.array(self.environment_00))
+            _extract_variables(self.cols,np.array(self.environment_00))
