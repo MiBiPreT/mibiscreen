@@ -24,8 +24,19 @@ verbose = False #True
 ###------------------------------------------------------------------------###
 ### File path settings
 file_path = './amersfoort.xlsx'
-file_path_dna = './amersfoort_DNA.xlsx'
-#file_standard = './grift_BTEXNII_standard.csv'
+
+###------------------------------------------------------------------------###
+### specify quantities to include in the analysis
+
+#selected group of contaminant to analyse
+contaminant_group = ['benzene','toluene','ethylbenzene','pm_xylene','indene','naphthalene']
+
+#selected group of geochemical parameters to include to the analysis
+geochemicals_group = ['nitrate','sulfate','redoxpot','iron2','manganese']
+
+#list of sequencing data to include to the analysis
+variables_dna = ['Total bacteria 16SRrna', 'Benzene carboxylase', 'NirS', 'NarG', 'BssA SRB',
+                 'BssA nitraat', 'Peptococcus']
 
 ###------------------------------------------------------------------------###
 ### Load and standardize data of environmental quantities/chemicals
@@ -49,8 +60,8 @@ contaminants,units = standardize(contaminants_raw,
 
 ###------------------------------------------------------------------------###
 ### Load and standardize data of contaminants
-dna_raw,units = load_excel(file_path_dna,
-                           # sheet_name = 'DNA field',
+dna_raw,units = load_excel(file_path,
+                           sheet_name = 'sequencing',
                            verbose = verbose)
 
 dna,units = standardize(dna_raw,
@@ -58,32 +69,29 @@ dna,units = standardize(dna_raw,
                         verbose = verbose)
 
 ###------------------------------------------------------------------------###
-### Data processing
+### Data preproocessing
 
-contaminant_group = ['benzene','toluene','ethylbenzene','pm_xylene','indene','naphthalene']
-geochemicals_group = ['nitrate','sulfate','redoxpot','iron2','manganese']
-variables_dna = ['Total bacteria 16SRrna', 'Benzene carboxylase', 'NirS', 'NarG', 'BssA SRB',
-                 'BssA nitraat', 'Peptococcus']
-
+#extract data of geochemical quantities of interest
 geochem_selected = environment[['sample_nr']+geochemicals_group]
 
+#extract data of contaminant of interest
 cont_selected = contaminants[['sample_nr']+contaminant_group]
+
+#extend data of contaminants with a few additional variables of interest
 total_concentration(cont_selected,
                     include = True,
                     verbose = verbose)
-
-BT_ratio = cont_selected['benzene']/cont_selected['toluene']*100
-TB_ratio = cont_selected['toluene']/cont_selected['benzene']*100
-cont_selected['BT_ratio'] = BT_ratio
-cont_selected['TB_ratio'] = TB_ratio
-
+cont_selected.loc[:, 'BT_ratio'] = cont_selected.loc[:,'benzene']/cont_selected.loc[:,'toluene']*100
+cont_selected.loc[:,'TB_ratio'] = cont_selected.loc[:,'toluene']/cont_selected.loc[:,'benzene']*100
 contaminant_group_analysis = list(cont_selected.columns)
 contaminant_group_analysis.remove('sample_nr')
 
 ### concatenate all relevant data
 data_ordination = merge_data([geochem_selected,cont_selected,dna],clean = True)
 
-data_ordination.to_excel('./ordination_data.xlsx')
+### store data for statistical analysis in separate excel file
+#data_ordination.to_excel('./ordination_data.xlsx')
+
 ###------------------------------------------------------------------------###
 # Data preprocessing (filtering and transformation) for RDA
 
