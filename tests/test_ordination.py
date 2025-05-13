@@ -252,6 +252,7 @@ class Test_Constrained_Ordination:
                                    )
 
 
+    # TODO
     # def test_constrained_ordination_04(self):
     #     """Testing routine constrained_ordination().
     #     Correct error message when data is not in normalized form/i.e.
