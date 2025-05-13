@@ -5,8 +5,8 @@
 @author: Alraune Zech, Jorrit Bakker
 """
 
-import numpy as np
 import warnings
+import numpy as np
 import skbio.stats.ordination as sciord
 from sklearn import decomposition
 from mibiscreen.data.check_data import check_data_frame
