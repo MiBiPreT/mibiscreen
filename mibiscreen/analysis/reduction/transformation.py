@@ -6,10 +6,12 @@
 """
 
 import numpy as np
+import pandas as pd
 from scipy.stats import zscore
 from mibiscreen.data.check_data import check_data_frame
 from mibiscreen.data.set_data import determine_quantities
 
+pd.set_option('mode.use_inf_as_na', True)
 
 def filter_values(data_frame,
                   replace_NaN = 'remove',
@@ -148,6 +150,7 @@ def transform_values(data_frame,
         print('==============================================================')
 
     data,cols= check_data_frame(data_frame,inplace = inplace)
+    ### sorting out which columns in data to use for summation of concentrations
     quantities, _ = determine_quantities(cols,
                                       name_list = name_list,
                                       verbose = verbose)

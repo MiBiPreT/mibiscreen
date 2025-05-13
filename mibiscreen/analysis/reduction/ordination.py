@@ -5,10 +5,12 @@
 @author: Alraune Zech, Jorrit Bakker
 """
 
+import warnings
 import numpy as np
 import skbio.stats.ordination as sciord
 from sklearn import decomposition
 from mibiscreen.data.check_data import check_data_frame
+from mibiscreen.data.set_data import compare_lists
 
 
 def pca(data_frame,
@@ -66,14 +68,14 @@ def pca(data_frame,
         names_dependent = []
 
     elif independent_variables is not False and dependent_variables is False:
-        names_independent = extract_variables(cols,
+        names_independent = _extract_variables(cols,
                               independent_variables,
                               name_variables = 'independent variables'
                               )
         names_dependent = []
         data_pca = data[names_independent]
     elif independent_variables is False and dependent_variables is not False:
-        names_dependent = extract_variables(cols,
+        names_dependent = _extract_variables(cols,
                               dependent_variables,
                               name_variables = 'dependent variables'
                               )
@@ -81,11 +83,11 @@ def pca(data_frame,
         data_pca = data[names_dependent]
 
     else:
-        names_independent = extract_variables(cols,
+        names_independent = _extract_variables(cols,
                               independent_variables,
                               name_variables = 'independent variables'
                               )
-        names_dependent = extract_variables(cols,
+        names_dependent = _extract_variables(cols,
                               dependent_variables,
                               name_variables = 'dependent variables'
                               )
@@ -275,13 +277,13 @@ def constrained_ordination(data_frame,
     """
     data,cols= check_data_frame(data_frame)
 
-    intersection = extract_variables(cols,
+    intersection = _extract_variables(cols,
                           independent_variables,
                           name_variables = 'independent variables'
                           )
     data_independent_variables = data[intersection]
 
-    intersection = extract_variables(cols,
+    intersection = _extract_variables(cols,
                           dependent_variables,
                           name_variables = 'dependent variables'
                           )
@@ -296,7 +298,10 @@ def constrained_ordination(data_frame,
     if method == 'cca':
         try:
             sci_ordination = sciord.cca(data_dependent_variables, data_independent_variables, scaling = n_comp)
-        except(TypeError,ValueError):
+        except(ValueError):
+            raise ValueError("There are rows which only contain zero values.\
+                             Consider other option for data filtering and/or standardization.")
+        except(TypeError):
             raise TypeError("Not all column values are numeric values. Consider standardizing data first.")
     elif method == 'rda':
         try:
@@ -314,24 +319,25 @@ def constrained_ordination(data_frame,
         raise ValueError("Number of dependent variables too small.")
 
     results = {"method": method,
-               "loadings_dependent": loadings_dependent,
-               "loadings_independent": loadings_independent,
-               "names_independent" : data_independent_variables.columns.to_list(),
-               "names_dependent" : data_dependent_variables.columns.to_list(),
-               "scores": scores,
-               "sample_index" : list(data.index),
-               }
+                "loadings_dependent": loadings_dependent,
+                "loadings_independent": loadings_independent,
+                "names_independent" : data_independent_variables.columns.to_list(),
+                "names_dependent" : data_dependent_variables.columns.to_list(),
+                "scores": scores,
+                "sample_index" : list(data.index),
+                }
 
     return results
 
-def extract_variables(columns,
+def _extract_variables(columns,
                       variables,
                       name_variables = 'variables'
                       ):
-    """Checking overlap of two given list.
+    """Checking list of variables and overlap of them with list of column names.
 
-    Function is used for checking if a list of variables is present in
-    the column names of a given dataframe (of quantities for data analysis)
+    Function is used to check if list of provided (dependent or independent)
+    variables is present in the data frame (columns, being the column names)
+    and provides a list of overlapping column names.
 
     Input
     -----
@@ -348,19 +354,18 @@ def extract_variables(columns,
             list of strings present in both lists 'columns' and 'variables'
 
     """
-    if isinstance(variables,list):
-        intersection = list(set(columns) & set(variables))
-        remainder = list(set(variables) - set(columns))
-        if len(intersection) == 0:
-            raise ValueError("No column names for '{}' identified in columns of dataframe.".format(name_variables))
-        elif len(intersection) < len(variables):
-            print("WARNING: not all column names for '{}' are found in dataframe.".format(name_variables))
-            print('----------------------------------------------------------------')
-            print("Columns used in analysis:", intersection)
-            print("Column names not identified in data:", remainder)
-            print('________________________________________________________________')
-    else:
+    if not isinstance(variables,list):
         raise ValueError("List of column names for '{}' empty or in wrong format.".format(name_variables))
+
+    intersection,remainder_list1,remainder = compare_lists(columns,variables)
+    if len(intersection) == 0:
+        raise ValueError("No columns found in data from list of '{}'.".format(name_variables))
+    elif len(remainder) > 0:
+        warnings.warn("Not all column names for '{}' are found in dataframe.".format(name_variables))
+        print('----------------------------------------------------------------')
+        print("Columns used in analysis:", *intersection,sep='\n')
+        print("Column names not identified in data:", *remainder,sep='\n')
+        print('________________________________________________________________')
 
     return intersection
 
