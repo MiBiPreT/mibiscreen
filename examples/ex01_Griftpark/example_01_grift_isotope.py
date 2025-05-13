@@ -13,7 +13,6 @@ data provided on personal basis
 
 import matplotlib.pyplot as plt
 import numpy as np
-
 import mibiscreen as mbs
 
 ###------------------------------------------------------------------------###
