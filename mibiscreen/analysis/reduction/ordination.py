@@ -6,6 +6,7 @@
 """
 
 import numpy as np
+import warnings
 import skbio.stats.ordination as sciord
 from sklearn import decomposition
 from mibiscreen.data.check_data import check_data_frame
@@ -357,12 +358,10 @@ def _extract_variables(columns,
         raise ValueError("List of column names for '{}' empty or in wrong format.".format(name_variables))
 
     intersection,remainder_list1,remainder = compare_lists(columns,variables)
-    # intersection = list(set(columns) & set(variables))
-    # remainder = list(set(variables) - set(columns))
     if len(intersection) == 0:
         raise ValueError("No columns found in data from list of '{}'.".format(name_variables))
     elif len(remainder) > 0:
-        print("WARNING: not all column names for '{}' are found in dataframe.".format(name_variables))
+        warnings.warn("Not all column names for '{}' are found in dataframe.".format(name_variables))
         print('----------------------------------------------------------------')
         print("Columns used in analysis:", *intersection,sep='\n')
         print("Column names not identified in data:", *remainder,sep='\n')
