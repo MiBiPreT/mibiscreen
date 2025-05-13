@@ -3,13 +3,7 @@
 @author: Alraune Zech
 """
 
-import mibiscreen.analysis.sample.concentrations as co
-import mibiscreen.analysis.sample.screening_NA as na
-from mibiscreen.data.check_data import standardize
-from mibiscreen.data.load_data import load_csv
-
-#from mibiscreen.data.check_data import check_columns,check_units,check_values, standardize
-from mibiscreen.visualize.activity import activity
+import mibiscreen as mbs
 
 ###------------------------------------------------------------------------###
 ### File path settings
@@ -18,7 +12,7 @@ file_standard = './grift_BTEXIIN_standard.csv'
 
 ###------------------------------------------------------------------------###
 ### Load and standardize data
-data_raw,units = load_csv(file_path,
+data_raw,units = mbs.load_csv(file_path,
                           verbose = False
                           )
 
@@ -30,7 +24,7 @@ data_raw,units = load_csv(file_path,
 
 # data_pure = check_values(data, verbose = True)
 
-data,units = standardize(data_raw,
+data,units = mbs.standardize(data_raw,
                          reduce = True,
                          # store_csv=file_standard,
                          verbose=False)
@@ -38,13 +32,13 @@ data,units = standardize(data_raw,
 ###------------------------------------------------------------------------###
 ### perform NA screening step by step
 
-tot_reduct = na.reductors(data,
+tot_reduct = mbs.reductors(data,
                           include = False,
                           verbose = True,
                           ea_group = 'ONS',
                           )
 
-tot_oxi = na.oxidators(data,
+tot_oxi = mbs.oxidators(data,
                        include = False,
                        contaminant_group='BTEXIIN',
                        verbose = True,
@@ -55,12 +49,12 @@ tot_oxi = na.oxidators(data,
 #                            nutrient = True
 #                            )
 
-e_bal = na.electron_balance(data,
+e_bal = mbs.electron_balance(data,
                             include = False,
                             verbose = True
                             )
 
-na_traffic = na.sample_NA_traffic(data,
+na_traffic = mbs.sample_NA_traffic(data,
                                   include = True,
                                   verbose = True,
                                   )
@@ -68,7 +62,7 @@ na_traffic = na.sample_NA_traffic(data,
 ### NA screening for samples in one go:
 
 ### run full NA screening with results in separate DataFrame
-data_na = na.sample_NA_screening(data,
+data_na = mbs.sample_NA_screening(data,
                           include = False,
                           contaminant_group='BTEXIIN',
                           verbose = True,
@@ -78,13 +72,13 @@ data_na = na.sample_NA_screening(data,
 ###------------------------------------------------------------------------###
 ### Evaluation of total concentrations and intervention threshold exceedance
 
-tot_cont = co.total_contaminant_concentration(data,
+tot_cont = mbs.total_contaminant_concentration(data,
                                               contaminant_group='BTEXIIN',
                                               include = True,
                                               verbose = True,
                                               )
 
-na_intervention = co.thresholds_for_intervention(data,
+na_intervention = mbs.thresholds_for_intervention(data,
                                                  contaminant_group='BTEXIIN',
                                                  include = False,
                                                  verbose = True,
@@ -95,6 +89,6 @@ na_intervention = co.thresholds_for_intervention(data,
 ### Create activity plot linking contaminant concentration to metabolite occurence
 ### and NA screening
 
-fig, ax = activity(data,
+fig, ax = mbs.activity(data,
                    # save_fig='grift_NA_activity.png',dpi = 300
                    )
