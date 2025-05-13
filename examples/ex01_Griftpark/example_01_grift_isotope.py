@@ -13,10 +13,8 @@ data provided on personal basis
 
 import matplotlib.pyplot as plt
 import numpy as np
-from mibiscreen.analysis.reduction.stable_isotope_regression import Lambda_regression
-from mibiscreen.analysis.reduction.stable_isotope_regression import extract_isotope_data
-from mibiscreen.data.check_data import standardize
-from mibiscreen.data.load_data import load_csv
+
+import mibiscreen as mbs
 
 ###------------------------------------------------------------------------###
 ### Script settings
@@ -32,10 +30,10 @@ save_fig = "./example_01_grift_isotopes.pdf"
 ###------------------------------------------------------------------------###
 ### Load and standardize data of isotopes
 
-isotopes_raw,units = load_csv(file_csv,
+isotopes_raw,units = mbs.load_csv(file_csv,
                                   verbose = verbose)
 
-isotopes,units = standardize(isotopes_raw,
+isotopes,units = mbs.standardize(isotopes_raw,
                                 reduce = True,
                                 verbose=verbose)
 
@@ -53,8 +51,8 @@ for j,molecule in enumerate(molecules):
     for i,well in enumerate(wells):
         data = isotopes[isotopes["obs_well"] == well]
 
-        x,y = extract_isotope_data(data,molecule)
-        results = Lambda_regression(x,y,validate_indices = True)
+        x,y = mbs.extract_isotope_data(data,molecule)
+        results = mbs.Lambda_regression(x,y,validate_indices = True)
 
         # Plot the scatter plot
         ax[j].scatter(x, y, marker=mto[i],zorder = 3)

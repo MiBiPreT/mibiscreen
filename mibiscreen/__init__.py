@@ -8,3 +8,17 @@ __version__ = "0.4.0"
 # Add some commonly used functions as top-level imports
 from mibiscreen.data.load_data import load_excel, load_csv
 from mibiscreen.data.check_data import standardize
+from mibiscreen.data.check_data import check_columns
+from mibiscreen.data.check_data import check_units
+from mibiscreen.data.check_data import check_values
+
+from mibiscreen.analysis.reduction.stable_isotope_regression import Lambda_regression
+from mibiscreen.analysis.reduction.stable_isotope_regression import extract_isotope_data
+
+from mibiscreen.visualize.stable_isotope_plots import Lambda_plot
+
+from mibiscreen.visualize.activity import activity
+
+from mibiscreen.analysis.sample.screening_NA import reductors, oxidators, electron_balance, sample_NA_traffic, sample_NA_screening
+from mibiscreen.analysis.sample.concentrations import total_contaminant_concentration, thresholds_for_intervention
+
