@@ -136,9 +136,9 @@ transform_values(data_cca,
 data_rda = data_ordination.copy()
 
 filter_values(data_rda,
-              replace_NaN = 'zero', #7a
-              # replace_NaN = 'average', #7b
-              # replace_NaN = 'remove', #7c
+              replace_NaN = 'zero',
+              # replace_NaN = 'average',
+              # replace_NaN = 'remove',
               inplace = True,
               verbose = True)
 
