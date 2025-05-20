@@ -7,9 +7,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import pytest
-from mibiscreen.data.settings.names_data import name_metabolites_variety
-from mibiscreen.data.settings.names_data import name_na_traffic_light
-from mibiscreen.data.settings.names_data import name_total_contaminants
+from mibiscreen.data.settings.standard_names import name_metabolites_variety
+from mibiscreen.data.settings.standard_names import name_na_traffic_light
+from mibiscreen.data.settings.standard_names import name_total_contaminants
 from mibiscreen.visualize.activity import activity
 
 

@@ -8,7 +8,8 @@ groundwater samples useful for biodegredation and bioremediation analysis
 @author: A. Zech
 """
 
-import mibiscreen.data.settings.names_data as names
+# import mibiscreen.data.settings.names_data as names
+import mibiscreen.data.settings.standard_names as names
 
 #name_phosphate,name_nitrite
 #name_sulfide,name_ammonium,name_methane,name_manganese,

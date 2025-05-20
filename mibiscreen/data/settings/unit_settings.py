@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """Unit specifications of data!
 
 File containing unit specifications of quantities and parameters measured in
@@ -8,9 +6,9 @@ groundwater samples useful for biodegredation and bioremediation analysis.
 @author: Alraune Zech
 """
 
-from mibiscreen.data.settings.names_data import name_EC
-from mibiscreen.data.settings.names_data import name_redox
-from mibiscreen.data.settings.names_data import name_sample_depth
+from mibiscreen.data.settings.standard_names import name_EC
+from mibiscreen.data.settings.standard_names import name_redox
+from mibiscreen.data.settings.standard_names import name_sample_depth
 
 ### potential units
 standard_units = dict(

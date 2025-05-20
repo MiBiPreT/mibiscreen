@@ -6,7 +6,14 @@
 """
 import numpy as np
 import pandas as pd
-import mibiscreen.data.settings.names_data as names
+import mibiscreen.data.settings.standard_names as names
+from mibiscreen.data.settings.contaminants import contaminants
+from mibiscreen.data.settings.geochemicals import geochemicals
+from mibiscreen.data.settings.isotopes import isotopes
+from mibiscreen.data.settings.metabolites import metabolites
+from mibiscreen.data.settings.names_data import col_dict
+from mibiscreen.data.settings.names_data import names_contaminants
+from mibiscreen.data.settings.names_data import names_isotopes
 from mibiscreen.data.settings.unit_settings import all_units
 from mibiscreen.data.settings.unit_settings import standard_units
 from mibiscreen.data.settings.unit_settings import units_env_cond
@@ -57,7 +64,7 @@ def standard_names(name_list,
     names_unknown = []
     names_transform = {}
 
-    dict_names = names.col_dict.copy()
+    dict_names = col_dict.copy()
 
     if isinstance(name_list, str):
         name_list = [name_list]
@@ -69,11 +76,11 @@ def standard_names(name_list,
     for x in name_list:
         y = dict_names.get(x, False)
         x_isotope = x.split('-')[0]
-        y_isotopes = names.names_isotopes.get(x_isotope.lower(), False)
+        y_isotopes = names_isotopes.get(x_isotope.lower(), False)
 
         if y_isotopes is not False:
             x_molecule = x.removeprefix(x_isotope+'-')
-            y_molecule = names.names_contaminants.get(x_molecule.lower(), False)
+            y_molecule = names_contaminants.get(x_molecule.lower(), False)
             if y_molecule is False:
                 names_unknown.append(x)
             else:
@@ -315,14 +322,14 @@ def check_units(data,
     col_check_list= []
 
     for quantity in units.columns:
-        if quantity in names.geochemicals['chemical_composition']:
+        if quantity in geochemicals['chemical_composition']:
             if str(units[quantity][0]).lower() not in standard_units['mgperl']:
                 col_check_list.append(quantity)
                 if verbose:
                     print("Warning: Check unit of {}!\n Given in {}, but must be milligramm per liter (e.g. {})."
                               .format(quantity,units[quantity][0],standard_units['mgperl'][0]))
 
-        if quantity in names.contaminants['all_cont']:
+        if quantity in contaminants['all_cont']:
             if str(units[quantity][0]).lower() not in standard_units['microgperl']:
                 col_check_list.append(quantity)
                 if verbose:
@@ -337,14 +344,14 @@ def check_units(data,
                     print("Warning: Check unit of {}!\n Given in {}, but must be in {} (e.g. {}).".format(
                             quantity,units[quantity][0],unit_type,standard_units[unit_type][0]))
 
-        if quantity.split('-')[0] in names.isotopes:
+        if quantity.split('-')[0] in isotopes:
             if str(units[quantity][0]).lower() not in standard_units['permil']:
                 col_check_list.append(quantity)
                 if verbose:
                     print("Warning: Check unit of {}!\n Given in {}, but must be per mille (e.g. {})."
                               .format(quantity,units[quantity][0],standard_units['permil'][0]))
 
-        if quantity in names.metabolites:
+        if quantity in metabolites:
             if str(units[quantity][0]).lower() not in standard_units['microgperl']:
                 col_check_list.append(quantity)
                 if verbose:

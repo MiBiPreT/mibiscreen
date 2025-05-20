@@ -1,6 +1,4 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""Example dat.
+"""Example data.
 
 Measurements on quantities and parameters in groundwater samples
 used for biodegredation and bioremediation analysis.
@@ -10,7 +8,9 @@ used for biodegredation and bioremediation analysis.
 
 import numpy as np
 import pandas as pd
-import mibiscreen.data.settings.names_data as names
+import mibiscreen.data.settings.standard_names as names
+
+# import mibiscreen.data.settings.names_data as names
 from mibiscreen.data.settings.unit_settings import standard_units
 
 
