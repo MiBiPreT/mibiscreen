@@ -8,9 +8,9 @@ groundwater samples useful for biodegredation and bioremediation analysis.
 @author: Alraune Zech
 """
 
-from mibiscreen.data.names_data import name_EC
-from mibiscreen.data.names_data import name_redox
-from mibiscreen.data.names_data import name_sample_depth
+from mibiscreen.data.settings.names_data import name_EC
+from mibiscreen.data.settings.names_data import name_redox
+from mibiscreen.data.settings.names_data import name_sample_depth
 
 ### potential units
 standard_units = dict(
