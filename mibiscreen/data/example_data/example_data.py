@@ -10,8 +10,8 @@ used for biodegredation and bioremediation analysis.
 
 import numpy as np
 import pandas as pd
-import mibiscreen.data.names_data as names
-from mibiscreen.data.unit_settings import standard_units
+import mibiscreen.data.settings.names_data as names
+from mibiscreen.data.settings.unit_settings import standard_units
 
 
 def example_data(data_type = 'all',
