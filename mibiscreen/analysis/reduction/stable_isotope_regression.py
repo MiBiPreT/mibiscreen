@@ -5,8 +5,8 @@
 @author: Alraune Zech
 """
 import numpy as np
-from mibiscreen.data.names_data import names_contaminants
-from mibiscreen.data.names_data import names_isotopes
+from mibiscreen.data.settings.names_data import names_contaminants
+from mibiscreen.data.settings.names_data import names_isotopes
 
 
 def Lambda_regression(delta_C,
