@@ -5,7 +5,7 @@
 @author: Alraune Zech
 """
 import pandas as pd
-import mibiscreen.data.names_data as names
+import mibiscreen.data.settings.names_data as names
 from mibiscreen.data.check_data import check_data_frame
 
 

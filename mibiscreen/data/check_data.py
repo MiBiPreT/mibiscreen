@@ -6,10 +6,10 @@
 """
 import numpy as np
 import pandas as pd
-import mibiscreen.data.names_data as names
-from mibiscreen.data.unit_settings import all_units
-from mibiscreen.data.unit_settings import standard_units
-from mibiscreen.data.unit_settings import units_env_cond
+import mibiscreen.data.settings.names_data as names
+from mibiscreen.data.settings.unit_settings import all_units
+from mibiscreen.data.settings.unit_settings import standard_units
+from mibiscreen.data.settings.unit_settings import units_env_cond
 
 to_replace_list = ["-",'--','',' ','  ']
 to_replace_value = np.nan
