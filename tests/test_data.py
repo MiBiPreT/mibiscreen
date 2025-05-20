@@ -11,7 +11,7 @@ from mibiscreen.data.check_data import check_units
 from mibiscreen.data.check_data import check_values
 from mibiscreen.data.check_data import standard_names
 from mibiscreen.data.check_data import standardize
-from mibiscreen.data.example_data import example_data
+from mibiscreen.data.example_data.example_data import example_data
 from mibiscreen.data.load_data import load_csv
 from mibiscreen.data.load_data import load_excel
 from mibiscreen.data.set_data import compare_lists
@@ -20,7 +20,7 @@ from mibiscreen.data.set_data import extract_data
 from mibiscreen.data.set_data import extract_settings
 from mibiscreen.data.set_data import merge_data
 
-path_data = "./mibiscreen/data"
+path_data = "./mibiscreen/data/example_data/"
 
 class TestLoadData:
     """Class for testing data loading routines in data module of mibiscreen."""
