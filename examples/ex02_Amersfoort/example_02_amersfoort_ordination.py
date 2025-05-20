@@ -5,16 +5,7 @@ Example of diagnostic plotting using ordination with contaminant data from Amers
 @author: Alraune Zech
 """
 
-from mibiscreen.analysis.reduction.ordination import pca
-from mibiscreen.analysis.reduction.transformation import filter_values
-from mibiscreen.analysis.reduction.transformation import transform_values
-from mibiscreen.analysis.sample.concentrations import total_contaminant_concentration
-from mibiscreen.data.check_data import standard_names
-from mibiscreen.data.check_data import standardize
-from mibiscreen.data.load_data import load_excel
-from mibiscreen.data.set_data import extract_data
-from mibiscreen.data.set_data import merge_data
-from mibiscreen.visualize.ordination_plot import ordination_plot
+import mibiscreen as mbs
 
 ###------------------------------------------------------------------------###
 ### Script settings
@@ -27,71 +18,71 @@ file_path = './amersfoort.xlsx'
 
 ###------------------------------------------------------------------------###
 ### Load and standardize data of environmental quantities/chemicals
-environment_raw,units = load_excel(file_path,
+environment_raw,units = mbs.load_excel(file_path,
                                     sheet_name = 'environment',
                                     verbose = verbose)
 
-environment,units = standardize(environment_raw,
+environment,units = mbs.standardize(environment_raw,
                                 reduce = True,
                                 verbose=verbose)
 
 ###------------------------------------------------------------------------###
 ### Load and standardize data of contaminants
-contaminants_raw,units = load_excel(file_path,
+contaminants_raw,units = mbs.load_excel(file_path,
                                     sheet_name = 'contaminants',
                                     verbose = verbose)
 
-contaminants,units = standardize(contaminants_raw,
+contaminants,units = mbs.standardize(contaminants_raw,
                                   reduce = False,
                                   verbose = verbose)
 
 
-total_contaminant_concentration(contaminants,
+mbs.total_contaminant_concentration(contaminants,
                                 include = True,
                                 verbose = verbose)
 
-data = merge_data([environment,contaminants],clean = True)
+data = mbs.merge_data([environment,contaminants],clean = True)
 #display(data)
 
 ###------------------------------------------------------------------------###
-variables_1 = standard_names(['total_contaminants'])
-variables_2 = standard_names(['nitrate','pH','nitrite','sulfate','Redox','EC','DOC',"Mn","Fe"])
+variables_1 = mbs.standard_names(['total_contaminants'])
+variables_2 = mbs.standard_names(['nitrate','pH','nitrite','sulfate','Redox','EC','DOC',"Mn","Fe"])
 
 
-data_ordination = extract_data(data,
+data_ordination = mbs.extract_data(data,
                   name_list = variables_1 + variables_2,
                   keep_setting_data = True,
                   )
 
-filter_values(data_ordination,
+mbs.filter_values(data_ordination,
               replace_NaN = 'remove',
               inplace = True,
               verbose = True)
 
-transform_values(data_ordination,
+mbs.transform_values(data_ordination,
                  name_list = variables_1,
                  how = 'log_scale',
                  inplace = True,
                  )
 
-transform_values(data_ordination,
+mbs.transform_values(data_ordination,
                  name_list = variables_1,
                   how = 'standardize',
                   inplace = True,
                   )
 
-transform_values(data_ordination,
+mbs.transform_values(data_ordination,
                  name_list = variables_2,
                  how = 'standardize',
                  inplace = True,
                  )
 
 ###------------------------------------------------------------------------###
-ordination_output = pca(data_ordination,
+ordination_output = mbs.pca(data_ordination,
                         independent_variables = variables_1+variables_2,
                         verbose = True)
 
-fig, ax = ordination_plot(ordination_output=ordination_output,
+fig, ax = mbs.ordination_plot(ordination_output=ordination_output,
                 plot_scores = True,
                 plot_loadings = True,
                 rescale_loadings_scores = True,
