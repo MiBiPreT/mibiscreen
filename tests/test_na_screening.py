@@ -13,7 +13,7 @@ from mibiscreen.analysis.sample.screening_NA import oxidators
 from mibiscreen.analysis.sample.screening_NA import reductors
 from mibiscreen.analysis.sample.screening_NA import sample_NA_screening
 from mibiscreen.analysis.sample.screening_NA import sample_NA_traffic
-from mibiscreen.data.example_data import example_data
+from mibiscreen.data.example_data.example_data import example_data
 
 
 class TestReductors:

@@ -12,7 +12,7 @@ from mibiscreen.analysis.reduction.stable_isotope_regression import Lambda_regre
 from mibiscreen.analysis.reduction.stable_isotope_regression import Rayleigh_fractionation
 from mibiscreen.analysis.reduction.stable_isotope_regression import extract_isotope_data
 from mibiscreen.analysis.reduction.stable_isotope_regression import valid_indices
-from mibiscreen.data.example_data import example_data
+from mibiscreen.data.example_data.example_data import example_data
 
 
 class TestData:

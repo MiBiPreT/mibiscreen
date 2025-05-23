@@ -12,7 +12,7 @@ from mibiscreen.analysis.sample.concentrations import thresholds_for_interventio
 from mibiscreen.analysis.sample.concentrations import total_concentration
 from mibiscreen.analysis.sample.concentrations import total_contaminant_concentration
 from mibiscreen.analysis.sample.concentrations import total_count
-from mibiscreen.data.example_data import example_data
+from mibiscreen.data.example_data.example_data import example_data
 
 
 class TestTotalConcentration:
