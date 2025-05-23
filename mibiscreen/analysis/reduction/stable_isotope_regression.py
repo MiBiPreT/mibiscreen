@@ -5,9 +5,13 @@
 @author: Alraune Zech
 """
 import numpy as np
-from mibiscreen.data.settings.names_data import names_contaminants
-from mibiscreen.data.settings.names_data import names_isotopes
 
+### standard names/prefixes for isotopes:
+
+import mibiscreen.data.settings.standard_names as names
+
+from mibiscreen.data.names_data import other_names_contaminants
+from mibiscreen.data.names_data import other_names_isotopes
 
 def Lambda_regression(delta_C,
                       delta_H,
@@ -348,9 +352,10 @@ def valid_indices(data1,
 
 def extract_isotope_data(df,
                          molecule,
-                         name_13C = 'delta_13C',
-                         name_2H = 'delta_2H',
+                         name_13C = names.name_13C,
+                         name_2H = names.name_2H,
                          ):
+    
     """Extracts isotope data from standardised input-dataframe.
 
     Parameters
@@ -372,9 +377,11 @@ def extract_isotope_data(df,
         numeric isotope data
 
     """
-    molecule_standard = names_contaminants.get(molecule.lower(), False)
-    isotope_13C = names_isotopes.get(name_13C.lower(), False)
-    isotope_2H = names_isotopes.get(name_2H.lower(), False)
+    
+    
+    molecule_standard = other_names_contaminants.get(molecule.lower(), False)
+    isotope_13C = other_names_isotopes.get(name_13C.lower(), False)
+    isotope_2H = other_names_isotopes.get(name_2H.lower(), False)
 
     if molecule_standard is False:
         raise ValueError("Contaminant (name) unknown: {}".format(molecule))
