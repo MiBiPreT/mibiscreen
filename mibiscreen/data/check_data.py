@@ -7,16 +7,11 @@
 import numpy as np
 import pandas as pd
 import mibiscreen.data.settings.standard_names as names
-from mibiscreen.data.settings.contaminants import contaminants
-from mibiscreen.data.settings.geochemicals import geochemicals
-from mibiscreen.data.settings.isotopes import isotopes
-from mibiscreen.data.settings.metabolites import metabolites
-from mibiscreen.data.settings.names_data import col_dict
-from mibiscreen.data.settings.names_data import names_contaminants
-from mibiscreen.data.settings.names_data import names_isotopes
+from mibiscreen.data.settings.unit_settings import properties_units
 from mibiscreen.data.settings.unit_settings import all_units
-from mibiscreen.data.settings.unit_settings import standard_units
-from mibiscreen.data.settings.unit_settings import units_env_cond
+from mibiscreen.data.names_data import properties_all,other_names_all
+from mibiscreen.data.names_data import other_names_isotopes,other_names_contaminants
+
 
 to_replace_list = ["-",'--','',' ','  ']
 to_replace_value = np.nan
@@ -59,12 +54,13 @@ def standard_names(name_list,
         - complete list of potential contaminants, environmental factors
         - add name check for metabolites?
     """
+
+
     names_standard = []
     names_known = []
     names_unknown = []
     names_transform = {}
 
-    dict_names = col_dict.copy()
 
     if isinstance(name_list, str):
         name_list = [name_list]
@@ -73,14 +69,16 @@ def standard_names(name_list,
             if not isinstance(name, str):
                 raise ValueError("Entry in provided list of names is not a string:", name)
 
+    dict_names = other_names_all.copy()
+
     for x in name_list:
         y = dict_names.get(x, False)
         x_isotope = x.split('-')[0]
-        y_isotopes = names_isotopes.get(x_isotope.lower(), False)
+        y_isotopes = other_names_isotopes.get(x_isotope.lower(), False)
 
         if y_isotopes is not False:
             x_molecule = x.removeprefix(x_isotope+'-')
-            y_molecule = names_contaminants.get(x_molecule.lower(), False)
+            y_molecule = other_names_contaminants.get(x_molecule.lower(), False)
             if y_molecule is False:
                 names_unknown.append(x)
             else:
@@ -304,8 +302,9 @@ def check_units(data,
     else:
         units = data.copy()
 
+    
+    ### testing if provided data frame contains any units (at all)
     units_in_data = set(map(lambda x: str(x).lower(), units.iloc[0,:].values))
-    ### testing if provided data frame contains any unit
     test_unit = False
     for u in all_units:
         if u in units_in_data:
@@ -320,50 +319,34 @@ def check_units(data,
     # standardize column names (as it might not has happened for data yet)
     check_columns(units,standardize = True, verbose = False)
     col_check_list= []
+    col_not_checked  = []
 
+
+    ### run through all quantity columns and check their units 
     for quantity in units.columns:
-        if quantity in geochemicals['chemical_composition']:
-            if str(units[quantity][0]).lower() not in standard_units['mgperl']:
+        if quantity in properties_all.keys():
+            standard_unit = properties_all[quantity]['standard_unit']
+        elif quantity.split('-')[0] in properties_all.keys(): # test on isotope
+            standard_unit = properties_all[quantity.split('-')[0]]['standard_unit']
+        else:
+            col_not_checked.append(quantity)
+            continue
+        
+        if standard_unit != names.unit_less:
+            other_names_unit = properties_units[standard_unit]['other_names']
+            if str(units[quantity][0]).lower() not in other_names_unit:
                 col_check_list.append(quantity)
                 if verbose:
-                    print("Warning: Check unit of {}!\n Given in {}, but must be milligramm per liter (e.g. {})."
-                              .format(quantity,units[quantity][0],standard_units['mgperl'][0]))
-
-        if quantity in contaminants['all_cont']:
-            if str(units[quantity][0]).lower() not in standard_units['microgperl']:
-                col_check_list.append(quantity)
-                if verbose:
-                    print("Warning: Check unit of {}!\n Given in {}, but must be microgramm per liter (e.g. {})."
-                              .format(quantity,units[quantity][0],standard_units['microgperl'][0]))
-
-        if quantity in list(units_env_cond.keys()):
-            unit_type = units_env_cond[quantity]
-            if str(units[quantity][0]).lower() not in standard_units[unit_type]:
-                col_check_list.append(quantity)
-                if verbose:
-                    print("Warning: Check unit of {}!\n Given in {}, but must be in {} (e.g. {}).".format(
-                            quantity,units[quantity][0],unit_type,standard_units[unit_type][0]))
-
-        if quantity.split('-')[0] in isotopes:
-            if str(units[quantity][0]).lower() not in standard_units['permil']:
-                col_check_list.append(quantity)
-                if verbose:
-                    print("Warning: Check unit of {}!\n Given in {}, but must be per mille (e.g. {})."
-                              .format(quantity,units[quantity][0],standard_units['permil'][0]))
-
-        if quantity in metabolites:
-            if str(units[quantity][0]).lower() not in standard_units['microgperl']:
-                col_check_list.append(quantity)
-                if verbose:
-                    print("Warning: Check unit of {}!\n Given in {}, but must be microgramm per liter (e.g. {})."
-                              .format(quantity,units[quantity][0],standard_units['microgperl'][0]))
-
+                    print("Warning: Check unit of {}!\n Given in {}, but must be in {}."
+                              .format(quantity,units[quantity][0],standard_unit))
+          
     if verbose:
         print('________________________________________________________________')
         if len(col_check_list) == 0:
             print(" All identified quantities given in requested units.")
         else:
             print(" All other identified quantities given in requested units.")
+        print(" Quantities not identified (and thus not checked on units:", col_not_checked)
         print('================================================================')
 
     return col_check_list
@@ -532,4 +515,3 @@ def standardize(data_frame,
         print('================================================================')
 
     return data_numeric, units
-
