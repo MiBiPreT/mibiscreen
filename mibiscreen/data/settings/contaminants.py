@@ -527,7 +527,7 @@ contaminants = dict(
                names.name_indane,
                names.name_indene,
                names.name_naphthalene],
-    all_cont = properties_contaminants.keys()
+    all_cont = list(properties_contaminants.keys())
                 # [names.name_benzene,
                 # names.name_toluene,
                 # names.name_ethylbenzene,

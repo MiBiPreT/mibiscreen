@@ -55,6 +55,38 @@ geochemicals = dict(
           names.name_phosphate], # nutrients
 )
 
+properties_geochemicals = dict()
+
+properties_geochemicals[names.name_redox]=dict(
+    other_names = ["redox", "redoxpotential","redox potential","redox-potential",
+                   "redox_potential","redoxpot","redox pot","redox-pot","redox_pot"] ,
+    )
+
+properties_geochemicals[names.name_pH]=dict(
+    other_names = ["ph"],
+    )
+
+properties_geochemicals[names.name_EC]=dict(
+    other_names = ["ec"],
+    )
+
+properties_geochemicals[names.name_pE]=dict(
+    other_names = ["pe"],
+    )
+
+properties_geochemicals[names.name_NOPC]=dict(
+    other_names = ["nopc"],
+    )
+
+properties_geochemicals[names.name_DOC]=dict(
+    other_names = ["doc"],
+    )
+
+# properties_geochemicals[names.]=dict(
+#     other_names = [] ,
+#     )
+
+
 # properties[names.name_oxygen]=dict(
 #     chemical_formula = 'o2',
 #     molecular_mass = 32.,

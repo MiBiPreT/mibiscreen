@@ -6,6 +6,16 @@ groundwater samples useful for biodegredation and bioremediation analysis
 @author: A. Zech
 """
 
+### Standard names for units
+unit_mgperl = "mg/l"
+unit_microgperl  = "ug/l"
+unit_millivolt = "mV"
+unit_meter = 'm'
+unit_microsimpercm = 'uS/cm'
+unit_permil = 'permil'
+unit_count = 'nr'
+unit_less = ''
+
 ### Standard names for settings
 name_sample = "sample_nr"
 name_observation_well = "obs_well"
@@ -17,15 +27,22 @@ name_aquifer = 'aquifer'
 name_redox = "redoxpot"
 name_pH = "pH"
 name_EC = "EC"
-name_pE = "pE"
-name_NOPC = "NOPC"
-name_DOC = "DOC"
+#name_Eh = "Eh" #Reduction potential
+name_pE = "pE" #Alternative mathematical formulation of redox potential/reduction potential
+# In analogy to pε is a measure of the solution activity of hypothetical free electrons, 
+# pε = −log{e−}, and is related to E via pε = (F/2.3RT)/E
+
+name_DOC = "DOC" # Dissolved Organic Carbon
+name_NPOC = "NPOC" # Non-Purgeable Organic Carbon
+name_TOC = "TOC" # Total Organic Carbon 
 
 name_oxygen = 'oxygen' #o2
 name_nitrate = 'nitrate' #no3
 name_sulfate = 'sulfate' #"so4"
-name_ironII = "iron2" #"fe_II"
-name_manganese = 'manganese' #"mn_II"
+name_iron2 = "iron2" #"fe_II"
+name_iron3 = "iron3" #"fe_II"
+name_manganese2 = 'manganese2' #"mn_II"
+name_manganese4 = 'manganese4' #"mn_II"
 name_methane = 'methane' #"ch4"
 name_nitrite = 'nitrite' #no2
 name_sulfide = 'sulfide' #"s2min"
@@ -106,7 +123,6 @@ name_acetylphenol = "acetylphenol"
 name_methyl_benzoic_acid = 'methyl_benzoic_acid'
 name_benzylsuccinic_acid = "benzylsuccinic_acid"
 name_3o_toluoyl_propionic_acid = "3o_toluoyl_propionic_acid"
-name_2methylindene = "2_methylindene"
 
 ### Standard names for metabolite related quantities
 name_metabolites_conc = "metabolites_concentration"
