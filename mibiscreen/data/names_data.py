@@ -5,13 +5,16 @@ groundwater samples useful for biodegredation and bioremediation analysis
 
 @author: A. Zech
 """
-import mibiscreen.data.settings.standard_names as names
 
-### Todo: adapt routine for running through list of names as dictionary keys
-### use that to generate name dictionary for environmental settings
+import mibiscreen.data.settings.standard_names as names
+from mibiscreen.data.settings.sample_settings import properties_sample_settings
+from mibiscreen.data.settings.contaminants import properties_contaminants,contaminants_analysis
+from mibiscreen.data.settings.environment import properties_geochemicals
+from mibiscreen.data.settings.metabolites import properties_metabolites
+from mibiscreen.data.settings.isotopes import properties_isotopes
 
 def _generate_dict_other_names(name_dict,
-                               selection = False):
+                                selection = False):
 
     """Function creating dictionary for mapping alternative names.
 
@@ -21,6 +24,9 @@ def _generate_dict_other_names(name_dict,
             dictionary of dictionaries with properties for each quantity (e.g. contaminant)
             each quantity-subdictionary needs to have one key called 'other_names' 
             providing a list of other/alternative names of the quantities
+        selectin: False or list
+            if False, all keys in dictionary name_dict will be run through
+            if a list: only keys which are also in list will be used
 
     Returns:
     -------
@@ -31,210 +37,124 @@ def _generate_dict_other_names(name_dict,
     
 
     other_names_dict=dict()
-    # if selection is False:
-    #     name_list = name_dict.items()
-    for key, value in name_dict.items():
-        print(f"{key}: ")
-        # print(value['other_names'])
-        for other_name in value['other_names']:
+    if selection is False:
+        name_list = list(name_dict.keys())
+    else:
+        name_list = selection
+    for key in name_list:
+        for other_name in name_dict[key]['other_names']:
             other_names_dict[other_name] = key
 
     return other_names_dict
 
-from mibiscreen.data.settings.sample_settings import properties_sample_settings
-from mibiscreen.data.settings.contaminants import properties_contaminants
-# from mibiscreen.data.settings.geochemicals import properties_geochemicals,geochemicals
-from mibiscreen.data.settings.metabolites import properties_metabolites
-from mibiscreen.data.settings.isotopes import properties_isotopes
-
-names_sample_settings = _generate_dict_other_names(properties_sample_settings)
-names_contaminants = _generate_dict_other_names(properties_contaminants)
-names_metabolites = _generate_dict_other_names(properties_metabolites)
-names_isotopes = _generate_dict_other_names(properties_isotopes)
-
-# names_chemicals = _generate_dict_other_names(properties_geochemicals)
-# names_environment = _generate_dict_other_names(properties_geochemicals,selection = geochemicals['environmental_conditions'])
+### -----------------------------------------------------------------------------
+### List with all quantities of particular data type in standard names:
+sample_settings = list(properties_sample_settings.keys())
+contaminants = list(properties_contaminants.keys())
+contaminants_analysis_quantities = list(contaminants_analysis.keys())
+environment = list(properties_geochemicals.keys())
+isotopes = list(properties_isotopes.keys())
+metabolites = list(properties_metabolites.keys())
 
 ### -----------------------------------------------------------------------------
-### Dictionary with potential names of quantities to be replaced by standard name
-
-names_environment = {
-    "redox": names.name_redox,
-    "redoxpotential": names.name_redox,
-    "redox potential": names.name_redox,
-    "redox-potential": names.name_redox,
-    "redox_potential": names.name_redox,
-    "redoxpot": names.name_redox,
-    "redox pot": names.name_redox,
-    "redox-pot": names.name_redox,
-    "redox_pot": names.name_redox,
-    "ph": names.name_pH,
-    "ec": names.name_EC,
-    "pe": names.name_pE,
-    "nopc": names.name_NOPC,
-    "doc": names.name_DOC,
+### combined dictionary of all properties
+properties_all = {**properties_sample_settings,
+                  **properties_geochemicals,
+                  **properties_contaminants,
+                  **properties_metabolites,
+                  **properties_isotopes,
 }
 
-names_chemicals = {
-    "oxygen": names.name_oxygen,
-    "o":names.name_oxygen,
-    "o2":names.name_oxygen,
-    "nitrite": names.name_nitrite,
-    "no2": names.name_nitrite,
-    "nitrate": names.name_nitrate,
-    "no3": names.name_nitrate,
-    "sulfate": names.name_sulfate,
-    "so4": names.name_sulfate,
-    "so42-": names.name_sulfate,
-    "so4 2-": names.name_sulfate,
-    "so4-2-": names.name_sulfate,
-    "so4_2-": names.name_sulfate,
-    "sulfide": names.name_sulfide,
-    "s": names.name_sulfide,
-    "s2": names.name_sulfide,
-    "s 2": names.name_sulfide,
-    "s-2": names.name_sulfide,
-    "s_2": names.name_sulfide,
-    "s2-": names.name_sulfide,
-    "s 2-": names.name_sulfide,
-    "s-2-": names.name_sulfide,
-    "s_2-": names.name_sulfide,
-    "s2min": names.name_sulfide,
-    "s 2min": names.name_sulfide,
-    "s-2min": names.name_sulfide,
-    "s_2min": names.name_sulfide,
-    "ammonium": names.name_ammonium,
-    "nh4": names.name_ammonium,
-    "nh4+": names.name_ammonium,
-    "methane": names.name_methane,
-    "ch4": names.name_methane,
-    "manganese": names.name_manganese,
-    "mn": names.name_manganese,
-    "mn2": names.name_manganese,
-    "mn 2": names.name_manganese,
-    "mn-2": names.name_manganese,
-    "mn_2": names.name_manganese,
-    "mnii": names.name_manganese,
-    "mn ii": names.name_manganese,
-    "mn-ii": names.name_manganese,
-    "mn_ii": names.name_manganese,
-    "mn2+": names.name_manganese,
-    "mn 2+": names.name_manganese,
-    "mn-2+": names.name_manganese,
-    "mn_2+": names.name_manganese,
-    "mnii+": names.name_manganese,
-    "mn ii+": names.name_manganese,
-    "mn-ii+": names.name_manganese,
-    "mn_ii+": names.name_manganese,
-    "iron": names.name_ironII,
-    "iron2": names.name_ironII,
-    "iron 2": names.name_ironII,
-    "iron-2": names.name_ironII,
-    "iron_2": names.name_ironII,
-    "iron2+": names.name_ironII,
-    "iron 2+": names.name_ironII,
-    "iron-2+": names.name_ironII,
-    "iron_2+": names.name_ironII,
-    "ironii": names.name_ironII,
-    "iron ii": names.name_ironII,
-    "iron-ii": names.name_ironII ,
-    "iron_ii": names.name_ironII,
-    "ironii+": names.name_ironII,
-    "iron ii+": names.name_ironII ,
-    "iron-ii+": names.name_ironII,
-    "iron_ii+": names.name_ironII ,
-    "fe": names.name_ironII,
-    "fe2": names.name_ironII,
-    "fe 2": names.name_ironII,
-    "fe-2": names.name_ironII,
-    "fe_2": names.name_ironII,
-    "fe2+": names.name_ironII,
-    "fe 2+": names.name_ironII,
-    "fe-2+": names.name_ironII,
-    "fe_2+": names.name_ironII,
-    "feii": names.name_ironII,
-    "fe ii": names.name_ironII,
-    "fe-ii": names.name_ironII,
-    "fe_ii": names.name_ironII,
-    "feii+": names.name_ironII,
-    "fe ii+": names.name_ironII,
-    "fe-ii+": names.name_ironII,
-    "fe_ii+": names.name_ironII,
-    "phosphate": names.name_phosphate,
-    "po4": names.name_phosphate,
-    "po43-": names.name_phosphate,
-    "po4 3-": names.name_phosphate,
-    "po4-3-": names.name_phosphate,
-    "po4_3-": names.name_phosphate,
-    'chloride': names.name_chloride,
-    'cl': names.name_chloride,
-    'cl-': names.name_chloride,
-    'bromide': names.name_bromide,
-    'br': names.name_bromide,
-    'br-': names.name_bromide,
-    'fluoride': names.name_fluoride,
-    'f': names.name_fluoride,
-    'f-': names.name_fluoride,
-    'sodium': names.name_sodium,
-    'na': names.name_sodium,
-    'na+': names.name_sodium,
-    'magnesium': names.name_magnesium,
-    'mg': names.name_magnesium,
-    'mg2+': names.name_magnesium,
-    'potassium': names.name_potassium,
-    'k': names.name_potassium,
-    'k+': names.name_potassium,
-    'calcium': names.name_calcium,
-    'ca': names.name_calcium,
-    'ca2+': names.name_calcium,
-    'acetate': names.name_acetate,
-    'c2h3o2-': names.name_acetate,
+### -----------------------------------------------------------------------------
+### dictionaries for mapping possible name to standard name for quantities of particular type
+
+other_names_sample_settings = _generate_dict_other_names(properties_sample_settings)
+other_names_contaminants = _generate_dict_other_names(properties_contaminants)
+other_names_environment = _generate_dict_other_names(properties_geochemicals)
+#               selection = environment['environmental_conditions']+environment['geochemicals'])
+other_names_metabolites = _generate_dict_other_names(properties_metabolites)
+other_names_isotopes = _generate_dict_other_names(properties_isotopes)
+other_names_contaminants_analysis = _generate_dict_other_names(contaminants_analysis)
+
+### -----------------------------------------------------------------------------
+### Dictionary with all potentially identified names of quantities
+other_names_all = {
+        **other_names_sample_settings,
+        **other_names_environment,
+        **other_names_contaminants,
+        **other_names_contaminants_analysis,
+        **other_names_metabolites,
+        **other_names_isotopes,
 }
 
-names_contaminants_analysis = {
-    "sum_contaminants": names.name_total_contaminants,
-    "sum-contaminants": names.name_total_contaminants,
-    "sum contaminants": names.name_total_contaminants,
-    "sumcontaminants": names.name_total_contaminants,
-    "total_contaminants": names.name_total_contaminants,
-    "total-contaminants": names.name_total_contaminants,
-    "total contaminants": names.name_total_contaminants,
-    "totalcontaminants": names.name_total_contaminants,
-    'Sum GC': names.name_total_contaminants,
-    "total_oxidators": names.name_total_oxidators,
-    "total_reductors": names.name_total_reductors,
-    "NP_avail": names.name_NP_avail,
-    'e_balance': names.name_e_balance,
-    'na_traffic_light': names.name_na_traffic_light,
-    'intervention_traffic': names.name_intervention_traffic,
-    'intervention_number': names.name_intervention_number,
-    'intervention_contaminants': names.name_intervention_contaminants,
-}
+### -----------------------------------------------------------------------------
+### dictionaries with specific selection lists of quantities of particular type
 
+contaminant_groups = dict(
+    BTEX = [names.name_benzene,
+            names.name_toluene,
+            names.name_ethylbenzene,
+            names.name_pm_xylene,
+            names.name_o_xylene,
+            names.name_xylene],
+    BTEXIIN = [names.name_benzene,
+               names.name_toluene,
+               names.name_ethylbenzene,
+               names.name_pm_xylene,
+               names.name_o_xylene,
+               names.name_xylene,
+               names.name_indane,
+               names.name_indene,
+               names.name_naphthalene],
+    all_cont = list(properties_contaminants.keys())
+)
 
-names_metabolites_sum = {
-    "metaboliteconcentration": names.name_metabolites_conc,
-    "metabolite concentration": names.name_metabolites_conc,
-    "metabolite_concentration": names.name_metabolites_conc,
-    "Metabolite-concentration": names.name_metabolites_conc,
-    'metabolitevariety': names.name_metabolites_variety,
-    'metabolite variety': names.name_metabolites_variety,
-    'metabolite-variety': names.name_metabolites_variety,
-    'metabolite_variety': names.name_metabolites_variety,
-    'metabolitesvariety': names.name_metabolites_variety,
-    'metabolites variety': names.name_metabolites_variety,
-    'metabolites-variety': names.name_metabolites_variety,
-    'metabolites_variety': names.name_metabolites_variety,
-    "number of detected metabolites":  names.name_metabolites_variety,
-}
-
-
-col_dict = {
-    **names_sample_settings,
-    **names_environment,
-    **names_chemicals,
-    **names_contaminants,
-    **names_contaminants_analysis,
-    **names_metabolites,
-    **names_metabolites_sum,
-}
+environment_groups = dict(
+    environmental_conditions = [names.name_redox,
+                                names.name_pH,
+                                names.name_EC,
+                                names.name_pE,
+                                ],
+    geochemicals = [names.name_oxygen,
+                            names.name_nitrate,
+                            names.name_sulfate,
+                            names.name_iron2,
+                            names.name_iron3,
+                            names.name_manganese2,
+                            names.name_manganese4,
+                            names.name_methane,
+                            names.name_nitrite,
+                            names.name_sulfide,
+                            names.name_ammonium,
+                            names.name_phosphate,
+                            names.name_chloride,
+                            names.name_bromide,
+                            names.name_fluoride,
+                            names.name_sodium,
+                            names.name_magnesium,
+                            names.name_potassium,
+                            names.name_calcium,
+                            names.name_acetate,
+                            names.name_DOC,
+                            names.name_NPOC,
+                            names.name_TOC,
+                            ],
+    ONS = [names.name_oxygen,
+           names.name_nitrate,
+           names.name_sulfate
+           ], # non reduced electron acceptors
+    ONSFe = [names.name_oxygen,
+             names.name_nitrate,
+             names.name_sulfate,
+             names.name_iron3,
+             ], # selected electron acceptors
+    all_ea = [names.name_oxygen,
+              names.name_nitrate,
+              names.name_sulfate,
+              names.name_iron2,
+              names.name_manganese2,
+              names.name_methane], # all electron acceptors (unreduced/reduced form)
+    NP = [names.name_nitrate,
+          names.name_nitrite,
+          names.name_phosphate], # nutrients
+)
