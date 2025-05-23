@@ -157,7 +157,7 @@ class TestStandardNames:
 
     names_standard = ['sample_nr', 'obs_well', 'depth', 'pH', 'redoxpot', 'sulfate',\
                       'methane', 'iron2', 'benzene', 'naphthalene']
-    names_mod = ["sample","well","Depth",'pH', 'redox' , 'Sulfate', 'CH4','iron','c6h6', 'Naphthalene']
+    names_mod = ["sample","well","Depth",'pH', 'redox' , 'Sulfate', 'CH4','ironII','c6h6', 'Naphthalene']
     unknown  = ['unknown_contaminant']
     names_isotopes = ['delta_2H-unknown_contaminant', 'delta_13C-Toluene']
 
@@ -359,7 +359,7 @@ class TestCheckDataColumns:
 
     columns = ['sample_nr', 'obs_well', 'depth', 'pH', 'redoxpot', 'sulfate',\
                 'methane', 'iron2', 'benzene', 'naphthalene']
-    columns_mod = ["sample","well","Depth",'pH', 'redox' , 'Sulfate', 'CH4','iron','c6h6', 'Naphthalene']
+    columns_mod = ["sample","well","Depth",'pH', 'redox' , 'Sulfate', 'CH4','ironII','c6h6', 'Naphthalene']
     units = [' ',' ','m',' ','mV', 'mg/l', 'mg/l', 'mg/l', 'ug/l', 'ug/l']
     s01 = ['2000-001', 'B-MLS1-3-12',-12, 7.23, -208, 23, 748, 3,263,2207]
 
@@ -563,7 +563,7 @@ class TestDataStandardize:
     data4standard_0 = pd.DataFrame([units,s00],columns = columns)
 
     columns_mod = ["sample","well","Depth",'pH', 'redox' , 'Sulfate', 'CH4',
-                   'iron','c6h6', 'Naphthalene','Phenol','delta_13C-Benzene','unknown_contaminant']
+                   'ironII','c6h6', 'Naphthalene','Phenol','delta_13C-Benzene','unknown_contaminant']
     units_mod = [' ',' ','cm',' ','','ug/L', 'mg/L', 'ppm', 'mg/L',  'ug/L', 'ppm', '-',' ']
     s01 = ['2000-001', 'B-MLS1-3-12',-12, 7.23, -208, 23, 748, 3,263,2207 , 10., 20.,30.]
     data4standard_1 = pd.DataFrame([units_mod,s01],columns = columns_mod)
