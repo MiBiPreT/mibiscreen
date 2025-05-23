@@ -6,28 +6,45 @@ groundwater samples useful for biodegredation and bioremediation analysis.
 @author: Alraune Zech
 """
 
-from mibiscreen.data.settings.standard_names import name_EC
-from mibiscreen.data.settings.standard_names import name_redox
-from mibiscreen.data.settings.standard_names import name_sample_depth
+import mibiscreen.data.settings.standard_names as names
+import numpy as np
 
-### potential units
-standard_units = dict(
-    mgperl = ["mg/l",'ppm'],
-    microgperl = [
-        "ug/l",
-        "micro g/l",
-        r"$\mu$ g/l",
-    ],
-    millivolt = ["mV","mv"],
-    meter = ['m',"meter"],
-    microsimpercm = ['uS/cm','us/cm'],
-    permil = ['permil','mur','‰','per mil','per mill','per mille','permill','permille','promille'],
-    count = ['nr','number','count']
+properties_units = dict()
+properties_units[names.unit_mgperl]=dict(
+    other_names = ["mg/l",'ppm'],
     )
 
-all_units = [item for sublist in list(standard_units.values()) for item in sublist]
+properties_units[names.unit_microgperl]=dict(
+    other_names = ["ug/l","micro g/l",r"$\mu$ g/l",],
+    )
 
-units_env_cond = dict()
-units_env_cond[name_sample_depth] = 'meter'
-units_env_cond[name_EC] = 'microsimpercm'
-units_env_cond[name_redox] = 'millivolt'
+properties_units[names.unit_millivolt]=dict(
+    other_names = ["mV","mv"],
+    )
+
+properties_units[names.unit_meter]=dict(
+    other_names = ['m',"meter"],
+    )
+
+properties_units[names.unit_microsimpercm]=dict(
+    other_names = ['uS/cm','us/cm'],
+    )
+
+properties_units[names.unit_permil]=dict(
+    other_names = ['permil','mur','‰','per mil','per mill','per mille',
+                   'permill','permille','promille'],
+    )
+
+properties_units[names.unit_count]=dict(
+    other_names =['nr','number','count'],
+    )
+
+properties_units[names.unit_less]=dict(
+    other_names = ['',' ','  ','-',np.nan],
+    )
+
+
+all_units = []
+for key in properties_units.keys():
+    if key != names.unit_less:
+        all_units = all_units + properties_units[key]['other_names']
