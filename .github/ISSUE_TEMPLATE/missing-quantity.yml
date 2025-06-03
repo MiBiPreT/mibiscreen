@@ -47,6 +47,6 @@ body:
     id: codecontext
     attributes:
       label: If applicable, what code generated the missing quantity exception?
-      description: [Optional] Please paste (some of) your code here to give us an idea how you are using the package
+      description: (Optional) Please paste (some of) your code here to give us an idea how you are using the package
     validations:
       requried: false
