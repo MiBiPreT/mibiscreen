@@ -7,11 +7,14 @@
 import numpy as np
 import pandas as pd
 import mibiscreen.data.settings.standard_names as names
-from mibiscreen.data.settings.unit_settings import properties_units
+from mibiscreen.data.settings.contaminants import contaminants_analysis
+from mibiscreen.data.settings.contaminants import properties_contaminants
+from mibiscreen.data.settings.environment import properties_geochemicals
+from mibiscreen.data.settings.isotopes import properties_isotopes
+from mibiscreen.data.settings.metabolites import properties_metabolites
+from mibiscreen.data.settings.sample_settings import properties_sample_settings
 from mibiscreen.data.settings.unit_settings import all_units
-from mibiscreen.data.names_data import properties_all,other_names_all
-from mibiscreen.data.names_data import other_names_isotopes,other_names_contaminants
-
+from mibiscreen.data.settings.unit_settings import properties_units
 
 to_replace_list = ["-",'--','',' ','  ']
 to_replace_value = np.nan
@@ -54,8 +57,6 @@ def standard_names(name_list,
         - complete list of potential contaminants, environmental factors
         - add name check for metabolites?
     """
-
-
     names_standard = []
     names_known = []
     names_unknown = []
@@ -69,7 +70,19 @@ def standard_names(name_list,
             if not isinstance(name, str):
                 raise ValueError("Entry in provided list of names is not a string:", name)
 
-    dict_names = other_names_all.copy()
+    properties_all = {**properties_sample_settings,
+                      **properties_geochemicals,
+                      **properties_contaminants,
+                      **properties_metabolites,
+                      **properties_isotopes,
+                      **contaminants_analysis,
+    }
+    dict_names=_generate_dict_other_names(properties_all)
+
+    other_names_contaminants = _generate_dict_other_names(properties_contaminants)
+    other_names_isotopes = _generate_dict_other_names(properties_isotopes)
+
+     # dict_names= other_names_all.copy()
 
     for x in name_list:
         y = dict_names.get(x, False)
@@ -302,7 +315,6 @@ def check_units(data,
     else:
         units = data.copy()
 
-    
     ### testing if provided data frame contains any units (at all)
     units_in_data = set(map(lambda x: str(x).lower(), units.iloc[0,:].values))
     test_unit = False
@@ -322,7 +334,14 @@ def check_units(data,
     col_not_checked  = []
 
 
-    ### run through all quantity columns and check their units 
+    properties_all = {**properties_sample_settings,
+                      **properties_geochemicals,
+                      **properties_contaminants,
+                      **properties_metabolites,
+                      **properties_isotopes,
+    }
+
+    ### run through all quantity columns and check their units
     for quantity in units.columns:
         if quantity in properties_all.keys():
             standard_unit = properties_all[quantity]['standard_unit']
@@ -331,7 +350,7 @@ def check_units(data,
         else:
             col_not_checked.append(quantity)
             continue
-        
+
         if standard_unit != names.unit_less:
             other_names_unit = properties_units[standard_unit]['other_names']
             if str(units[quantity][0]).lower() not in other_names_unit:
@@ -339,7 +358,7 @@ def check_units(data,
                 if verbose:
                     print("Warning: Check unit of {}!\n Given in {}, but must be in {}."
                               .format(quantity,units[quantity][0],standard_unit))
-          
+
     if verbose:
         print('________________________________________________________________')
         if len(col_check_list) == 0:
@@ -515,3 +534,34 @@ def standardize(data_frame,
         print('================================================================')
 
     return data_numeric, units
+
+def _generate_dict_other_names(name_dict,
+                               selection = False):
+    """Function creating dictionary for mapping alternative names.
+
+    Args:
+    -------
+        name_dict: dict
+            dictionary of dictionaries with properties for each quantity (e.g. contaminant)
+            each quantity-subdictionary needs to have one key called 'other_names'
+            providing a list of other/alternative names of the quantities
+        selection: False or list
+            if False, all keys in dictionary name_dict will be run through
+            if a list: only keys which are also in list will be used
+
+    Returns:
+    -------
+        other_names_dict: dictionary
+            dictionary mapping alternative names to standard name
+
+    """
+    other_names_dict=dict()
+    if selection is False:
+        name_list = list(name_dict.keys())
+    else:
+        name_list = selection
+    for key in name_list:
+        for other_name in name_dict[key]['other_names']:
+            other_names_dict[other_name] = key
+
+    return other_names_dict

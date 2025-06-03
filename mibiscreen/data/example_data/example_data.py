@@ -45,7 +45,6 @@ def example_data(data_type = 'all',
     -------
         To be added!
     """
-
     mgl = names.unit_mgperl
     microgl = names.unit_microgperl
 

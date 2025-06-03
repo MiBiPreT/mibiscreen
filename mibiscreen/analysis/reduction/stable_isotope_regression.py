@@ -5,13 +5,11 @@
 @author: Alraune Zech
 """
 import numpy as np
-
-### standard names/prefixes for isotopes:
-
 import mibiscreen.data.settings.standard_names as names
+from mibiscreen.data.check_data import _generate_dict_other_names
+from mibiscreen.data.settings.contaminants import properties_contaminants
+from mibiscreen.data.settings.isotopes import properties_isotopes
 
-from mibiscreen.data.names_data import other_names_contaminants
-from mibiscreen.data.names_data import other_names_isotopes
 
 def Lambda_regression(delta_C,
                       delta_H,
@@ -355,7 +353,6 @@ def extract_isotope_data(df,
                          name_13C = names.name_13C,
                          name_2H = names.name_2H,
                          ):
-    
     """Extracts isotope data from standardised input-dataframe.
 
     Parameters
@@ -377,8 +374,9 @@ def extract_isotope_data(df,
         numeric isotope data
 
     """
-    
-    
+    other_names_contaminants = _generate_dict_other_names(properties_contaminants)
+    other_names_isotopes = _generate_dict_other_names(properties_isotopes)
+
     molecule_standard = other_names_contaminants.get(molecule.lower(), False)
     isotope_13C = other_names_isotopes.get(name_13C.lower(), False)
     isotope_2H = other_names_isotopes.get(name_2H.lower(), False)

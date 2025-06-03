@@ -6,12 +6,10 @@
 """
 import pandas as pd
 import mibiscreen.data.settings.standard_names as names
-
-# import mibiscreen.data.settings.names_data as names
 from mibiscreen.data.check_data import check_data_frame
-from mibiscreen.data.names_data import contaminant_groups
-from mibiscreen.data.names_data import environment_groups
-from mibiscreen.data.names_data import sample_settings
+from mibiscreen.data.settings.contaminants import contaminant_groups
+from mibiscreen.data.settings.environment import environment_groups
+from mibiscreen.data.settings.sample_settings import sample_settings
 
 
 def determine_quantities(cols,
