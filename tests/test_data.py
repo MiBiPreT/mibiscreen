@@ -5,6 +5,7 @@
 import numpy as np
 import pandas as pd
 import pytest
+from mibiscreen.data.check_data import _generate_dict_other_names
 from mibiscreen.data.check_data import check_columns
 from mibiscreen.data.check_data import check_data_frame
 from mibiscreen.data.check_data import check_units
@@ -623,6 +624,44 @@ class TestDataStandardize:
         out,err=capsys.readouterr()
 
         assert len(out)>0
+
+class TestGenerateDictOtherNames:
+    """Class for testing data module of mibiscreen."""
+
+    other_names_1 = ["name_01","name1", "name_1", "name-1", "name 1"]
+    other_names_2 = ["name_02","name2", "name_2", "name-2", "name 2"]
+    other_names_3 = ["name_03","name3", "name_3", "name-3", "name 3"]
+    properties_test = dict()
+    properties_test['name_01']=dict(
+        other_names = other_names_1,
+        )
+    properties_test['name_02']=dict(
+        other_names = other_names_2,
+        )
+    properties_test['name_03']=dict(
+        other_names = other_names_3,
+        )
+
+
+    def test_generate_dict_other_names_01(self):
+        """Testing routine _generate_dict_other_names().
+
+        Testing functionality of routines in standard settings.
+        """
+        other_names = _generate_dict_other_names(self.properties_test)
+
+        assert set(other_names.keys()) == set(self.other_names_1+self.other_names_2+self.other_names_3)
+
+    def test_generate_dict_other_names_02(self):
+        """Testing routine _generate_dict_other_names().
+
+        Testing functionality of routines in standard settings.
+        """
+        other_names = _generate_dict_other_names(self.properties_test,
+                                                 selection = ['name_01','name_02'])
+
+        assert set(other_names.keys()) == set(self.other_names_1+self.other_names_2)
+
 
 class TestDataCompareLists:
     """Class for testing data module of mibiscreen."""
