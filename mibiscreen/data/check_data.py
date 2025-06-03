@@ -106,6 +106,7 @@ def standard_names(name_list,
             print("\nRenaming can be done by setting keyword 'standardize' to True.\n")
         print('________________________________________________________________')
         print("{} quantities have not been identified in provided data:".format(len(names_unknown)))
+        print("You can suggest missing quantities that could be added to the library here: <https://github.com/MiBiPreT/mibiscreen/issues/new>")
         print('---------------------------------------------------------')
         for i,name in enumerate(names_unknown):
             print(name)
