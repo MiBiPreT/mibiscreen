@@ -8,7 +8,6 @@ for biodegredation and bioremediation analysis
 
 import mibiscreen.data.settings.standard_names as names
 
-
 properties_isotopes = dict()
 
 properties_isotopes[names.name_13C]=dict(
@@ -47,7 +46,7 @@ properties_isotopes[names.name_13C]=dict(
                     'δ c13',
                     'δ carbon',
                     'δ 13carbon',
-                    'δ carbon13'],   
+                    'δ carbon13'],
     standard_unit = names.unit_permil,
     )
 
@@ -78,3 +77,6 @@ properties_isotopes[names.name_2H]=dict(
                     'delta hydrogen2'],
     standard_unit = names.unit_permil,
     )
+
+### List with all quantities of particular data type in standard names:
+isotopes = list(properties_isotopes.keys())

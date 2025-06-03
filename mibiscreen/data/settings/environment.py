@@ -157,7 +157,6 @@ properties_geochemicals[names.name_ammonium]=dict(
     other_names = ["ammonium","nh4","nh_4","nh 4",'nh4+','nh_4+','nh 4+'],
     standard_unit = names.unit_mgperl,
     )
-    
 
 properties_geochemicals[names.name_phosphate]=dict(
     chemical_formula = "po4_3-",
@@ -217,3 +216,55 @@ properties_geochemicals[names.name_acetate]=dict(
     standard_unit = names.unit_mgperl,
     )
 
+### List with all quantities of particular data type in standard names:
+environment = list(properties_geochemicals.keys())
+
+environment_groups = dict(
+    environmental_conditions = [names.name_redox,
+                                names.name_pH,
+                                names.name_EC,
+                                names.name_pE,
+                                ],
+    geochemicals = [names.name_oxygen,
+                            names.name_nitrate,
+                            names.name_sulfate,
+                            names.name_iron2,
+                            names.name_iron3,
+                            names.name_manganese2,
+                            names.name_manganese4,
+                            names.name_methane,
+                            names.name_nitrite,
+                            names.name_sulfide,
+                            names.name_ammonium,
+                            names.name_phosphate,
+                            names.name_chloride,
+                            names.name_bromide,
+                            names.name_fluoride,
+                            names.name_sodium,
+                            names.name_magnesium,
+                            names.name_potassium,
+                            names.name_calcium,
+                            names.name_acetate,
+                            names.name_DOC,
+                            names.name_NPOC,
+                            names.name_TOC,
+                            ],
+    ONS = [names.name_oxygen,
+           names.name_nitrate,
+           names.name_sulfate
+           ], # non reduced electron acceptors
+    ONSFe = [names.name_oxygen,
+             names.name_nitrate,
+             names.name_sulfate,
+             names.name_iron3,
+             ], # selected electron acceptors
+    all_ea = [names.name_oxygen,
+              names.name_nitrate,
+              names.name_sulfate,
+              names.name_iron2,
+              names.name_manganese2,
+              names.name_methane], # all electron acceptors (unreduced/reduced form)
+    NP = [names.name_nitrate,
+          names.name_nitrite,
+          names.name_phosphate], # nutrients
+)

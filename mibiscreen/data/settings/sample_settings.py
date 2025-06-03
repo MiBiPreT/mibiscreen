@@ -56,3 +56,6 @@ properties_sample_settings[names.name_aquifer]=dict(
     other_names = ["aquifer"],
     standard_unit = names.unit_less,
 )
+
+### List with all quantities of particular data type in standard names:
+sample_settings = list(properties_sample_settings.keys())

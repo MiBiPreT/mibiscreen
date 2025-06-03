@@ -6,8 +6,8 @@ groundwater samples useful for biodegredation and bioremediation analysis.
 @author: Alraune Zech
 """
 
-import mibiscreen.data.settings.standard_names as names
 import numpy as np
+import mibiscreen.data.settings.standard_names as names
 
 properties_units = dict()
 properties_units[names.unit_mgperl]=dict(
@@ -48,3 +48,4 @@ all_units = []
 for key in properties_units.keys():
     if key != names.unit_less:
         all_units = all_units + properties_units[key]['other_names']
+

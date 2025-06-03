@@ -29,12 +29,12 @@ name_pH = "pH"
 name_EC = "EC"
 #name_Eh = "Eh" #Reduction potential
 name_pE = "pE" #Alternative mathematical formulation of redox potential/reduction potential
-# In analogy to pε is a measure of the solution activity of hypothetical free electrons, 
+# In analogy to pε is a measure of the solution activity of hypothetical free electrons,
 # pε = −log{e−}, and is related to E via pε = (F/2.3RT)/E
 
 name_DOC = "DOC" # Dissolved Organic Carbon
 name_NPOC = "NPOC" # Non-Purgeable Organic Carbon
-name_TOC = "TOC" # Total Organic Carbon 
+name_TOC = "TOC" # Total Organic Carbon
 
 name_oxygen = 'oxygen' #o2
 name_nitrate = 'nitrate' #no3

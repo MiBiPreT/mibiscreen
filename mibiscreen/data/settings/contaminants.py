@@ -134,7 +134,6 @@ properties_contaminants[names.name_styrene]=dict(
     standard_unit = names.unit_microgperl,
 )
 
-  
 properties_contaminants[names.name_isopropylbenzene]=dict(
     chemical_formula = "c6h5c3h7",
     molecular_mass = 120.195,
@@ -144,7 +143,7 @@ properties_contaminants[names.name_isopropylbenzene]=dict(
                    "iso-propylbenzene","iso_propylbenzene","iso propylbenzene"],
     standard_unit = names.unit_microgperl,
 )
-   
+
 properties_contaminants[names.name_n_propylbenzene]=dict(
     chemical_formula = "c6h5ch2ch2ch3",
     molecular_mass = 120.195,
@@ -386,12 +385,12 @@ properties_contaminants[names.name_1_methylnaphthalene]=dict(
     molecular_mass = 142.2,
     carbon_atoms = 11,
     hydrogen_atoms = 10,
-    other_names = ['1_methylnaphthalene','1-methylnaphthalene','1 methylnaphthalene','1methylnaphthalene',
-                   'alpha_methylnaphthalene','alpha-methylnaphthalene','alpha methylnaphthalene','alphamethylnaphthalene',
-                   'methyl-1-naphthalene','methyl-1-naphtalene',
-                   '1_methylnaphtalene','1-methylnaphtalene','1 methylnaphtalene','1methylnaphtalene',
-                   'alpha_methylnaphtalene','alpha-methylnaphtalene','alpha methylnaphtalene','alphamethylnaphtalene'                   
-                   ],
+    other_names = ['1_methylnaphthalene','1-methylnaphthalene','1 methylnaphthalene',
+                   '1methylnaphthalene','alpha_methylnaphthalene','alpha-methylnaphthalene',
+                   'alpha methylnaphthalene','alphamethylnaphthalene','methyl-1-naphthalene',
+                   'methyl-1-naphtalene','1_methylnaphtalene','1-methylnaphtalene',
+                   '1 methylnaphtalene','1methylnaphtalene','alpha_methylnaphtalene',
+                   'alpha-methylnaphtalene','alpha methylnaphtalene','alphamethylnaphtalene'],
     standard_unit = names.unit_microgperl,
 )
 
@@ -436,11 +435,11 @@ properties_contaminants[names.name_2_ethylnaphthalene]=dict(
     molecular_mass = 156.22,
     carbon_atoms = 12,
     hydrogen_atoms = 12,
-    other_names = ['2_ethylnaphthalene','2-ethylnaphthalene','2 ethylnaphthalene','2ethylnaphthalene',
-                   'beta_ethylnaphthalene','beta-ethylnaphthalene','beta ethylnaphthalene','betaethylnaphthalene',
-                   '2_ethylnaphtalene','2-ethylnaphtalene','2 ethylnaphtalene','2ethylnaphtalene',
-                   'beta_ethylnaphtalene','beta-ethylnaphtalene','beta ethylnaphtalene','betaethylnaphtalene',
-                   ],
+    other_names = ['2_ethylnaphthalene','2-ethylnaphthalene','2 ethylnaphthalene',
+                   '2ethylnaphthalene','beta_ethylnaphthalene','beta-ethylnaphthalene',
+                   'beta ethylnaphthalene','betaethylnaphthalene','2_ethylnaphtalene',
+                   '2-ethylnaphtalene','2 ethylnaphtalene','2ethylnaphtalene','beta_ethylnaphtalene',
+                   'beta-ethylnaphtalene','beta ethylnaphtalene','betaethylnaphtalene'],
     standard_unit = names.unit_microgperl,
 )
 
@@ -449,7 +448,8 @@ properties_contaminants[names.name_dimethylnaphthalene]=dict(
     molecular_mass = 156.22,
     carbon_atoms = 12,
     hydrogen_atoms = 12,
-    other_names = ['dimethylnaphthalene','dimethyl-naphthalene','dimethyl-snaphtalene','dimethylnaphtalene'],
+    other_names = ['dimethylnaphthalene','dimethyl-naphthalene','dimethyl-snaphtalene',
+                   'dimethylnaphtalene'],
     standard_unit = names.unit_microgperl,
 )
 
@@ -458,8 +458,9 @@ properties_contaminants[names.name_12_dimethylnaphthalene]=dict(
     molecular_mass = 156.22,
     carbon_atoms = 12,
     hydrogen_atoms = 12,
-    other_names = ['12_dimethylnaphthalene','12-dimethylnaphthalene','12 dimethylnaphthalene','12dimethylnaphthalene',
-                   '1,2_dimethylnaphthalene','1,2-dimethylnaphthalene','1,2 dimethylnaphthalene','1,2dimethylnaphthalene'],
+    other_names = ['12_dimethylnaphthalene','12-dimethylnaphthalene','12 dimethylnaphthalene',
+                   '12dimethylnaphthalene','1,2_dimethylnaphthalene','1,2-dimethylnaphthalene',
+                   '1,2 dimethylnaphthalene','1,2dimethylnaphthalene'],
     standard_unit = names.unit_microgperl,
 )
 
@@ -468,8 +469,9 @@ properties_contaminants[names.name_13_dimethylnaphthalene]=dict(
     molecular_mass = 156.22,
     carbon_atoms = 12,
     hydrogen_atoms = 12,
-    other_names = ['13_dimethylnaphthalene','13-dimethylnaphthalene','13 dimethylnaphthalene','13dimethylnaphthalene',
-                   '1,3_dimethylnaphthalene','1,3-dimethylnaphthalene','1,3 dimethylnaphthalene','1,3dimethylnaphthalene'],
+    other_names = ['13_dimethylnaphthalene','13-dimethylnaphthalene','13 dimethylnaphthalene',
+                   '13dimethylnaphthalene','1,3_dimethylnaphthalene','1,3-dimethylnaphthalene',
+                   '1,3 dimethylnaphthalene','1,3dimethylnaphthalene'],
     standard_unit = names.unit_microgperl,
 )
 
@@ -478,8 +480,9 @@ properties_contaminants[names.name_14_dimethylnaphthalene]=dict(
     molecular_mass = 156.22,
     carbon_atoms = 12,
     hydrogen_atoms = 12,
-    other_names = ['14_dimethylnaphthalene','14-dimethylnaphthalene','14 dimethylnaphthalene','14dimethylnaphthalene',
-                   '1,4_dimethylnaphthalene','1,4-dimethylnaphthalene','1,4 dimethylnaphthalene','1,4dimethylnaphthalene'],
+    other_names = ['14_dimethylnaphthalene','14-dimethylnaphthalene','14 dimethylnaphthalene',
+                   '14dimethylnaphthalene','1,4_dimethylnaphthalene','1,4-dimethylnaphthalene',
+                   '1,4 dimethylnaphthalene','1,4dimethylnaphthalene'],
     standard_unit = names.unit_microgperl,
 )
 
@@ -488,8 +491,9 @@ properties_contaminants[names.name_15_dimethylnaphthalene]=dict(
     molecular_mass = 156.22,
     carbon_atoms = 12,
     hydrogen_atoms = 12,
-    other_names = ['15_dimethylnaphthalene','15-dimethylnaphthalene','15 dimethylnaphthalene','15dimethylnaphthalene',
-                   '1,5_dimethylnaphthalene','1,5-dimethylnaphthalene','1,5 dimethylnaphthalene','1,5dimethylnaphthalene'],
+    other_names = ['15_dimethylnaphthalene','15-dimethylnaphthalene','15 dimethylnaphthalene',
+                   '15dimethylnaphthalene','1,5_dimethylnaphthalene','1,5-dimethylnaphthalene',
+                   '1,5 dimethylnaphthalene','1,5dimethylnaphthalene'],
     standard_unit = names.unit_microgperl,
 )
 
@@ -498,8 +502,9 @@ properties_contaminants[names.name_16_dimethylnaphthalene]=dict(
     molecular_mass = 156.22,
     carbon_atoms = 12,
     hydrogen_atoms = 12,
-    other_names = ['16_dimethylnaphthalene','16-dimethylnaphthalene','16 dimethylnaphthalene','16dimethylnaphthalene',
-                   '1,6_dimethylnaphthalene','1,6-dimethylnaphthalene','1,6 dimethylnaphthalene','1,6dimethylnaphthalene'],
+    other_names = ['16_dimethylnaphthalene','16-dimethylnaphthalene','16 dimethylnaphthalene',
+                   '16dimethylnaphthalene','1,6_dimethylnaphthalene','1,6-dimethylnaphthalene',
+                   '1,6 dimethylnaphthalene','1,6dimethylnaphthalene'],
     standard_unit = names.unit_microgperl,
 )
 
@@ -508,8 +513,9 @@ properties_contaminants[names.name_17_dimethylnaphthalene]=dict(
     molecular_mass = 156.22,
     carbon_atoms = 12,
     hydrogen_atoms = 12,
-    other_names = ['17_dimethylnaphthalene','17-dimethylnaphthalene','17 dimethylnaphthalene','17dimethylnaphthalene',
-                   '1,7_dimethylnaphthalene','1,7-dimethylnaphthalene','1,7 dimethylnaphthalene','1,7dimethylnaphthalene'],
+    other_names = ['17_dimethylnaphthalene','17-dimethylnaphthalene','17 dimethylnaphthalene',
+                   '17dimethylnaphthalene','1,7_dimethylnaphthalene','1,7-dimethylnaphthalene',
+                   '1,7 dimethylnaphthalene','1,7dimethylnaphthalene'],
     standard_unit = names.unit_microgperl,
 )
 
@@ -518,8 +524,9 @@ properties_contaminants[names.name_18_dimethylnaphthalene]=dict(
     molecular_mass = 156.22,
     carbon_atoms = 12,
     hydrogen_atoms = 12,
-    other_names = ['18_dimethylnaphthalene','18-dimethylnaphthalene','18 dimethylnaphthalene','18dimethylnaphthalene',
-                   '1,8_dimethylnaphthalene','1,8-dimethylnaphthalene','1,8 dimethylnaphthalene','1,8dimethylnaphthalene'],
+    other_names = ['18_dimethylnaphthalene','18-dimethylnaphthalene','18 dimethylnaphthalene',
+                   '18dimethylnaphthalene','1,8_dimethylnaphthalene','1,8-dimethylnaphthalene',
+                   '1,8 dimethylnaphthalene','1,8dimethylnaphthalene'],
     standard_unit = names.unit_microgperl,
 )
 
@@ -528,8 +535,9 @@ properties_contaminants[names.name_23_dimethylnaphthalene]=dict(
     molecular_mass = 156.22,
     carbon_atoms = 12,
     hydrogen_atoms = 12,
-    other_names = ['23_dimethylnaphthalene','23-dimethylnaphthalene','23 dimethylnaphthalene','23dimethylnaphthalene',
-                   '2,3_dimethylnaphthalene','2,3-dimethylnaphthalene','2,3 dimethylnaphthalene','2,3dimethylnaphthalene'],
+    other_names = ['23_dimethylnaphthalene','23-dimethylnaphthalene','23 dimethylnaphthalene',
+                   '23dimethylnaphthalene','2,3_dimethylnaphthalene','2,3-dimethylnaphthalene',
+                   '2,3 dimethylnaphthalene','2,3dimethylnaphthalene'],
     standard_unit = names.unit_microgperl,
 )
 
@@ -538,10 +546,12 @@ properties_contaminants[names.name_26_dimethylnaphthalene]=dict(
     molecular_mass = 156.22,
     carbon_atoms = 12,
     hydrogen_atoms = 12,
-    other_names = ['26_dimethylnaphthalene','26-dimethylnaphthalene','26 dimethylnaphthalene','26dimethylnaphthalene',
-                   '2,6_dimethylnaphthalene','2,6-dimethylnaphthalene','2,6 dimethylnaphthalene','2,6dimethylnaphthalene',
-                   '26_dimethylnaphtalene','26-dimethylnaphtalene','26 dimethylnaphtalene','26dimethylnaphtalene',
-                   '2,6_dimethylnaphtalene','2,6-dimethylnaphtalene','2,6 dimethylnaphtalene','2,6dimethylnaphtalene'],
+    other_names = ['26_dimethylnaphthalene','26-dimethylnaphthalene','26 dimethylnaphthalene',
+                   '26dimethylnaphthalene', '2,6_dimethylnaphthalene','2,6-dimethylnaphthalene',
+                   '2,6 dimethylnaphthalene','2,6dimethylnaphthalene','26_dimethylnaphtalene',
+                   '26-dimethylnaphtalene','26 dimethylnaphtalene','26dimethylnaphtalene',
+                   '2,6_dimethylnaphtalene','2,6-dimethylnaphtalene','2,6 dimethylnaphtalene',
+                   '2,6dimethylnaphtalene'],
     standard_unit = names.unit_microgperl,
 )
 
@@ -550,8 +560,9 @@ properties_contaminants[names.name_27_dimethylnaphthalene]=dict(
     molecular_mass = 156.22,
     carbon_atoms = 12,
     hydrogen_atoms = 12,
-    other_names = ['27_dimethylnaphthalene','27-dimethylnaphthalene','27 dimethylnaphthalene','27dimethylnaphthalene',
-                   '2,7_dimethylnaphthalene','2,7-dimethylnaphthalene','2,7 dimethylnaphthalene','2,7dimethylnaphthalene'],
+    other_names = ['27_dimethylnaphthalene','27-dimethylnaphthalene','27 dimethylnaphthalene',
+                   '27dimethylnaphthalene','2,7_dimethylnaphthalene','2,7-dimethylnaphthalene',
+                   '2,7 dimethylnaphthalene','2,7dimethylnaphthalene'],
     standard_unit = names.unit_microgperl,
 )
 
@@ -563,35 +574,61 @@ properties_contaminants[names.name_27_dimethylnaphthalene]=dict(
 contaminants_analysis = dict()
 contaminants_analysis[names.name_total_contaminants] = dict(
     other_names = ["sum_contaminants","sum-contaminants","sum contaminants","sumcontaminants",
-                   "total_contaminants","total-contaminants","total contaminants","totalcontaminants"],   
+                   "total_contaminants","total-contaminants","total contaminants","totalcontaminants"],
     standard_unit = names.unit_microgperl,
     )
 contaminants_analysis[names.name_total_oxidators] = dict(
-    other_names = ["total_oxidators"]   
+    other_names = ["total_oxidators"]
     )
 contaminants_analysis[names.name_total_reductors] = dict(
-    other_names = ["total_reductors"]   
+    other_names = ["total_reductors"]
     )
 contaminants_analysis[names.name_e_balance] = dict(
-    other_names = ["e_balance"]   
+    other_names = ["e_balance"]
     )
 
 contaminants_analysis[names.name_na_traffic_light] = dict(
-    other_names = ["na_traffic_light"]   
+    other_names = ["na_traffic_light"]
     )
 
 contaminants_analysis[names.name_intervention_traffic] = dict(
-    other_names = ["intervention_traffic"]   
+    other_names = ["intervention_traffic"]
     )
 
 contaminants_analysis[names.name_intervention_number] = dict(
-    other_names = ["intervention_number"]   
+    other_names = ["intervention_number"]
     )
 
 contaminants_analysis[names.name_intervention_contaminants] = dict(
-    other_names = ["intervention_contaminants"]   
+    other_names = ["intervention_contaminants"]
     )
 
 contaminants_analysis[names.name_NP_avail] = dict(
-    other_names = ["NP_avail"]   
+    other_names = ["NP_avail"]
     )
+
+### List with all quantities of particular data type in standard names:
+contaminants = list(properties_contaminants.keys())
+contaminants_analysis_quantities = list(contaminants_analysis.keys())
+
+### -----------------------------------------------------------------------------
+### dictionaries with specific selection lists of quantities of particular type
+
+contaminant_groups = dict(
+    BTEX = [names.name_benzene,
+            names.name_toluene,
+            names.name_ethylbenzene,
+            names.name_pm_xylene,
+            names.name_o_xylene,
+            names.name_xylene],
+    BTEXIIN = [names.name_benzene,
+               names.name_toluene,
+               names.name_ethylbenzene,
+               names.name_pm_xylene,
+               names.name_o_xylene,
+               names.name_xylene,
+               names.name_indane,
+               names.name_indene,
+               names.name_naphthalene],
+    all_cont = list(properties_contaminants.keys())
+)
