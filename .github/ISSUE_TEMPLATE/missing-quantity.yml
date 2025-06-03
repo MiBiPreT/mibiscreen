@@ -40,7 +40,7 @@ body:
     id: otherquantity
     attributes:
       label: Other Quantity
-      description: If you selected "Other" above then please specify here:
+      description: If you selected "Other" above then please specify here
     validations:
       required: false
   - type: textarea
