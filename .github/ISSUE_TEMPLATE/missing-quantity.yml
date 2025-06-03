@@ -15,7 +15,6 @@ body:
       label: Name
       description: What is the name (or names) of the quantities that appear to be missing?
       placeholder: Missing quantity name(s)
-      value: ""
     validations:
       required: true
   - type: textarea
@@ -23,7 +22,6 @@ body:
     attributes:
       label: Version
       description: What version of `mibiscreen` are you using? You can find this by running `import mibiscreen; print(mibiscreen.__version__)`
-      value: ""
     validations:
       required: true
   - type: dropdown
