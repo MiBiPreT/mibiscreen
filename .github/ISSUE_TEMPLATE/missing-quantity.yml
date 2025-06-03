@@ -1,0 +1,50 @@
+name: Report missing quantity in data handling
+description: Allows users to report quantities, such as contaminants, metabolites, etc, that are not in the list of standard quantities identified by the data handling routines
+title: "[Missing quantity report]: "
+labels: ["missing quantity"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping us to improve `mibiscreen`
+
+        This reports that a particular contaminant or metabolite (or other) name cannot be standardized by the data handling routines because `mibiscreen` does not yet recognise it.
+  - type: textarea
+    id: what-missing-quantity
+    attributes:
+      label: Name
+      description: What is the name (or names) of the quantities that appear to be missing?
+      placeholder: Missing quantity name(s)
+    validations:
+      required: true
+  - type: textarea
+    id: version
+    attributes:
+      label: Version
+      description: What version of `mibiscreen` are you using? You can find this by running `import mibiscreen; print(mibiscreen.__version__)`
+    validations:
+      required: true
+  - type: dropdown
+    id: TypeOfQuantity
+    attributes:
+      label: Type of the quantity
+      description: Is this a contaminant, metabolite or other (please specify)?
+      multiple: false
+      options:
+        - Contaminant
+        - Metabolite
+        - Other
+  - type: textarea
+    id: otherquantity
+    attributes:
+      label: Other Quantity
+      description: If you selected "Other" above then please specify here
+    validations:
+      required: false
+  - type: textarea
+    id: codecontext
+    attributes:
+      label: If applicable, what code generated the missing quantity exception?
+      description: (Optional) Please paste (some of) your code here to give us an idea how you are using the package
+    validations:
+      requried: false
