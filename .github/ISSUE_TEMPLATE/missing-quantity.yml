@@ -12,7 +12,8 @@ body:
   - type: textarea
     id: what-missing-quantity
     attributes:
-      label: What is the name (or names) of the quantities that appear to be missing?
+      label: Name
+      description: What is the name (or names) of the quantities that appear to be missing?
       placeholder: Missing quantity name(s)
       value: ""
     validations:
@@ -26,9 +27,10 @@ body:
     validations:
       required: true
   - type: dropdown
-    id: browsers
+    id: TypeOfQuantity
     attributes:
-      label: Is this a contaminant, metabolite or other (please specify)?
+      label: Type of the quantity
+      description: Is this a contaminant, metabolite or other (please specify)?
       multiple: false
       options:
         - Contaminant
@@ -39,8 +41,12 @@ body:
     attributes:
       label: Other Quantity
       description: If you selected "Other" above then please specify here:
+    validations:
+      required: false
   - type: textarea
     id: codecontext
     attributes:
       label: If applicable, what code generated the missing quantity exception?
       description: [Optional] Please paste (some of) your code here to give us an idea how you are using the package
+    validations:
+      requried: false
