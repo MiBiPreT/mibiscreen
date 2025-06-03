@@ -8,7 +8,7 @@ groundwater samples useful for biodegredation and bioremediation analysis
 @author: A. Zech
 """
 
-import mibiscreen.data.names_data as names
+import mibiscreen.data.settings.standard_names as names
 
 #name_phosphate,name_nitrite
 #name_sulfide,name_ammonium,name_methane,name_manganese,
@@ -133,7 +133,7 @@ properties[names.name_sulfide]=dict(
     other_names = ["sulfide", "Sulfide","s","S", "s2", "S2","s2-","S2-","s2min","S2min"],
     )
 
-properties[names.name_ironII]=dict(
+properties[names.name_iron2]=dict(
     chemical_formula = "fe2+",
     molecular_mass = 106.,
     factor_stoichiometry = 1,
@@ -144,7 +144,7 @@ properties[names.name_ironII]=dict(
                    "ironII","Iron II","iron II"],
     )
 
-properties[names.name_manganese]=dict(
+properties[names.name_manganese2]=dict(
     chemical_formula = "mn2+",
     molecular_mass = 109.876,
     factor_stoichiometry = 0,

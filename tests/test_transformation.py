@@ -7,7 +7,7 @@ import numpy as np
 import pytest
 from mibiscreen.analysis.reduction.transformation import filter_values
 from mibiscreen.analysis.reduction.transformation import transform_values
-from mibiscreen.data.example_data import example_data
+from mibiscreen.data.example_data.example_data import example_data
 
 
 class Test_Filtering:

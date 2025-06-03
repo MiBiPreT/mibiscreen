@@ -5,8 +5,11 @@
 @author: Alraune Zech
 """
 import pandas as pd
-import mibiscreen.data.names_data as names
+import mibiscreen.data.settings.standard_names as names
 from mibiscreen.data.check_data import check_data_frame
+from mibiscreen.data.settings.contaminants import contaminant_groups
+from mibiscreen.data.settings.environment import environment_groups
+from mibiscreen.data.settings.sample_settings import sample_settings
 
 
 def determine_quantities(cols,
@@ -30,9 +33,9 @@ def determine_quantities(cols,
                     - 'BTEXIIN' (for benzene, toluene, ethylbenzene, xylene,
                                   indene, indane and naphthaline)
                     - 'all_cont' (for all contaminant in name list)
-                - short name for group of geochemicals:
+                - short name for group of environmental parameters/geochemicals:
                     - 'environmental_conditions'
-                    - 'chemical_composition'
+                    - 'geochemicals'
                     - 'ONS':  non reduced electron acceptors (oxygen, nitrate, sulfate)
                     - 'ONSFe': selected electron acceptors  (oxygen, nitrate, sulfate + iron II)
                     - 'all_ea': all potential electron acceptors (non reduced & reduced)
@@ -51,20 +54,20 @@ def determine_quantities(cols,
     """
     if name_list == 'all':
         ### choosing all column names except those of settings
-        list_names = list(set(cols) - set(names.settings))
+        list_names = list(set(cols) - set(sample_settings))
         if verbose:
             print("Selecting all data columns except for those with settings.")
 
     elif isinstance(name_list, str):
-        if name_list in names.contaminants.keys():
+        if name_list in contaminant_groups.keys():
             verbose_text = "Selecting specific group of contaminants:"
-            list_names = names.contaminants[name_list].copy()
+            list_names = contaminant_groups[name_list].copy()
             if (names.name_o_xylene in cols) and (names.name_pm_xylene in cols):
                 list_names.remove(names.name_xylene) # handling of xylene isomeres
 
-        elif name_list in names.geochemicals.keys():
+        elif name_list in environment_groups.keys():
             verbose_text = "Selecting specific group of geochemicals:"
-            list_names = names.geochemicals[name_list].copy()
+            list_names = environment_groups[name_list].copy()
 
         else:
             verbose_text = "Selecting single quantity:"
@@ -130,7 +133,7 @@ def extract_settings(data_frame,
     ### check on correct data input format and extracting column names as list
     data,cols= check_data_frame(data_frame,inplace = False)
 
-    settings,r1,r2 = compare_lists(cols,names.settings)
+    settings,r1,r2 = compare_lists(cols,sample_settings)
 
     if verbose:
         print("Settings available in data: ", settings)
@@ -178,7 +181,7 @@ def extract_data(data_frame,
                                       verbose = verbose)
 
     if keep_setting_data:
-        settings,_,_ = compare_lists(cols,names.settings)
+        settings,_,_ = compare_lists(cols,sample_settings)
         i1,quantities_without_settings,_ = compare_lists(quantities,settings)
         columns_names = settings + quantities_without_settings
 

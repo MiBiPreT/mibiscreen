@@ -10,7 +10,7 @@ from mibiscreen.analysis.reduction.ordination import cca
 from mibiscreen.analysis.reduction.ordination import constrained_ordination
 from mibiscreen.analysis.reduction.ordination import pca
 from mibiscreen.analysis.reduction.ordination import rda
-from mibiscreen.data.example_data import example_data
+from mibiscreen.data.example_data.example_data import example_data
 
 
 class Test_PCA:

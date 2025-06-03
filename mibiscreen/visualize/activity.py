@@ -9,9 +9,9 @@ import copy
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from mibiscreen.data.names_data import name_metabolites_variety
-from mibiscreen.data.names_data import name_na_traffic_light
-from mibiscreen.data.names_data import name_total_contaminants
+from mibiscreen.data.settings.standard_names import name_metabolites_variety
+from mibiscreen.data.settings.standard_names import name_na_traffic_light
+from mibiscreen.data.settings.standard_names import name_total_contaminants
 
 DEF_settings = dict(
     figsize = [3.75,2.8],

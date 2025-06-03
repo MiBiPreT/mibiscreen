@@ -1,6 +1,4 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""Example dat.
+"""Example data.
 
 Measurements on quantities and parameters in groundwater samples
 used for biodegredation and bioremediation analysis.
@@ -10,8 +8,7 @@ used for biodegredation and bioremediation analysis.
 
 import numpy as np
 import pandas as pd
-import mibiscreen.data.names_data as names
-from mibiscreen.data.unit_settings import standard_units
+import mibiscreen.data.settings.standard_names as names
 
 
 def example_data(data_type = 'all',
@@ -48,11 +45,11 @@ def example_data(data_type = 'all',
     -------
         To be added!
     """
-    mgl = standard_units['mgperl'][0]
-    microgl = standard_units['microgperl'][0]
+    mgl = names.unit_mgperl
+    microgl = names.unit_microgperl
 
     setting = [names.name_sample,names.name_observation_well,names.name_sample_depth]
-    setting_units = [' ',' ',standard_units['meter'][0]]
+    setting_units = [' ',' ',names.unit_meter]
     setting_s01 = ['2000-001', 'B-MLS1-3-12', -12.]
     setting_s02 = ['2000-002', 'B-MLS1-5-15', -15.5]
     setting_s03 = ['2000-003', 'B-MLS1-6-17', -17.]
@@ -68,11 +65,11 @@ def example_data(data_type = 'all',
                    names.name_ammonium,
                    names.name_sulfide,
                    names.name_methane,
-                   names.name_ironII,
-                   names.name_manganese,
+                   names.name_iron2,
+                   names.name_manganese2,
                    names.name_phosphate]
 
-    environment_units = [' ',standard_units['microsimpercm'][0],standard_units['millivolt'][0],
+    environment_units = [' ',names.unit_microsimpercm,names.unit_millivolt,
                          mgl,mgl,mgl,mgl,mgl,mgl,mgl,mgl,mgl,mgl]
     environment_s01 = [7.23, 322., -208.,0.3,122.,0.58, 23., 5., 0., 748., 3., 1.,1.6]
     environment_s02 = [7.67, 405., -231.,0.9,5.,0.0, 0., 6., 0., 2022., 1., 0.,0]
@@ -110,7 +107,7 @@ def example_data(data_type = 'all',
                 names.name_2H+'-'+names.name_benzene,
                 ]
 
-    isotopes_units = [standard_units['permil'][0],standard_units['permil'][0]]
+    isotopes_units = [names.unit_permil,names.unit_permil]
     isotopes_s01 = [-26.1,-106.]
     isotopes_s02 = [-25.8,-110.]
     isotopes_s03 = [-24.1,-118.]

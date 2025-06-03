@@ -6,10 +6,15 @@
 """
 import numpy as np
 import pandas as pd
-import mibiscreen.data.names_data as names
-from mibiscreen.data.unit_settings import all_units
-from mibiscreen.data.unit_settings import standard_units
-from mibiscreen.data.unit_settings import units_env_cond
+import mibiscreen.data.settings.standard_names as names
+from mibiscreen.data.settings.contaminants import contaminants_analysis
+from mibiscreen.data.settings.contaminants import properties_contaminants
+from mibiscreen.data.settings.environment import properties_geochemicals
+from mibiscreen.data.settings.isotopes import properties_isotopes
+from mibiscreen.data.settings.metabolites import properties_metabolites
+from mibiscreen.data.settings.sample_settings import properties_sample_settings
+from mibiscreen.data.settings.unit_settings import all_units
+from mibiscreen.data.settings.unit_settings import properties_units
 
 to_replace_list = ["-",'--','',' ','  ']
 to_replace_value = np.nan
@@ -57,7 +62,6 @@ def standard_names(name_list,
     names_unknown = []
     names_transform = {}
 
-    dict_names = names.col_dict.copy()
 
     if isinstance(name_list, str):
         name_list = [name_list]
@@ -66,14 +70,28 @@ def standard_names(name_list,
             if not isinstance(name, str):
                 raise ValueError("Entry in provided list of names is not a string:", name)
 
+    properties_all = {**properties_sample_settings,
+                      **properties_geochemicals,
+                      **properties_contaminants,
+                      **properties_metabolites,
+                      **properties_isotopes,
+                      **contaminants_analysis,
+    }
+    dict_names=_generate_dict_other_names(properties_all)
+
+    other_names_contaminants = _generate_dict_other_names(properties_contaminants)
+    other_names_isotopes = _generate_dict_other_names(properties_isotopes)
+
+     # dict_names= other_names_all.copy()
+
     for x in name_list:
         y = dict_names.get(x, False)
         x_isotope = x.split('-')[0]
-        y_isotopes = names.names_isotopes.get(x_isotope.lower(), False)
+        y_isotopes = other_names_isotopes.get(x_isotope.lower(), False)
 
         if y_isotopes is not False:
             x_molecule = x.removeprefix(x_isotope+'-')
-            y_molecule = names.names_contaminants.get(x_molecule.lower(), False)
+            y_molecule = other_names_contaminants.get(x_molecule.lower(), False)
             if y_molecule is False:
                 names_unknown.append(x)
             else:
@@ -298,8 +316,8 @@ def check_units(data,
     else:
         units = data.copy()
 
+    ### testing if provided data frame contains any units (at all)
     units_in_data = set(map(lambda x: str(x).lower(), units.iloc[0,:].values))
-    ### testing if provided data frame contains any unit
     test_unit = False
     for u in all_units:
         if u in units_in_data:
@@ -314,43 +332,33 @@ def check_units(data,
     # standardize column names (as it might not has happened for data yet)
     check_columns(units,standardize = True, verbose = False)
     col_check_list= []
+    col_not_checked  = []
 
+
+    properties_all = {**properties_sample_settings,
+                      **properties_geochemicals,
+                      **properties_contaminants,
+                      **properties_metabolites,
+                      **properties_isotopes,
+    }
+
+    ### run through all quantity columns and check their units
     for quantity in units.columns:
-        if quantity in names.geochemicals['chemical_composition']:
-            if str(units[quantity][0]).lower() not in standard_units['mgperl']:
-                col_check_list.append(quantity)
-                if verbose:
-                    print("Warning: Check unit of {}!\n Given in {}, but must be milligramm per liter (e.g. {})."
-                              .format(quantity,units[quantity][0],standard_units['mgperl'][0]))
+        if quantity in properties_all.keys():
+            standard_unit = properties_all[quantity]['standard_unit']
+        elif quantity.split('-')[0] in properties_all.keys(): # test on isotope
+            standard_unit = properties_all[quantity.split('-')[0]]['standard_unit']
+        else:
+            col_not_checked.append(quantity)
+            continue
 
-        if quantity in names.contaminants['all_cont']:
-            if str(units[quantity][0]).lower() not in standard_units['microgperl']:
+        if standard_unit != names.unit_less:
+            other_names_unit = properties_units[standard_unit]['other_names']
+            if str(units[quantity][0]).lower() not in other_names_unit:
                 col_check_list.append(quantity)
                 if verbose:
-                    print("Warning: Check unit of {}!\n Given in {}, but must be microgramm per liter (e.g. {})."
-                              .format(quantity,units[quantity][0],standard_units['microgperl'][0]))
-
-        if quantity in list(units_env_cond.keys()):
-            unit_type = units_env_cond[quantity]
-            if str(units[quantity][0]).lower() not in standard_units[unit_type]:
-                col_check_list.append(quantity)
-                if verbose:
-                    print("Warning: Check unit of {}!\n Given in {}, but must be in {} (e.g. {}).".format(
-                            quantity,units[quantity][0],unit_type,standard_units[unit_type][0]))
-
-        if quantity.split('-')[0] in names.isotopes:
-            if str(units[quantity][0]).lower() not in standard_units['permil']:
-                col_check_list.append(quantity)
-                if verbose:
-                    print("Warning: Check unit of {}!\n Given in {}, but must be per mille (e.g. {})."
-                              .format(quantity,units[quantity][0],standard_units['permil'][0]))
-
-        if quantity in names.metabolites:
-            if str(units[quantity][0]).lower() not in standard_units['microgperl']:
-                col_check_list.append(quantity)
-                if verbose:
-                    print("Warning: Check unit of {}!\n Given in {}, but must be microgramm per liter (e.g. {})."
-                              .format(quantity,units[quantity][0],standard_units['microgperl'][0]))
+                    print("Warning: Check unit of {}!\n Given in {}, but must be in {}."
+                              .format(quantity,units[quantity][0],standard_unit))
 
     if verbose:
         print('________________________________________________________________')
@@ -358,6 +366,7 @@ def check_units(data,
             print(" All identified quantities given in requested units.")
         else:
             print(" All other identified quantities given in requested units.")
+        print(" Quantities not identified (and thus not checked on units:", col_not_checked)
         print('================================================================')
 
     return col_check_list
@@ -527,3 +536,33 @@ def standardize(data_frame,
 
     return data_numeric, units
 
+def _generate_dict_other_names(name_dict,
+                               selection = False):
+    """Function creating dictionary for mapping alternative names.
+
+    Args:
+    -------
+        name_dict: dict
+            dictionary of dictionaries with properties for each quantity (e.g. contaminant)
+            each quantity-subdictionary needs to have one key called 'other_names'
+            providing a list of other/alternative names of the quantities
+        selection: False or list
+            if False, all keys in dictionary name_dict will be run through
+            if a list: only keys which are also in list will be used
+
+    Returns:
+    -------
+        other_names_dict: dictionary
+            dictionary mapping alternative names to standard name
+
+    """
+    other_names_dict=dict()
+    if selection is False:
+        name_list = list(name_dict.keys())
+    else:
+        name_list = selection
+    for key in name_list:
+        for other_name in name_dict[key]['other_names']:
+            other_names_dict[other_name] = key
+
+    return other_names_dict
