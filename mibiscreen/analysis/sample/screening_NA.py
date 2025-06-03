@@ -7,7 +7,6 @@
 
 import numpy as np
 import pandas as pd
-# import mibiscreen.data.settings.names_data as names
 import mibiscreen.data.settings.standard_names as names
 from mibiscreen.data.check_data import check_data_frame
 from mibiscreen.data.set_data import determine_quantities
