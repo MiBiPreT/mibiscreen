@@ -74,7 +74,8 @@ def determine_quantities(cols,
             list_names = [name_list]
 
         if verbose:
-            print(verbose_text,*name_list,sep='\n')
+            print(verbose_text,name_list)
+            print('_____________________________________________________________')
 
     elif isinstance(name_list, list): # choosing specific list of column names except those of settings
         if not all(isinstance(item, str) for item in name_list):
@@ -94,10 +95,14 @@ def determine_quantities(cols,
                          Run 'standardize()' first.".format(name_list))
 
     if verbose:
-        print("Selected set of quantities: ", *quantities,sep='\n')
+        print("Selected set of quantities: \n---------------------------")
+        print(*quantities,sep='\n')
+        print('_____________________________________________________________')
 
     if remainder_list2:
-        print("WARNING: quantities from name list not in data:", *remainder_list2,sep='\n')
+        print("WARNING: There are quantities from name list not in data")
+        if verbose:
+            print(*remainder_list2,sep='\n')
         print("Maybe data not in standardized format. Run 'standardize()' first.")
         print("_________________________________________________________________")
 
