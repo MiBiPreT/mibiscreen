@@ -142,11 +142,24 @@ name_13C = 'delta_13C'
 name_2H = 'delta_2H'
 
 ### Standard names for NA screening related quantities
-name_total_oxidators = "total_oxidators"
 name_total_reductors = "total_reductors"
+name_total_oxidators = "total_oxidators"
+name_total_oxidators_BTEX = "total_oxidators_BTEX"
+name_total_oxidators_BTEXIIN = "total_oxidators_BTEXIIN"
 name_NP_avail = "NP_avail"
 name_e_balance = 'e_balance'
 name_na_traffic_light = 'na_traffic_light'
+
 name_intervention_traffic = 'intervention_traffic'
 name_intervention_number = 'intervention_number'
 name_intervention_contaminants = 'intervention_contaminants'
+
+name_benzene_thr_ratio = name_benzene+'_thr_ratio'
+name_toluene_thr_ratio = name_toluene+'_thr_ratio'
+name_ethylbenzene_thr_ratio = name_ethylbenzene+'_thr_ratio'
+name_pm_xylene_thr_ratio = name_pm_xylene+'_thr_ratio'
+name_o_xylene_thr_ratio = name_o_xylene+'_thr_ratio'
+name_xylene_thr_ratio = name_xylene+'_thr_ratio'
+name_indane_thr_ratio = name_indane+'_thr_ratio'
+name_indene_thr_ratio = name_indene+'_thr_ratio'
+name_naphthalene_thr_ratio = name_naphthalene+'_thr_ratio'
