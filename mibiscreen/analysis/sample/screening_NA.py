@@ -80,6 +80,7 @@ def reductors(
 def oxidators(
     data_frame,
     contaminant_group = "BTEXIIN",
+    name_column = False,
     include = False,
     verbose = False,
     **kwargs,
@@ -130,17 +131,20 @@ def oxidators(
     except TypeError:
         raise ValueError("Data not in standardized format. Run 'standardize()' first.")
 
-    tot_oxi.rename(names.name_total_oxidators,inplace = True)
+    if name_column is False:
+        name_column = names.name_total_oxidators + '_'+ contaminant_group
+
+    tot_oxi.rename(name_column,inplace = True)
+
     if verbose:
         print("Total amount of oxidators per well in [mmol e-/l] is:\n{}".format(tot_oxi))
         print('-----------------------------------------------------')
 
     ### additing series to data frame
     if include:
-        data[names.name_total_oxidators] = tot_oxi
+        data[name_column] = tot_oxi
 
     return tot_oxi
-
 
 def electron_balance(
         data_frame,
