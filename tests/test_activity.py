@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import pytest
-from mibiscreen.data.settings.standard_names import name_metabolites_variety
+from mibiscreen.data.settings.standard_names import name_metabolites_count
 from mibiscreen.data.settings.standard_names import name_na_traffic_light
 from mibiscreen.data.settings.standard_names import name_total_contaminants
 from mibiscreen.visualize.activity import activity
@@ -20,7 +20,7 @@ class TestActivity:
     conc = [13132.,11695.,4101.,498.,2822]
     traffic = ['red','y','green','green','red']
 
-    meta_pd = pd.Series(data = meta, name = name_metabolites_variety)
+    meta_pd = pd.Series(data = meta, name = name_metabolites_count)
     conc_pd = pd.Series(data = conc, name = name_total_contaminants)
     traffic_pd = pd.Series(data = traffic, name = name_na_traffic_light)
 

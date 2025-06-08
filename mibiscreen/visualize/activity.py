@@ -9,7 +9,7 @@ import copy
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from mibiscreen.data.settings.standard_names import name_metabolites_variety
+from mibiscreen.data.settings.standard_names import name_metabolites_count
 from mibiscreen.data.settings.standard_names import name_na_traffic_light
 from mibiscreen.data.settings.standard_names import name_total_contaminants
 
@@ -64,13 +64,13 @@ def activity(
     ### ---------------------------------------------------------------------------
     ### Handling of input data
     if isinstance(data, pd.DataFrame):
-        meta_count = data[name_metabolites_variety].values
+        meta_count = data[name_metabolites_count].values
         tot_cont = data[name_total_contaminants].values
         well_color = data[name_na_traffic_light].values
     elif isinstance(data, list) and len(data)>=3:
         if isinstance(data[0], pd.Series) and isinstance(data[1], pd.Series) and isinstance(data[2], pd.Series):
             for series in data:
-                if series.name == name_metabolites_variety:
+                if series.name == name_metabolites_count:
                     meta_count = series.values
                 if series.name == name_total_contaminants:
                     tot_cont = series.values
