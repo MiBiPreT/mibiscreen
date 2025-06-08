@@ -28,7 +28,12 @@ from mibiscreen.analysis.sample.screening_NA import (
     sample_NA_screening
 )
 from mibiscreen.analysis.sample.concentrations import (
+    total_concentration,
     total_contaminant_concentration,
+    total_metabolites_concentration,
+    total_count,
+    total_contaminant_count,
+    total_metabolites_count,
     thresholds_for_intervention
 )
 
