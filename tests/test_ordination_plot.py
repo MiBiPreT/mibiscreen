@@ -6,7 +6,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import pytest
-from mibiscreen.visualize.ordination_plot import ordination_plot
+from mibiscreen.visualize.ordination_plots import ordination_plot
 
 
 class TestOrdinationPlot:
