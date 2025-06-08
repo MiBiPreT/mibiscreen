@@ -125,8 +125,17 @@ name_benzylsuccinic_acid = "benzylsuccinic_acid"
 name_3o_toluoyl_propionic_acid = "3o_toluoyl_propionic_acid"
 
 ### Standard names for metabolite related quantities
+#name_total_contaminants = "total_contaminants"
+name_total_contaminants = "contaminants_concentration"
+name_total_BTEX = "contaminants_BTEX"
+name_total_BTEXIIN = "contaminants_BTEXIIN"
+name_total_contaminants_count = "contaminants_count"
+
+
+### Standard names for metabolite related quantities
 name_metabolites_conc = "metabolites_concentration"
-name_metabolites_variety = 'metabolites_variety'
+# name_metabolites_variety = 'metabolites_count'
+name_metabolites_count = 'metabolites_count'
 
 ### standard names/prefixes for isotopes:
 name_13C = 'delta_13C'
@@ -138,7 +147,6 @@ name_total_reductors = "total_reductors"
 name_NP_avail = "NP_avail"
 name_e_balance = 'e_balance'
 name_na_traffic_light = 'na_traffic_light'
-name_total_contaminants = "total_contaminants"
 name_intervention_traffic = 'intervention_traffic'
 name_intervention_number = 'intervention_number'
 name_intervention_contaminants = 'intervention_contaminants'
