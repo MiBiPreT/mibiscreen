@@ -3,7 +3,6 @@
 [![PyPI version](https://badge.fury.io/py/mibiscreen.svg)](https://badge.fury.io/py/mibiscreen)
 [![RSD](https://img.shields.io/badge/rsd-mibiscreen-00a3e3.svg)](https://www.research-software.nl/software/mibiscreen)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10878799.svg)](https://doi.org/10.5281/zenodo.10878799)
-[![workflow cii badge](https://bestpractices.coreinfrastructure.org/projects/8711/badge)](https://bestpractices.coreinfrastructure.org/projects/8711)
 [![fair-software.eu](https://img.shields.io/badge/fair--software.eu-%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F-green)](https://fair-software.eu)
 [![workflow scq badge](https://sonarcloud.io/api/project_badges/measure?project=MiBiPreT_MiBiPreT&metric=alert_status)](https://sonarcloud.io/dashboard?id=MiBiPreT_MiBiPreT)
 [![workflow scc badge](https://sonarcloud.io/api/project_badges/measure?project=MiBiPreT_MiBiPreT&metric=coverage)](https://sonarcloud.io/dashboard?id=MiBiPreT_MiBiPreT)
