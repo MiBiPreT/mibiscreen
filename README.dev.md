@@ -1,7 +1,5 @@
 # `mibiscreen` developer documentation
 
-If you're looking for user documentation, go [here](README.md).
-
 ## Development install
 
 ```shell
@@ -100,78 +98,38 @@ This will return a URL (e.g. `http://127.0.0.1:8000/mibiscreen/`) where the docs
 Bumping the version across all files is done with [bump-my-version](https://github.com/callowayproject/bump-my-version), e.g.
 
 ```shell
-bump-my-version major  # bumps from e.g. 0.3.2 to 1.0.0
-bump-my-version minor  # bumps from e.g. 0.3.2 to 0.4.0
-bump-my-version patch  # bumps from e.g. 0.3.2 to 0.3.3
+bump-my-version bump major  # bumps from e.g. 0.3.2 to 1.0.0
+bump-my-version bump minor  # bumps from e.g. 0.3.2 to 0.4.0
+bump-my-version bump patch  # bumps from e.g. 0.3.2 to 0.3.3
 ```
 
 ## Making a release
+To create a release you need write permission on the repository.
 
-This section describes how to make a release in 3 parts:
+This section describes how to make a release:
 
 1. preparation
-1. making a release on PyPI
 1. making a release on GitHub
 
-### (1/3) Preparation
+### (1/2) Preparation
 
-1. Verify that the information in [`CITATION.cff`](CITATION.cff) is correct.
+1. Checkout the main branch locally
+1. Verify that the information (especially the author list) in [`CITATION.cff`](../../CITATION.cff) is correct.
 1. Make sure the [version has been updated](#versioning).
 1. Run the unit tests with `pytest -v`
+1. Make sure the [docs build and look good](#testing-docs-locally)
 
-### (2/3) PyPI
 
-In a new terminal:
+### (2/2) GitHub
 
-```shell
-# OPTIONAL: prepare a new directory with fresh git clone to ensure the release
-# has the state of origin/main branch
-cd $(mktemp -d mibiscreen.XXXXXX)
-git clone git@github.com:MiBiPreT/mibiscreen .
+When all is well, navigate to the [releases on GitHub](https://github.com/MiBiPreT/mibiscreen/releases). 
 
-# make sure to have a recent version of pip and the publishing dependencies
-python -m pip install --upgrade pip
-python -m pip install .[publishing]
+1. Press draft a new release button
+1. Select the "Choose a tag" drop down and write out the new version (e.g. v1.3.2)
+1. Press "Generate release notes" to automatically fill the title (with the version number) and generate a description (the changelog from the merge pull requests)
+1. Press the Publish release button
 
-# create the source distribution and the wheel
-python -m build
+This will create the release on github and automatically trigger:
 
-# upload to test pypi instance (requires credentials)
-python -m twine upload --repository testpypi dist/*
-```
-
-Visit [https://test.pypi.org](https://test.pypi.org)
-<!-- [https://test.pypi.org/project/mibiscreen](https://test.pypi.org/project/mibiscreen) -->
-and verify that your package was uploaded successfully. Keep the terminal open, we'll need it later.
-
-In a new terminal, without an activated virtual environment or an env directory:
-
-```shell
-cd $(mktemp -d mibiscreen-test.XXXXXX)
-
-# prepare a clean virtual environment and activate it
-python -m venv env
-source env/bin/activate
-
-# make sure to have a recent version of pip and setuptools
-python -m pip install --upgrade pip
-
-# install from test pypi instance:
-python -m pip -v install --no-cache-dir \
---index-url https://test.pypi.org/simple/ \
---extra-index-url https://pypi.org/simple mibiscreen
-```
-
-Check that the package works as it should when installed from pypitest.
-
-Then upload to pypi.org with:
-
-```shell
-# Back to the first terminal,
-# FINAL STEP: upload to PyPI (requires credentials)
-python -m twine upload dist/*
-```
-
-### (3/3) GitHub
-
-Don't forget to also make a [release on GitHub](https://github.com/MiBiPreT/mibiscreen/releases/new). If your repository uses the GitHub-Zenodo integration this will also trigger Zenodo into making a snapshot of your repository and sticking a DOI on it.
+1. The [publish.yml workflow](../../.github/workflows/publish.yml) which will build the package and publish it on PyPI
+1. The Zenodo-Github integration into making a snapshot of your repository and sticking a DOI on it and adding the new version to the main Zenodo entry for your software at [10.5281/zenodo.10878799](https://doi.org/10.5281/zenodo.10878799)
