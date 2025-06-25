@@ -114,7 +114,7 @@ This section describes how to make a release:
 ### (1/2) Preparation
 
 1. Checkout the main branch locally
-1. Verify that the information (especially the author list) in [`CITATION.cff`](../../CITATION.cff) is correct.
+1. Verify that the information (especially the author list) in `CITATION.cff` is correct.
 1. Make sure the [version has been updated](#versioning).
 1. Run the unit tests with `pytest -v`
 1. Make sure the [docs build and look good](#testing-docs-locally)
@@ -131,5 +131,5 @@ When all is well, navigate to the [releases on GitHub](https://github.com/MiBiPr
 
 This will create the release on github and automatically trigger:
 
-1. The [publish.yml workflow](../../.github/workflows/publish.yml) which will build the package and publish it on PyPI
+1. The `.github/workflows/publish.yml` workflow which will build the package and publish it on PyPI
 1. The Zenodo-Github integration into making a snapshot of your repository and sticking a DOI on it and adding the new version to the main Zenodo entry for your software at [10.5281/zenodo.10878799](https://doi.org/10.5281/zenodo.10878799)
