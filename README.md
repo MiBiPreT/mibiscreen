@@ -49,7 +49,7 @@ You can find the project's full documentation [here](https://mibipret.github.io/
 ## Contributing
 
 If you want to contribute to the development of mibiscreen,
-have a look at the [contribution guidelines](CONTRIBUTING.md).
+have a look at the contribution guidelines in CONTRIBUTING.md.
 
 ## Credits
 
