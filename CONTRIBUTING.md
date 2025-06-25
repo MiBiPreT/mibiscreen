@@ -35,22 +35,7 @@ The sections below outline the steps in each case.
 1. make sure the existing tests still work by running ``pytest``;
 1. add your own tests (if necessary);
 1. update or expand the documentation;
-1. update the `CHANGELOG.md` file with your change;
 1. [push](http://rogerdudler.github.io/git-guide/) your feature branch to (your fork of) the mibiscreen repository on GitHub;
 1. create the pull request, e.g. following the instructions [here](https://help.github.com/articles/creating-a-pull-request/).
 
 In case you feel like you've made a valuable contribution, but you don't know how to write or run tests for it, or how to generate the documentation: don't let this discourage you from making the pull request; we can help you! Just go ahead and submit the pull request, but keep in mind that you might be asked to append additional commits to your pull request.
-
-## You want to make a new release of the code base
-
-To create a release you need write permission on the repository.
-
-1. Check the author list in [`CITATION.cff`](CITATION.cff)
-1. Bump the version using `bump-my-version bump <major|minor|patch>`. For example, `bump-my-version bump major` will increase major version numbers everywhere it's needed (code, meta, etc.) in the repo. Alternatively the version can be manually changed in mibiscreen/__init__.py, pyproject.toml, CITATION.cff and docs/conf.py (and other places it was possibly added).
-1. Update the `CHANGELOG.md` to include changes made
-1. Go to the [GitHub release page](https://github.com/MiBiPreT/mibiscreen/releases)
-1. Press draft a new release button
-1. Fill version, title and description field
-1. Press the Publish Release button
-
-Also a Zenodo entry will be made for the release with its own DOI.
