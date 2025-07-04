@@ -32,7 +32,7 @@ file_path = './amersfoort.xlsx'
 contaminant_group = ['benzene','toluene','ethylbenzene','pm_xylene','indene','naphthalene']
 
 #selected group of geochemical parameters to include to the analysis
-geochemicals_group = ['nitrate','sulfate','redoxpot','iron2','manganese']
+geochemicals_group = ['nitrate','sulfate','redoxpot','iron2','manganese2']
 
 #list of sequencing data to include to the analysis
 variables_dna = ['Total bacteria 16SRrna', 'Benzene carboxylase', 'NirS', 'NarG', 'BssA SRB',
