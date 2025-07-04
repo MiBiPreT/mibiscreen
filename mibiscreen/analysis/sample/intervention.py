@@ -1,10 +1,8 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Jul  4 16:08:38 2025
+"""Routines for calculating intervention analysis of contaminant concentrations.
 
-@author: alraune
+@author: Alraune Zech
 """
+
 import numpy as np
 import pandas as pd
 from IPython.display import display
@@ -14,6 +12,7 @@ from mibiscreen.data.set_data import determine_quantities
 from mibiscreen.data.set_data import extract_settings
 from .properties import properties
 
+
 def thresholds_for_intervention_ratio(
         data_frame,
         contaminant_group = "BTEXIIN",
@@ -21,7 +20,6 @@ def thresholds_for_intervention_ratio(
         keep_setting_data = False,
         verbose = False,
         ):
-
     """Evaluting ratio of contaminant concentration to intervention threshold.
 
         Determines ratio of contaminant concentration to thresholds set by
@@ -84,7 +82,6 @@ def thresholds_for_intervention_ratio(
         print('__________________________________________________________________________________')
 
     return data_thresh
-    
 
 def thresholds_for_intervention_traffic(
         data_frame,

@@ -7,10 +7,10 @@
 
 #import numpy as np
 #import pandas as pd
-from IPython.display import display
 import mibiscreen.data.settings.standard_names as names
 from mibiscreen.data.check_data import check_data_frame
 from mibiscreen.data.set_data import determine_quantities
+
 #from mibiscreen.data.set_data import extract_settings
 #from .properties import properties
 
@@ -46,7 +46,6 @@ def total_concentration(
             Total concentration of contaminants in [ug/l]
 
     """
-    
     if verbose:
         print('==============================================================')
         print(" Running function 'total_concentration()' on data")
@@ -95,7 +94,7 @@ def total_contaminant_concentration(
             Contaminant contentrations in [ug/l], i.e. microgram per liter
         contaminant_group: str
             Short name for group of contaminants to use
-            default is 'all_cont' 
+            default is 'all_cont'
         include: bool, default False
             Whether to include total concentration to DataFrame or not.
         verbose: Boolean
@@ -161,7 +160,7 @@ def total_metabolites_concentration(
         print('==============================================================')
         print(" Running function 'total_metabolites_concentration()' on data")
         print('==============================================================')
-    
+
     if include is True:
         include_as = names.name_metabolites_conc
     else:
@@ -350,4 +349,3 @@ def total_metabolites_count(
         )
 
     return tot_count
-

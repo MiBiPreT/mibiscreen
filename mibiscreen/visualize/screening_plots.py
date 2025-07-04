@@ -10,9 +10,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import mibiscreen.data.settings.standard_names as names
-from mibiscreen.data.set_data import determine_quantities
-from mibiscreen.data.check_data import check_data_frame
 from mibiscreen.analysis.sample.intervention import thresholds_for_intervention_ratio
+from mibiscreen.data.check_data import check_data_frame
+from mibiscreen.data.set_data import determine_quantities
 
 DEF_settings = dict(
     figsize = [3.75,2.8],
@@ -39,7 +39,7 @@ def contaminants_bar(data,
                      save_fig = False,
                      **kwargs,
                      ):
-    
+
     settings = copy.copy(DEF_settings)
     settings.update(**kwargs)
     if isinstance(data,pd.Series()):
@@ -50,10 +50,10 @@ def contaminants_bar(data,
     else:
         sort_args = np.arange(len(data[list_contaminants[0]].values))
 
-    if sample_nr is False:        
+    if sample_nr is False:
         n_bars = np.arange(len(data[list_contaminants[0]].values))
     if sample_nr == 'sample_nr':
-        if not sample_nr in data.columns():
+        if sample_nr not in data.columns():
             raise ValueError("No sample number provided in data frame.")
         n_bars = data[names.name_sample].values[sort_args]
 
@@ -61,7 +61,7 @@ def contaminants_bar(data,
 
     for i,cont_group in enumerate(list_contaminants):
         plt.bar(n_bars,data[cont_group].values[sort_args],label=list_labels[i])
-    
+
     ### ---------------------------------------------------------------------------
     ### Adapt plot optics
     plt.xlabel(xlabel,fontsize = settings['textsize'])
@@ -72,7 +72,7 @@ def contaminants_bar(data,
         plt.title(title_text,fontsize = settings['textsize'])
     if settings['xtick_autorotate']:
         fig.autofmt_xdate(bottom=0.2, rotation=30, ha='right', which='major')
-    
+
     fig.tight_layout()
 
     ### ---------------------------------------------------------------------------
@@ -84,7 +84,7 @@ def contaminants_bar(data,
         except OSError:
             print("WARNING: Figure could not be saved. Check provided file path and name: {}".format(save_fig))
 
-    
+
     return fig, ax
 
 def electron_balance_bar_data_prep(data,
@@ -92,37 +92,38 @@ def electron_balance_bar_data_prep(data,
                                    ):
 
     electron_balance_bar_dict = dict()
-  
+
     electron_balance_bar_dict['EA capacity'] = dict(
         height = data[names.name_total_reductors].values,
         color = 'C1',
         sample_nr = data[names.name_sample],
-    )       
+    )
     electron_balance_bar_dict['BTEXIIN'] = dict(
         # height = data[names.name_total_oxidators_BTEXIIN],
         height = data['total_oxidators_BTEXIIN'].values,
         color = 'C0',
-    )        
+    )
     electron_balance_bar_dict['BTEX'] = dict(
         # height = data[names.name_total_oxidators_BTEX],
         height = data['total_oxidators_BTEX'].values,
         color = 'C2',
-    )     
-    
+    )
+
     electron_balance_bar_dict['EA capacity minor'] = dict(
         height = data[names.name_total_reductors].where(data[names.name_e_balance] < 1, 0).values,
         color = 'C1',
-    )       
+    )
 
     if sample_selection:
         for key, value in electron_balance_bar_dict.items():
             value['height'] = value['height'][sample_selection]
-        electron_balance_bar_dict['EA capacity']['sample_nr'] = electron_balance_bar_dict['EA capacity']['sample_nr'][sample_selection]
+        val = electron_balance_bar_dict['EA capacity']['sample_nr'][sample_selection]
+        electron_balance_bar_dict['EA capacity']['sample_nr'] = val
 
     return electron_balance_bar_dict
 
 def electron_balance_bar(electron_balance_bar_dict,
-                         sample_nr = False,    
+                         sample_nr = False,
                          sort = False,
                          xlabel = 'Sample locations',
                          ylabel = r'Electron capacity/needed [mmol e-/l]',
@@ -131,7 +132,7 @@ def electron_balance_bar(electron_balance_bar_dict,
                          save_fig = False,
                          **kwargs,
                          ):
-    
+
     settings = copy.copy(DEF_settings)
     settings.update(**kwargs)
 
@@ -140,7 +141,7 @@ def electron_balance_bar(electron_balance_bar_dict,
     else:
         sort_args = np.arange(len(electron_balance_bar_dict['EA capacity']['height']))
 
-    if sample_nr:        
+    if sample_nr:
         n_bars = electron_balance_bar_dict['EA capacity']['sample_nr'][sort_args]
     else:
         n_bars = np.arange(1,len(electron_balance_bar_dict['EA capacity']['height'])+1)
@@ -152,8 +153,8 @@ def electron_balance_bar(electron_balance_bar_dict,
         if key != 'EA capacity minor':
             plt.bar(n_bars,value['height'][sort_args],color = value['color'],label = key)
         else:
-            plt.bar(n_bars,value['height'][sort_args],color = value['color'],zorder = 1)                 
-    
+            plt.bar(n_bars,value['height'][sort_args],color = value['color'],zorder = 1)
+
     ### ---------------------------------------------------------------------------
     ### Adapt plot optics
     plt.xlabel(xlabel,fontsize = settings['textsize'])
@@ -178,7 +179,7 @@ def threshold_ratio_bar_data_prep(data,
                                   name_list = 'BTEXIIN',
                                   sample_selection = False,
                                   ):
-    
+
     quantities, _ = determine_quantities(data.columns.to_list(),
                                          name_list = name_list,
                                          verbose = False)
@@ -210,7 +211,7 @@ def threshold_ratio_bar(quantities,
                         save_fig = False,
                         **kwargs,
                         ):
-    
+
     settings = copy.copy(DEF_settings)
     settings.update(**kwargs)
 
@@ -222,32 +223,31 @@ def threshold_ratio_bar(quantities,
             raise ValueError("Number of colors too short.")
     else:
         colorlist = ['C{}'.format(i) for i in range(len(data_thresh_for_bar))]
-        
-        
+
     if sort:
         if len(sort) != len(quantities):
-            raise ValueError("Lenght of list for resorting does not match number of quantities.")        
+            raise ValueError("Lenght of list for resorting does not match number of quantities.")
         quantities = [quantities[i] for i in sort]
         data_thresh_for_bar = data_thresh_for_bar.iloc[:,sort]
-        
+
     fig, ax = plt.subplots(figsize=settings['figsize'],
                             nrows=nrows,
                             ncols=ncols,
                             sharex=sharex,
                             sharey=sharey,
                             )
-    axs = ax.flatten()  
-      
+    axs = ax.flatten()
+
     for i in range(len(data_thresh_for_bar)):
 
-        # plt.bar(n_bars,value['height'][sort_args],color = value['color'],zorder = 1)                 
+        # plt.bar(n_bars,value['height'][sort_args],color = value['color'],zorder = 1)
         axs[i].barh(quantities,data_thresh_for_bar.iloc[i,:],color = colorlist[i])
         if unity_line:
             axs[i].plot([1,1],[-0.5,len(quantities)-.5],'k--')
 
         ### ---------------------------------------------------------------------------
         ### Adapt plot optics
- 
+
         axs[i].set_xlabel(xlabel,fontsize=settings['textsize'])
         if ylabel:
             axs[i].set_ylabel(ylabel, fontsize=settings['textsize'])
@@ -260,7 +260,7 @@ def threshold_ratio_bar(quantities,
     # ax.tick_params(axis="both", which="minor", labelsize=settings['textsize'])
     # plt.title(title_text,fontsize = settings['textsize'])
     fig.tight_layout()
-    
+
     ### ---------------------------------------------------------------------------
     ### Save figure to file if file path provided
     if save_fig is not False:
@@ -271,22 +271,21 @@ def threshold_ratio_bar(quantities,
             print("WARNING: Figure could not be saved. Check provided file path and name: {}".format(save_fig))
 
     return fig, ax
-    
-def activity_data_prep(data):
 
+def activity_data_prep(data):
     """Preparing data required for activity plot.
 
     Activity plot requires data analysis of:
         - contaminant concentrations
         - metabolites counts
         - NA screening
-    
-    Functions checks if required quantities are provided as columns in DataFrame, 
+
+    Functions checks if required quantities are provided as columns in DataFrame,
     extracts it from DataFrame and saves it to dictionary.
-    
+
     When data is provided as list of pd.Series/np.arrays/lists it checks data
     on compatibility and saves it to dictionary.
-        
+
     Input
     ----------
         data: list or pandas.DataFrame
@@ -306,23 +305,24 @@ def activity_data_prep(data):
             - total count of metabolites per sample
             - traffic light on NA activity per sample
     """
-
     if isinstance(data, pd.DataFrame):
         ### check on correct data input format and extracting column names as list
         data_frame,cols= check_data_frame(data)
-    
+
         if names.name_metabolites_count not in cols:
             raise ValueError("Count of metabolites not in DataFrame. Run 'total_metabolites_count()' first.")
         else:
             meta_count = data_frame[names.name_metabolites_count].values
-    
+
         if names.name_total_contaminants not in cols:
-            raise ValueError("Total concentration of contaminants not in DataFrame. Run 'total_contaminant_concentration()' first.")
+            raise ValueError("Total concentration of contaminants not in DataFrame. \
+                             Run 'total_contaminant_concentration()' first.")
         else:
             tot_cont = data_frame[names.name_total_contaminants].values
-            
+
         if names.name_na_traffic_light not in cols:
-            raise ValueError("Traffic light on NA activity per sample not in DataFrame. Run 'sample_NA_traffic()' first.")
+            raise ValueError("Traffic light on NA activity per sample not in DataFrame. \
+                             Run 'sample_NA_traffic()' first.")
         else:
             well_color = data_frame[names.name_na_traffic_light].values
 
@@ -396,7 +396,7 @@ def activity_plot(
 
     ### ---------------------------------------------------------------------------
     ### Handling of input data
-    
+
     if len(activity_data_dict['tot_cont']) <= 1:
         raise ValueError("Too little data for activity plot. At least two values per quantity required.")
 

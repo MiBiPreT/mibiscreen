@@ -16,7 +16,7 @@ from mibiscreen.data.check_data import (
 )
 from mibiscreen.data.set_data import  (
     determine_quantities,
-    merge_data, 
+    merge_data,
     extract_data
 )
 from mibiscreen.analysis.reduction.stable_isotope_regression import Lambda_regression
