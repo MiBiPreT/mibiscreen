@@ -126,10 +126,12 @@ name_3o_toluoyl_propionic_acid = "3o_toluoyl_propionic_acid"
 
 ### Standard names for metabolite related quantities
 #name_total_contaminants = "total_contaminants"
-name_total_contaminants = "contaminants_concentration"
-name_total_BTEX = "contaminants_BTEX"
-name_total_BTEXIIN = "contaminants_BTEXIIN"
-name_total_contaminants_count = "contaminants_count"
+name_total_contaminants = "concentration_contaminants"
+name_total_BTEX = "concentration_BTEX"
+name_total_BTEXIIN = "concentration_BTEXIIN"
+name_total_contaminants_count = "count_contaminants"
+name_total_BTEX_count = "count_BTEX"
+name_total_BTEXIIN_count = "count_BTEXIIN"
 
 
 ### Standard names for metabolite related quantities
