@@ -22,7 +22,11 @@ from mibiscreen.data.set_data import  (
 from mibiscreen.analysis.reduction.stable_isotope_regression import Lambda_regression
 from mibiscreen.analysis.reduction.stable_isotope_regression import extract_isotope_data
 from mibiscreen.analysis.reduction.transformation import filter_values, transform_values
-from mibiscreen.analysis.reduction.ordination import pca
+from mibiscreen.analysis.reduction.ordination import (
+    pca,
+    cca,
+    rda,
+)
 from mibiscreen.analysis.sample.screening_NA import (
     reductors,
     oxidators,
@@ -37,6 +41,8 @@ from mibiscreen.analysis.sample.concentrations import (
     total_count,
     total_contaminant_count,
     total_metabolites_count,
+)
+from mibiscreen.analysis.sample.intervention import (
     thresholds_for_intervention_traffic,
     thresholds_for_intervention_ratio,
 )
