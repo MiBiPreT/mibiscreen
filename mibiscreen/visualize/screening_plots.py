@@ -12,7 +12,7 @@ import pandas as pd
 import mibiscreen.data.settings.standard_names as names
 from mibiscreen.data.set_data import determine_quantities
 from mibiscreen.data.check_data import check_data_frame
-from mibiscreen.analysis.sample.concentrations import thresholds_for_intervention_ratio
+from mibiscreen.analysis.sample.intervention import thresholds_for_intervention_ratio
 
 DEF_settings = dict(
     figsize = [3.75,2.8],
@@ -23,6 +23,7 @@ DEF_settings = dict(
     loc = 'lower right',
     dpi = 300,
     save_fig=False,
+    xtick_autorotate = False,
     )
 
 
@@ -41,6 +42,8 @@ def contaminants_bar(data,
     
     settings = copy.copy(DEF_settings)
     settings.update(**kwargs)
+    if isinstance(data,pd.Series()):
+        raise ValueError("Provide full data frame not only series.")
 
     if sort:
         sort_args = np.argsort(data[list_contaminants[0]].values)
@@ -50,9 +53,9 @@ def contaminants_bar(data,
     if sample_nr is False:        
         n_bars = np.arange(len(data[list_contaminants[0]].values))
     if sample_nr == 'sample_nr':
+        if not sample_nr in data.columns():
+            raise ValueError("No sample number provided in data frame.")
         n_bars = data[names.name_sample].values[sort_args]
-
-    # if isinstance(samples, list):
 
     fig, ax = plt.subplots(figsize=settings['figsize'])
 
@@ -65,7 +68,11 @@ def contaminants_bar(data,
     plt.ylabel(ylabel,fontsize = settings['textsize'])
     plt.yscale(yscale)
     plt.legend(loc =settings['loc'],fontsize = settings['textsize'])
-    plt.title(title_text,fontsize = settings['textsize'])
+    if title_text:
+        plt.title(title_text,fontsize = settings['textsize'])
+    if settings['xtick_autorotate']:
+        fig.autofmt_xdate(bottom=0.2, rotation=30, ha='right', which='major')
+    
     fig.tight_layout()
 
     ### ---------------------------------------------------------------------------
@@ -77,6 +84,7 @@ def contaminants_bar(data,
         except OSError:
             print("WARNING: Figure could not be saved. Check provided file path and name: {}".format(save_fig))
 
+    
     return fig, ax
 
 def electron_balance_bar_data_prep(data,
