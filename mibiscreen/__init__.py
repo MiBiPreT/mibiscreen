@@ -56,7 +56,6 @@ from mibiscreen.visualize.screening_plots import (
     contaminants_bar,
     electron_balance_bar_data_prep,
     electron_balance_bar,
-    threshold_ratio_bar_data_prep,
     threshold_ratio_bar,
     activity_data_prep,
     activity_plot,
