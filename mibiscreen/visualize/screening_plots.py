@@ -10,9 +10,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import mibiscreen.data.settings.standard_names as names
-from mibiscreen.analysis.sample.intervention import thresholds_for_intervention_ratio
 from mibiscreen.data.check_data import check_data_frame
-from mibiscreen.data.set_data import determine_quantities
 
 DEF_settings = dict(
     figsize = [3.75,2.8],
@@ -27,40 +25,91 @@ DEF_settings = dict(
     )
 
 
-def contaminants_bar(data,
-                     list_contaminants = [names.name_total_contaminants],
-                     list_labels = ['all'],
+def contaminants_bar(data_frame,
+                     list_contaminants,
+                     list_labels = False,
                      sort = False,
                      sample_nr = False,
                      xlabel = 'Samples',
                      ylabel = r'Total concentration [$\mu$g/l]',
-                     yscale = 'log',
+                     yscale = 'linear',
                      title_text = 'Total concentration of contaminants per sample',
                      save_fig = False,
                      **kwargs,
                      ):
+    """Creating a bar plot of contaminant concentrations (or counts) per sample.
 
+    A selected list on quantities (at least 2) from a data frame is displayed as
+    overlaying bars showing concentrations of individual components and/or sums
+    of different contaminants with one bar per sample.
+    The plot can also be used to display total counts of a selected range of
+    contaminants per sample.
+
+    Input
+    -----
+        data_frame : pd.DataFrame
+            Contaminant concentrations in [ug/l], i.e. microgram per liter
+        list_contaminants : list
+            list of column names to select from data_frame
+        list_labels: list or False, default: False
+            list of quantity names to be displayed in legend
+            if False, the names in 'list_contaminants' will be used
+        sort: Boolean, default False
+            weather to sort data and display concentrations bars
+            in ascending order (based on values of first quantity in
+            list_contaminants)
+        sample_nr: Boolean, default False
+            weather to display sample_nr on x-axis (True) or
+            just number all samples starting from 1 (False)
+        xlabel: str, default 'Samples'
+            x-axis label
+        ylabel: str, default 'Total concentration',
+            y-axis label
+        yscale: str, default 'linear',
+            scaling of y-axis, typically 'log' or 'linear'
+        title_text: str or False, default 'Total concentration of contaminants per sample'
+            text displayed as figure title,
+            in case of False, no title will be displayed
+        save_fig: Boolean or string, optional, default is False.
+            Flag to save figure to file with name provided as string.
+        **kwargs: dict
+            dictionary with plot settings
+
+    Returns:
+    --------
+        fig : Figure object
+            Figure object of created activity plot.
+        ax :  Axes object
+            Axes object of created activity plot.
+
+    """
     settings = copy.copy(DEF_settings)
     settings.update(**kwargs)
-    if isinstance(data,pd.Series()):
+
+    ### Plotting data preparation
+    if isinstance(data_frame,pd.Series):
         raise ValueError("Provide full data frame not only series.")
 
     if sort:
-        sort_args = np.argsort(data[list_contaminants[0]].values)
+        sort_args = np.argsort(data_frame[list_contaminants[0]].values)
     else:
-        sort_args = np.arange(len(data[list_contaminants[0]].values))
+        sort_args = np.arange(len(data_frame[list_contaminants[0]].values))
 
     if sample_nr is False:
-        n_bars = np.arange(len(data[list_contaminants[0]].values))
+        n_bars = np.arange(len(data_frame[list_contaminants[0]].values))
     if sample_nr == 'sample_nr':
-        if sample_nr not in data.columns():
-            raise ValueError("No sample number provided in data frame.")
-        n_bars = data[names.name_sample].values[sort_args]
+        if sample_nr not in data_frame.columns():
+            raise ValueError("No sample number provided in data_frame frame.")
+        n_bars = data_frame[names.name_sample].values[sort_args]
 
+    if list_labels is False:
+        list_labels = list_contaminants
+
+    ### plotting actual data
     fig, ax = plt.subplots(figsize=settings['figsize'])
 
     for i,cont_group in enumerate(list_contaminants):
-        plt.bar(n_bars,data[cont_group].values[sort_args],label=list_labels[i])
+        plt.bar(n_bars,data_frame[cont_group].values[sort_args],label=list_labels[i])
 
     ### ---------------------------------------------------------------------------
     ### Adapt plot optics
@@ -87,37 +136,220 @@ def contaminants_bar(data,
 
     return fig, ax
 
-def electron_balance_bar_data_prep(data,
-                                   sample_selection = False,
-                                   ):
+def threshold_ratio_bar(data_threshold_ratios,
+                        list_contaminants = False,
+                        list_labels = False,
+                        list_samples = False,
+                        nrows=1,
+                        ncols=1,
+                        unity_line = False,
+                        list_sort = False,
+                        list_colors = False,
+                        sharex=False,
+                        sharey=False,
+                        xlabel = r'ratio to threshold concentration $C/C_\mathrm{threshold}$',
+                        ylabel = False,
+                        xscale = False,
+                        title_text = 'Concentration treshold ratio',
+                        save_fig = False,
+                        **kwargs,
+                        ):
+    """Horizontal bar plots showing relative threshold exceedance of contaminants per sample.
 
+    Creates a figure with subfigures for each (selected) sample displaying the
+    relative exceedance of contaminant concentrations are ratio of concentration
+    to exceedance value (with <1 being lower then exceedance value).
+
+    The required input data frame can be create with the function:
+    'thresholds_for_intervention_ratio()'
+    using the recommended keywords:
+        - include = False
+        - keep_setting_data = False
+
+    Input
+    -----
+        data_threshold_ratios: pd.Data_frame
+            each column contains a relative contaminant concentration
+            each rows contains a sample
+
+        list_contaminants : list
+            list of column names to select from data_frame
+        list_labels: list or False, default: False
+            list of quantity names to be displayed in legend
+            if False, the names in 'list_contaminants' will be used
+        list_samples: list or False, default: False
+            if False, bars for all samples are displayed
+            if list, bars are only displayed for selected samples (given by indexs)
+        nrows, ncolsint, default: 1
+            Number of rows/columns of the subplot grid.
+            Number of total subfigures need to fit to number of selected samples.
+        unity_line: Boolean, default False
+            weather to include unity line (i.e. solid black line at 1 indicating
+            equality of contaminant concentration and exceedance threshold value)
+        list_sort: list or False, default False
+            list representing order of display of quantities
+        list_colors: list or False, default False
+            list of colors to use for individual bars
+            in case of False the standard color order in python is used
+        sharex, sharey: bool or {'none', 'all', 'row', 'col'}, default: False
+            Controls sharing of properties among x (sharex) or y (sharey) axes
+            See matplotlib.pyplot.subplots() for more details
+        xlabel: str, default r'ratio to threshold concentration'
+            x-axis label
+        ylabel: str, default False
+            y-axis label
+        xscale: str or False, default 'False',
+            scaling of y-axis, when False --> 'linear', typical other option: 'log'
+        title_text: str or False, default 'Concentration treshold ratio'
+            text displayed as figure title,
+            in case of False, no title will be displayed
+        save_fig: Boolean or string, optional, default is False.
+            Flag to save figure to file with name provided as string.
+        **kwargs: dict
+            dictionary with plot settings
+
+    Returns:
+    --------
+        fig : Figure object
+            Figure object of created activity plot.
+        ax :  Axes object
+            Axes object of created activity plot.
+
+    """
+    # Data preparation
+    # quantities, _ = determine_quantities(data_frame.columns.to_list(),
+    #                                       name_list = list_labels,
+    #                                       verbose = False)
+
+
+
+    settings = copy.copy(DEF_settings)
+    settings.update(**kwargs)
+
+    ### data prepration
+    if list_contaminants:
+        data_threshold_ratios = data_threshold_ratios[list_contaminants]
+    else:
+        list_contaminants = data_threshold_ratios.columns.to_list()
+
+    if list_samples:
+        data_threshold_ratios = data_threshold_ratios.iloc[list_samples]
+
+    if list_labels is False:
+        list_labels = list_contaminants
+
+    if len(list_contaminants) != nrows * ncols:
+        raise ValueError("Number of subplots does not match selection of samples\n \
+                         check keywords 'nrows' and 'ncols'.")
+    if list_colors:
+        if len(list_colors)<len(list_contaminants):
+            raise ValueError("Number of colors too short.")
+    else:
+        list_colors = ['C{}'.format(i) for i in range(len(list_contaminants))]
+
+    if list_sort:
+        if len(list_sort) != len(list_contaminants):
+            raise ValueError("Lenght of list for resorting does not match number of quantities.")
+        list_contaminants = [list_contaminants[i] for i in list_sort]
+        data_threshold_ratios = data_threshold_ratios.iloc[:,list_sort]
+
+
+    ### creating figure
+    fig, ax = plt.subplots(figsize=settings['figsize'],
+                            nrows=nrows,
+                            ncols=ncols,
+                            sharex=sharex,
+                            sharey=sharey,
+                            )
+    axs = ax.flatten()
+
+    for i in range(len(list_contaminants)):
+
+        # plt.bar(n_bars,value['height'][sort_args],color = value['color'],zorder = 1)
+        axs[i].barh(list_labels,data_threshold_ratios.iloc[i,:],color = list_colors[i])
+        if unity_line:
+            axs[i].plot([1,1],[-0.5,len(list_labels)-.5],'k--')
+
+        ### ---------------------------------------------------------------------------
+        ### Adapt plot optics
+
+        axs[i].set_xlabel(xlabel,fontsize=settings['textsize'])
+        if ylabel:
+            axs[i].set_ylabel(ylabel, fontsize=settings['textsize'])
+        if xscale:
+            axs[i].set_xscale(xscale)
+
+    # ax.grid(True)
+    # ax.minorticks_on()
+    # ax.tick_params(axis="both", which="major", labelsize=settings['textsize'])
+    # ax.tick_params(axis="both", which="minor", labelsize=settings['textsize'])
+    # plt.title(title_text,fontsize = settings['textsize'])
+    fig.tight_layout()
+
+    ### ---------------------------------------------------------------------------
+    ### Save figure to file if file path provided
+    if save_fig is not False:
+        try:
+            plt.savefig(save_fig,dpi = settings['dpi'])
+            print("Save Figure to file:\n", save_fig)
+        except OSError:
+            print("WARNING: Figure could not be saved. Check provided file path and name: {}".format(save_fig))
+
+    return fig, ax
+
+def electron_balance_bar_data_prep(data_frame,
+                                   color_order = ['C1','C0','C2'],
+                                   list_samples = False,
+                                   ):
+    """Preparing dictionary from data_frame for electron balance plot.
+
+    Requires data_frame to contain the following quantities:
+        - "total_reductors"
+        - 'total_oxidators_BTEXIIN'
+        - 'total_oxidators_BTEX'
+
+    Input
+    -----
+        data_frame : pd.DataFrame
+            Contaminant concentrations in [ug/l], i.e. microgram per liter
+        color_order: list of colors, default = ['C1','C0','C2']
+            colors to be used in the plot for the three quantities
+        list_samples: list or False, default: False
+            if False, bars for all samples are displayed
+            if list, bars are only displayed for selected samples (given by indexs)
+
+    Returns:
+    --------
+        electron_balance_bar_dict : dict
+            dictionary with plot relevant specifics
+    """
     electron_balance_bar_dict = dict()
 
     electron_balance_bar_dict['EA capacity'] = dict(
-        height = data[names.name_total_reductors].values,
-        color = 'C1',
-        sample_nr = data[names.name_sample],
+        height = data_frame[names.name_total_reductors].values,
+        color = color_order[0],
+        sample_nr = data_frame[names.name_sample],
     )
     electron_balance_bar_dict['BTEXIIN'] = dict(
-        # height = data[names.name_total_oxidators_BTEXIIN],
-        height = data['total_oxidators_BTEXIIN'].values,
-        color = 'C0',
+        # height = data_frame[names.name_total_oxidators_BTEXIIN],
+        height = data_frame['total_oxidators_BTEXIIN'].values,
+        color = color_order[1],
     )
     electron_balance_bar_dict['BTEX'] = dict(
-        # height = data[names.name_total_oxidators_BTEX],
-        height = data['total_oxidators_BTEX'].values,
-        color = 'C2',
+        # height = data_frame[names.name_total_oxidators_BTEX],
+        height = data_frame['total_oxidators_BTEX'].values,
+        color = color_order[2],
     )
 
     electron_balance_bar_dict['EA capacity minor'] = dict(
-        height = data[names.name_total_reductors].where(data[names.name_e_balance] < 1, 0).values,
-        color = 'C1',
+        height = data_frame[names.name_total_reductors].where(data_frame[names.name_e_balance] < 1, 0).values,
+        color = color_order[0],
     )
 
-    if sample_selection:
+    if list_samples:
         for key, value in electron_balance_bar_dict.items():
-            value['height'] = value['height'][sample_selection]
-        val = electron_balance_bar_dict['EA capacity']['sample_nr'][sample_selection]
+            value['height'] = value['height'][list_samples]
+        val = electron_balance_bar_dict['EA capacity']['sample_nr'][list_samples]
         electron_balance_bar_dict['EA capacity']['sample_nr'] = val
 
     return electron_balance_bar_dict
@@ -125,14 +357,61 @@ def electron_balance_bar_data_prep(data,
 def electron_balance_bar(electron_balance_bar_dict,
                          sample_nr = False,
                          sort = False,
-                         xlabel = 'Sample locations',
+                         xlabel = 'Samples',
                          ylabel = r'Electron capacity/needed [mmol e-/l]',
                          yscale = 'linear',
                          title_text = 'Electron balance per sample',
                          save_fig = False,
                          **kwargs,
                          ):
+    """Creating a bar plot for electron balance per sample.
 
+    Displayed are bars of electron concentrations for:
+    - "total_reductors"
+    - 'total_oxidators_BTEXIIN'
+    - 'total_oxidators_BTEX'
+
+    The plot shows the three quantities as overlapping bars with the smallest in
+    front and the largest to the back, indicating if an excess of or need for
+    electrons is present at the sample location, including quantitative differences.
+
+    Operates on dictionary containing electron concentration values extracted
+    from data frame, color and sample selection. The dictionary can be prepared
+    by running the function 'electron_balance_bar_data_prep()' on the data frame.
+
+    Input
+    -----
+        electron_balance_bar_dict : dict
+            dictionary with plot relevant specifics
+        sort: Boolean, default False
+            weather to sort data and display concentrations bars
+            in ascending order (based on values of first quantity in
+            list_contaminants)
+        sample_nr: Boolean, default False
+            weather to display sample_nr on x-axis (True) or
+            just number all samples starting from 1 (False)
+        xlabel: str, default 'Samples'
+            x-axis label
+        ylabel: str, default r'Electron capacity/needed [mmol e-/l]'
+            y-axis label
+        yscale: str, default 'linear',
+            scaling of y-axis, typically 'log' or 'linear'
+        title_text: str or False, default 'Total concentration of contaminants per sample'
+            text displayed as figure title,
+            in case of False, no title will be displayed
+        save_fig: Boolean or string, optional, default is False.
+            Flag to save figure to file with name provided as string.
+        **kwargs: dict
+            dictionary with plot settings
+
+    Returns:
+    --------
+        fig : Figure object
+            Figure object of created activity plot.
+        ax :  Axes object
+            Axes object of created activity plot.
+
+    """
     settings = copy.copy(DEF_settings)
     settings.update(**kwargs)
 
@@ -162,103 +441,10 @@ def electron_balance_bar(electron_balance_bar_dict,
     plt.yscale(yscale)
     plt.legend(loc =settings['loc'],fontsize = settings['textsize'])
     plt.title(title_text,fontsize = settings['textsize'])
-    fig.tight_layout()
-
-    ### ---------------------------------------------------------------------------
-    ### Save figure to file if file path provided
-    if save_fig is not False:
-        try:
-            plt.savefig(save_fig,dpi = settings['dpi'])
-            print("Save Figure to file:\n", save_fig)
-        except OSError:
-            print("WARNING: Figure could not be saved. Check provided file path and name: {}".format(save_fig))
-
-    return fig, ax
-
-def threshold_ratio_bar_data_prep(data,
-                                  name_list = 'BTEXIIN',
-                                  sample_selection = False,
-                                  ):
-
-    quantities, _ = determine_quantities(data.columns.to_list(),
-                                         name_list = name_list,
-                                         verbose = False)
+    if settings['xtick_autorotate']:
+        fig.autofmt_xdate(bottom=0.2, rotation=30, ha='right', which='major')
 
 
-    data_thresh_for_bar = thresholds_for_intervention_ratio(data,
-                                            include = False,
-                                            keep_setting_data = False,
-                                            verbose = False)
-
-    if sample_selection:
-        data_thresh_for_bar = data_thresh_for_bar.iloc[sample_selection]
-
-    return quantities,data_thresh_for_bar
-
-def threshold_ratio_bar(quantities,
-                        data_thresh_for_bar,
-                        nrows=1,
-                        ncols=1,
-                        sort = False,
-                        unity_line = False,
-                        colorlist = False,
-                        sharex=False,
-                        sharey=False,
-                        xlabel = r'ratio to threshold concentration $C/C_\mathrm{threshold}$',
-                        ylabel = False,
-                        xscale = False,
-                        title_text = 'Concentration treshold ratio',
-                        save_fig = False,
-                        **kwargs,
-                        ):
-
-    settings = copy.copy(DEF_settings)
-    settings.update(**kwargs)
-
-    if len(data_thresh_for_bar) != nrows * ncols:
-        raise ValueError("Number of subplots does not match selection of samples\n \
-                         check keywords 'nrows' and 'ncols'.")
-    if colorlist:
-        if len(colorlist)<len(data_thresh_for_bar):
-            raise ValueError("Number of colors too short.")
-    else:
-        colorlist = ['C{}'.format(i) for i in range(len(data_thresh_for_bar))]
-
-    if sort:
-        if len(sort) != len(quantities):
-            raise ValueError("Lenght of list for resorting does not match number of quantities.")
-        quantities = [quantities[i] for i in sort]
-        data_thresh_for_bar = data_thresh_for_bar.iloc[:,sort]
-
-    fig, ax = plt.subplots(figsize=settings['figsize'],
-                            nrows=nrows,
-                            ncols=ncols,
-                            sharex=sharex,
-                            sharey=sharey,
-                            )
-    axs = ax.flatten()
-
-    for i in range(len(data_thresh_for_bar)):
-
-        # plt.bar(n_bars,value['height'][sort_args],color = value['color'],zorder = 1)
-        axs[i].barh(quantities,data_thresh_for_bar.iloc[i,:],color = colorlist[i])
-        if unity_line:
-            axs[i].plot([1,1],[-0.5,len(quantities)-.5],'k--')
-
-        ### ---------------------------------------------------------------------------
-        ### Adapt plot optics
-
-        axs[i].set_xlabel(xlabel,fontsize=settings['textsize'])
-        if ylabel:
-            axs[i].set_ylabel(ylabel, fontsize=settings['textsize'])
-        if xscale:
-            axs[i].set_xscale(xscale)
-
-    # ax.grid(True)
-    # ax.minorticks_on()
-    # ax.tick_params(axis="both", which="major", labelsize=settings['textsize'])
-    # ax.tick_params(axis="both", which="minor", labelsize=settings['textsize'])
-    # plt.title(title_text,fontsize = settings['textsize'])
     fig.tight_layout()
 
     ### ---------------------------------------------------------------------------
@@ -355,9 +541,9 @@ def activity_data_prep(data):
 
 def activity_plot(
         activity_data_dict,
-        save_fig=False,
         xlabel = r"Concentration contaminants [$\mu$g/L]",
         ylabel = "Metabolite count",
+        save_fig=False,
         **kwargs,
         ):
     """Creating activity plot.
@@ -378,8 +564,12 @@ def activity_plot(
             if DataFrame, it contains the three required quantities with their standard names
             if list of arrays: the three quantities are given order above
             if list of pandas-Series, quantities given in standard names
+        xlabel: str, default r"Concentration contaminants"
+            x-axis label
+        ylabel: str, default "Metabolite count"
+            y-axis label
         save_fig: Boolean or string, optional, default is False.
-            Flag to save figure to file with name provided as string. =
+            Flag to save figure to file with name provided as string.
         **kwargs: dict
             dictionary with plot settings
 
