@@ -10,9 +10,9 @@ import pandas as pd
 import pytest
 from mibiscreen.analysis.sample.concentrations import total_concentration
 from mibiscreen.analysis.sample.concentrations import total_contaminant_concentration
-from mibiscreen.analysis.sample.concentrations import total_metabolites_concentration
-from mibiscreen.analysis.sample.concentrations import total_count
 from mibiscreen.analysis.sample.concentrations import total_contaminant_count
+from mibiscreen.analysis.sample.concentrations import total_count
+from mibiscreen.analysis.sample.concentrations import total_metabolites_concentration
 from mibiscreen.analysis.sample.concentrations import total_metabolites_count
 from mibiscreen.data.example_data.example_data import example_data
 
@@ -140,7 +140,7 @@ class TestTotalContaminantConcentration:
         data_test = self.data.copy()
         total_contaminant_concentration(data_test,include = True)
 
-        assert data_test.shape[1] == self.data.shape[1]+1 
+        assert data_test.shape[1] == self.data.shape[1]+1
         assert 'concentration_contaminants' in data_test.columns
 
 
@@ -179,7 +179,7 @@ class TestTotalMetaboliteConcentration:
         data_test = self.data.copy()
         total_metabolites_concentration(data_test,include = True)
 
-        assert data_test.shape[1] == self.data.shape[1]+1 
+        assert data_test.shape[1] == self.data.shape[1]+1
         assert "metabolites_concentration" in data_test.columns
 
 
@@ -282,7 +282,6 @@ class TestTotalContaminantCount:
 
         Correct calculation of total amount of contaminants (total concentration).
         """
-
         tot_conc = np.sum(total_contaminant_count(self.data))
 
         assert tot_conc == 78
@@ -347,7 +346,6 @@ class TestTotalMetaboliteCount:
 
         Correct calculation of total amount of metabolites (total concentration).
         """
-
         tot_conc = np.sum(total_metabolites_count(self.data))
 
         assert tot_conc == 9
