@@ -3,7 +3,7 @@
 For example field site data of Vetgas Amersfoort, the Netherlands.
 
 For documented version with details to each step, consult similarly named
-Jupyter-Notebook.     
+Jupyter-Notebook.
 
 @author: Alraune Zech
 """
@@ -73,6 +73,9 @@ mbs.total_concentration(contaminants,
                         verbose = verbose,
                         )
 
+###------------------------------------------------------------------------###
+### Visualization of contaminant concentrations per sample
+
 list_contaminants = ['concentration_contaminants','concentration_BTEXIIN','concentration_BTEX',
                      'concentration_BT','benzene']
 
@@ -87,7 +90,7 @@ mbs.contaminants_bar(contaminants,
                       title_text = False,
                       )
 
-# ###------------------------------------------------------------------------###
+###------------------------------------------------------------------------###
 ### Basic analysis of number of contaminants per sample
 
 mbs.total_count(contaminants,
@@ -112,6 +115,9 @@ mbs.total_count(contaminants,
 
 list_counts = ['count_contaminants','count_BTEXIIN','count_BTEX','count_benzene']
 
+###------------------------------------------------------------------------###
+### Visualizatin of contaminant counts per sample
+
 mbs.contaminants_bar(contaminants,
                      list_counts,
                      list_labels = ['all','BTEXIIN','BTEX','B'],
@@ -125,5 +131,37 @@ mbs.contaminants_bar(contaminants,
                      title_text = False,
                      )
 
+
+# ###------------------------------------------------------------------------###
+# ### Evaluation of intervention threshold exceedance
+
+# threshold = mbs.thresholds_for_intervention_ratio(data,
+#                                 verbose = verbose,
+#                                 include = False,
+#                                 contaminant_group='BTEXIIN'
+#                                 )
+
+# quantities = ['naphthalene','indene','pm_xylene','o_xylene','ethylbenzene','toluene','benzene']
+
+# data_thresh = pd.DataFrame(index = data.index)
+
+# for cont in quantities:
+#     th_value = properties[cont]['thresholds_for_intervention_NL']
+#     data_thresh[cont+'_thr_ratio'] = data[cont]/th_value
+
+# plt.figure(num=7)
+# plt.barh(quantities,data_thresh.iloc[9],color = 'lightblue')
+# plt.plot([1,1],[-0.5,6.5],'k--')
+# plt.xlabel(r'ratio to threshold concentration $sC/C_\mathrm{threshold}$')
+
+# plt.figure(num=8)
+# plt.barh(quantities,data_thresh.iloc[11],color = 'tomato')
+# plt.plot([1,1],[-0.5,6.5],'k--')
+# plt.xlabel(r'ratio to threshold concentration $C/C_\mathrm{threshold}$')
+
+# plt.figure(num=9)
+# plt.barh(quantities,data_thresh.iloc[31],color = 'olive')
+# plt.plot([1,1],[-0.5,6.5],'k--')
+# plt.xlabel(r'ratio to threshold concentration $C/C_\mathrm{threshold}$')
 
 

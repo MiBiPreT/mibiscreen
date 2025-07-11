@@ -141,7 +141,7 @@ def threshold_ratio_bar(data_threshold_ratios,
                         list_labels = False,
                         list_samples = False,
                         nrows=1,
-                        ncols=1,
+                        ncols=False,
                         unity_line = False,
                         list_sort = False,
                         list_colors = False,
@@ -232,15 +232,26 @@ def threshold_ratio_bar(data_threshold_ratios,
     else:
         list_contaminants = data_threshold_ratios.columns.to_list()
 
-    if list_samples:
-        data_threshold_ratios = data_threshold_ratios.iloc[list_samples]
-
     if list_labels is False:
         list_labels = list_contaminants
 
-    if len(list_contaminants) != nrows * ncols:
-        raise ValueError("Number of subplots does not match selection of samples\n \
-                         check keywords 'nrows' and 'ncols'.")
+    if list_samples:
+        data_threshold_ratios = data_threshold_ratios.iloc[list_samples]
+    else:
+        list_samples = data_threshold_ratios.index.values
+
+    if ncols and nrows:
+        if len(list_samples) != nrows * ncols:
+            raise ValueError("Number of subplots does not match selection of samples\n \
+                             check keywords 'nrows' and 'ncols'.")
+    elif ncols:
+        nrows = int(len(list_samples)/ncols)
+    elif nrows:
+        ncols = int(len(list_samples)/nrows)
+    else:
+        ncols = len(list_samples)
+        nrows = 1
+
     if list_colors:
         if len(list_colors)<len(list_contaminants):
             raise ValueError("Number of colors too short.")
@@ -263,7 +274,7 @@ def threshold_ratio_bar(data_threshold_ratios,
                             )
     axs = ax.flatten()
 
-    for i in range(len(list_contaminants)):
+    for i in range(len(list_samples)):
 
         # plt.bar(n_bars,value['height'][sort_args],color = value['color'],zorder = 1)
         axs[i].barh(list_labels,data_threshold_ratios.iloc[i,:],color = list_colors[i])
