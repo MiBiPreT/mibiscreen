@@ -171,7 +171,6 @@ def total_metabolites_concentration(
         name_list = 'all',
         include_as = include_as,
         verbose = verbose,
-        include = include,
         )
 
     return tot_conc
