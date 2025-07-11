@@ -1,7 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
-# -*- coding: utf-8 -*-
 """Testing analysis module on threshhold exceedance analysis of mibiscreen.
 
 @author: Alraune Zech
@@ -10,12 +6,85 @@
 import numpy as np
 import pandas as pd
 import pytest
+from mibiscreen.analysis.sample.intervention import thresholds_for_intervention_ratio
 from mibiscreen.analysis.sample.intervention import thresholds_for_intervention_traffic
 from mibiscreen.data.example_data.example_data import example_data
 
+data = example_data(with_units = False,data_type = 'contaminants')
+#intervention_ratio = thresholds_for_intervention_ratio(data)
+
+data_test = data.copy()
+thresholds_for_intervention_ratio(data_test,
+                                  contaminant_group=['benzene'],
+                                  include = True,
+                                  )
+
+class TestThresholdsForInterventionRatio:
+    """Class for testing thresholds_for_intervention_ratio() from module intervention of mibipret."""
+
+    # data = example_data(with_units = False)
+
+    # columns = ['sample_nr', 'sulfate', 'benzene']
+    # units = [' ','mg/L', 'ug/L']
+    # s01 = ['2000-001', 748, 263]
+    # s02b = ['2000-002', 548, ]
+    data = example_data(with_units = False,data_type = 'contaminants')
+    benzene_thr_ratio =  np.array([8.76667,5.96667,28.4333,41.8])
+    intervention_ratio_cols = ['benzene_thr_ratio', 'o_xylene_thr_ratio',
+                               'ethylbenzene_thr_ratio','toluene_thr_ratio',
+                               'pm_xylene_thr_ratio', 'naphthalene_thr_ratio',
+                               'indene_thr_ratio','indane_thr_ratio']
+
+    def test_thresholds_for_intervention_ratio_01(self):
+        """Testing routine thresholds_for_intervention_ratio().
+
+        Check that routine produced correct dataframe output.
+        """
+        intervention_ratio = thresholds_for_intervention_ratio(self.data)
+
+        assert intervention_ratio.shape == (4,8)
+        assert set(intervention_ratio.columns) == set(self.intervention_ratio_cols)
+        assert np.sum(intervention_ratio['benzene_thr_ratio'].values - self.benzene_thr_ratio)< 1e-4
+
+    def test_thresholds_for_intervention_ratio_02(self):
+        """Testing routine thresholds_for_intervention_ratio().
+
+        Check keyword keep_setting_data leads to output dataframe including
+        sample settings.
+        """
+        intervention_ratio = thresholds_for_intervention_ratio(self.data,
+                                                               keep_setting_data = True)
+
+        assert intervention_ratio.shape == (4,11)
+
+
+    def test_thresholds_for_intervention_ratio_03(self):
+        """Testing routine thresholds_for_intervention_ratio().
+
+        Check that routine produced correct dataframe output.
+        """
+        data_test = self.data.copy()
+        thresholds_for_intervention_ratio(data_test,
+                                          contaminant_group=['benzene'],
+                                          include = True,
+                                          )
+
+        assert data_test.shape == (4,12)
+        assert set(data_test.columns) == set(self.data.columns.to_list()+['benzene_thr_ratio'])
+        assert np.sum(data_test['benzene_thr_ratio'].values - self.benzene_thr_ratio)< 1e-4
+
+    def test_thresholds_for_intervention_ratio_04(self,capsys):
+        """Testing routine thresholds_for_intervention_ratio().
+
+        Testing verbose flag.
+        """
+        thresholds_for_intervention_ratio(self.data,verbose=True)
+        out,err=capsys.readouterr()
+
+        assert len(out)>0
 
 class TestThresholdsForIntervention:
-    """Class for testing thresholds_for_intervention_traffic() from module concentation of mibipret."""
+    """Class for testing thresholds_for_intervention_traffic() from module intervention of mibipret."""
 
     data = example_data(with_units = False)
 
