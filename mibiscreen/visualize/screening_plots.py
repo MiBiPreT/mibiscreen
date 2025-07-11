@@ -459,8 +459,8 @@ def electron_balance_bar(electron_balance_bar_dict,
     return fig, ax
 
 def activity_data_prep(data,
-		       verbose = False
-		       ):
+                       verbose = False,
+                       ):
     """Preparing data required for activity plot.
 
     Activity plot requires data analysis of:
@@ -521,7 +521,8 @@ def activity_data_prep(data,
         if len(data[0]) != len(data[1]) or len(data[0]) != len(data[2]):
            raise ValueError("Provided arrays/lists/series of data must have the same length.")
 
-        if isinstance(data[0], (np.ndarray, list)) and isinstance(data[1], (np.ndarray, list)) and isinstance(data[2], (np.ndarray, list)):
+        if isinstance(data[0], (np.ndarray, list)) and isinstance(data[1], (np.ndarray, list)) \
+            and isinstance(data[2], (np.ndarray, list)):
             tot_cont = data[0]
             meta_count = data[1]
             well_color = data[2]

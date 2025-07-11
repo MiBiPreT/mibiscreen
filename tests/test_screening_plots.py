@@ -8,7 +8,8 @@ import numpy as np
 import pandas as pd
 import pytest
 import mibiscreen.data.settings.standard_names as names
-from mibiscreen.visualize.screening_plots import activity_plot,activity_data_prep
+from mibiscreen.visualize.screening_plots import activity_data_prep
+from mibiscreen.visualize.screening_plots import activity_plot
 
 
 class TestActivity:
@@ -38,23 +39,21 @@ class TestActivity:
         well_color = traffic)
 
     def test_activity_data_prep_01(self):
-
         """Testing routine activity_data_prep().
 
-        Testing that routine produces a dictionary of input data for 
+        Testing that routine produces a dictionary of input data for
         activity plot from DataFrame.
 
         """
         data_dict = activity_data_prep(pd.concat([self.meta_pd,self.conc_pd,self.traffic_pd],axis = 1))
 
         assert isinstance(data_dict,dict)
-        
+
 
     def test_activity_data_prep_02(self):
-
         """Testing routine activity_data_prep().
 
-        Testing that routine produces a dictionary of input data for 
+        Testing that routine produces a dictionary of input data for
         activity plot from list of pd.Series provided.
 
         """
@@ -63,19 +62,18 @@ class TestActivity:
         assert isinstance(data_dict,dict)
 
     def test_activity_data_prep_03(self,capsys):
-
          """Testing routine activity_data_prep().
 
-         Testing that routine produces a dictionary of input data for 
+         Testing that routine produces a dictionary of input data for
          activity plot from list of lists provided.
-         
+
          Also testing verbosity flag.
          """
          data_dict = activity_data_prep([self.conc,self.traffic,self.meta],verbose=True)
          out,err=capsys.readouterr()
 
          assert isinstance(data_dict,dict) and len(out)>0
- 
+
     def test_activity_plot_prep_04(self):
         """Testing routine activity_data_prep().
 
@@ -83,7 +81,7 @@ class TestActivity:
         """
         with pytest.raises(ValueError):
             activity_data_prep(pd.concat([self.conc_pd,self.traffic_pd],axis = 1))
-        
+
     def test_activity_plot_prep_05(self):
         """Testing routine activity_data_prep().
 
@@ -91,7 +89,7 @@ class TestActivity:
         """
         with pytest.raises(ValueError):
             activity_data_prep(pd.concat([self.meta_pd,self.traffic_pd],axis = 1))
- 
+
     def test_activity_plot_prep_06(self):
         """Testing routine activity_data_prep().
 
@@ -104,7 +102,7 @@ class TestActivity:
     def test_activity_plot_prep_07(self):
         """Testing routine activity_data_prep().
 
-        Testing Error message that provided lists/arrays of values 
+        Testing Error message that provided lists/arrays of values
         dot no have the same length (are required for plotting).
         """
         with pytest.raises(ValueError):
@@ -117,7 +115,7 @@ class TestActivity:
         all required quantities.
         """
         test = pd.Series(data = self.traffic, name = 'test')
-        
+
         with pytest.raises(ValueError):
             activity_data_prep([self.conc_pd,self.traffic_pd,test])
 
@@ -129,7 +127,7 @@ class TestActivity:
         """
         with pytest.raises(ValueError):
             activity_data_prep(['no data',[1,2,2],10.])
-    
+
     def test_activity_plot_prep_10(self):
         """Testing routine activity_plot_prep().
 
@@ -146,7 +144,7 @@ class TestActivity:
     def test_activity_plot_01(self):
         """Testing routine activity_plot().
 
-        Testing that routine produces a plot when data is provided as dictionary 
+        Testing that routine produces a plot when data is provided as dictionary
         of pd.Series.
         """
         fig, ax = activity_plot(self.data_dict_1)
@@ -189,7 +187,6 @@ class TestActivity:
 
         Testing Error message that not sufficient data for a plot.
         """
-        
         data_dict = dict(
             tot_cont = [1],
             meta_count = [2],
