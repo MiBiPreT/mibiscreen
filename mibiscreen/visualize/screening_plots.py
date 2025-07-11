@@ -458,7 +458,9 @@ def electron_balance_bar(electron_balance_bar_dict,
 
     return fig, ax
 
-def activity_data_prep(data):
+def activity_data_prep(data,
+		       verbose = False
+		       ):
     """Preparing data required for activity plot.
 
     Activity plot requires data analysis of:
@@ -482,6 +484,8 @@ def activity_data_prep(data):
             if DataFrame, it contains the three required quantities with their standard names
             if list of arrays: the three quantities are given order above
             if list of pandas-Series, quantities given in standard names
+        verbose: Boolean, default True
+            verbosity flag
 
     Output
     -------
@@ -513,7 +517,20 @@ def activity_data_prep(data):
             well_color = data_frame[names.name_na_traffic_light].values
 
     elif isinstance(data, list) and len(data)>=3:
-        if isinstance(data[0], pd.Series) and isinstance(data[1], pd.Series) and isinstance(data[2], pd.Series):
+
+        if len(data[0]) != len(data[1]) or len(data[0]) != len(data[2]):
+           raise ValueError("Provided arrays/lists/series of data must have the same length.")
+
+        if isinstance(data[0], (np.ndarray, list)) and isinstance(data[1], (np.ndarray, list)) and isinstance(data[2], (np.ndarray, list)):
+            tot_cont = data[0]
+            meta_count = data[1]
+            well_color = data[2]
+            if verbose:
+                print("List of arrays/lists interpreted as quantities for activity plot in the order:")
+                print("  total concentration; metabolite count; NA traffic light color")
+
+        elif isinstance(data[0], pd.Series) and isinstance(data[1], pd.Series) and isinstance(data[2], pd.Series):
+            meta_count, tot_cont, well_color = False, False, False
             for series in data:
                 if series.name == names.name_metabolites_count:
                     meta_count = series.values
@@ -521,14 +538,11 @@ def activity_data_prep(data):
                     tot_cont = series.values
                 if series.name == names.name_na_traffic_light:
                     well_color = series.values
-        elif isinstance(data[0], (np.ndarray, list)):
-            tot_cont = data[0]
-            meta_count = data[1]
-            well_color = data[2]
+            if meta_count is False or tot_cont is False or well_color is False:
+                raise ValueError("List of data frames does not contain all required quantities:\
+                                 total concentration; metabolite count; NA traffic light color")
         else:
             raise ValueError("List elements in data must be lists, np.arrays or pd.series.")
-        if len(tot_cont) != len(meta_count) or len(tot_cont) != len(well_color):
-            raise ValueError("Provided arrays/lists/series of data must have the same length.")
     else:
         raise ValueError("Data needs to be DataFrame or list of at least three lists/np.arrays/pd.series.")
 
@@ -586,6 +600,9 @@ def activity_plot(
 
     ### ---------------------------------------------------------------------------
     ### Handling of input data
+    if not isinstance(activity_data_dict,dict):
+        raise ValueError("Input data needs to be dictionary containing keywords for quantities:\
+                          tot_cont, meta_count, well_color. Consider running first 'activity_data_prep()'")
 
     if len(activity_data_dict['tot_cont']) <= 1:
         raise ValueError("Too little data for activity plot. At least two values per quantity required.")
