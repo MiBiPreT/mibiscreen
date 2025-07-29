@@ -12,6 +12,8 @@ from mibiscreen.data.example_data.example_data import example_data
 from mibiscreen.visualize.screening_plots import activity_data_prep
 from mibiscreen.visualize.screening_plots import activity_plot
 from mibiscreen.visualize.screening_plots import contaminants_bar
+from mibiscreen.visualize.screening_plots import electron_balance_bar
+from mibiscreen.visualize.screening_plots import electron_balance_bar_data_prep
 from mibiscreen.visualize.screening_plots import threshold_ratio_bar
 
 
@@ -200,7 +202,7 @@ class TestThresholdRatioBar:
         """
         fig, ax = threshold_ratio_bar(self.df_ratio,
                                       ylabel = 'test_ylabel',
-                                      scale = 'log',
+                                      xscale = 'log',
                                       unity_line = True,
                                       nrows = False,
                                       ncols = 2,
@@ -265,6 +267,122 @@ class TestThresholdRatioBar:
        out,err=capsys.readouterr()
 
        assert out==out_text
+
+class ElectronBalanceBar:
+    """Class for Electron balance bar plot and plot prepration of mibiscreen."""
+
+    total_reductors = [0.166493,5.174298, 15.327849, 14.541129, 3.233611, 5.428226]
+    total_oxidators_BTEX = [29.596715, 15.801516, 0.347378, 4.167609, 4.917605, 1.545525]
+    total_oxidators_BTEXIIN = [44.082629,28.781054,1.519835,5.430876, 8.211821, 2.709059]
+    e_balance = [0.003777,0.179781,10.085204,2.677492,0.393775,2.003731]
+    e_balance_minor = [0.003777,0.179781,0,2.677492,0.393775,0]
+
+    data = pd.DataFrame(data = list(zip(total_reductors,total_oxidators_BTEX,total_oxidators_BTEXIIN,e_balance)),
+                      columns = [names.name_total_reductors,names.name_total_oxidators_BTEX,
+                                 names.name_total_oxidators_BTEXIIN,names.name_e_balance])
+
+    EB_dict_01 = dict()
+    EB_dict_01['EA capacity'] = dict(
+            height = total_reductors,
+            color = 'C1',
+            sample_nr = 'sample_nr',
+        )
+    EB_dict_01['BTEXIIN'] = dict(
+            height = total_oxidators_BTEXIIN,
+            color = 'C0',
+        )
+    EB_dict_01['BTEX'] = dict(
+        height = total_oxidators_BTEX,
+        color = 'C2',
+        )
+    EB_dict_01['EA capacity minor'] = dict(
+        height = e_balance_minor,
+        color = 'C1',
+    )
+
+    EB_dict_02 = dict()
+    EB_dict_02['EA capacity'] = dict(
+            height = total_reductors[::2],
+            color = 'C1',
+            sample_nr = 'sample_nr',
+        )
+    EB_dict_02['BTEXIIN'] = dict(
+            height = total_oxidators_BTEXIIN[::2],
+            color = 'C0',
+        )
+    EB_dict_02['BTEX'] = dict(
+        height = total_oxidators_BTEX[::2],
+        color = 'C2',
+        )
+    EB_dict_02['EA capacity minor'] = dict(
+        height = e_balance_minor[::2],
+        color = 'C1',
+    )
+
+
+    def test_electron_balance_bar_data_prep_01(self):
+        """Testing routine electron_balance_bar_data_prep().
+
+        Testing that routine produces a dictionary of input data for
+        activity plot from DataFrame.
+
+        """
+        data_dict = electron_balance_bar_data_prep(self.data)
+
+        assert data_dict == self.EB_dict_01 #isinstance(data_dict,dict)
+
+    def test_electron_balance_bar_data_prep_02(self):
+        """Testing routine electron_balance_bar_data_prep().
+
+        Testing that routine produces a dictionary of input data for
+        activity plot from DataFrame.
+
+        """
+        data_dict = electron_balance_bar_data_prep(self.data,
+                                                   list_samples = [0,2,4])
+
+        assert  data_dict == self.EB_dict_02
+
+    def test_electron_balance_bar_01(self):
+        """Testing routine electron_balance_bar().
+
+        Testing that routine produces a plot when data is provided as dictionary
+        with standard settings
+        """
+        fig, ax = electron_balance_bar(self.EB_dict_01)
+
+        assert isinstance(fig,plt.Figure)
+        plt.close(fig)
+
+    def test_electron_balance_bar_02(self):
+        """Testing routine electron_balance_bar().
+
+        Testing that routine produces a plot when data is provided as dictionary
+        with standard settings
+        """
+        fig, ax = electron_balance_bar(self.EB_dict_01,
+                                       sample_nr = True,
+                                       sort = True,
+                                       xtick_autorotate = True,
+                                       )
+
+        assert isinstance(fig,plt.Figure)
+        plt.close(fig)
+
+    def test_electron_balance_bar_03(self,capsys):
+        """Testing routine electron_balance_bar().
+
+        Testing keyword save_fig. Checks output of Warning that given file path
+        does not match for writing figure to file.
+        """
+        save_fig = '../dir_does_not_exist/file.png'
+        out_text = "WARNING: Figure could not be saved. Check provided file path and name: {}\n".format(save_fig)
+        electron_balance_bar(self.EB_dict_01,
+                             save_fig = save_fig)
+        out,err=capsys.readouterr()
+
+        assert out==out_text
+
 
 class TestActivity:
     """Class for testing activity plot and activity plot prepration of mibiscreen."""

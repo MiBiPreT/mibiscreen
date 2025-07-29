@@ -22,7 +22,6 @@ DEF_settings = dict(
     loc = 'lower right',
     dpi = 300,
     save_fig=False,
-    # xtick_autorotate = False,
     )
 
 
@@ -353,12 +352,12 @@ def electron_balance_bar_data_prep(data_frame,
     )
     electron_balance_bar_dict['BTEXIIN'] = dict(
         # height = data_frame[names.name_total_oxidators_BTEXIIN],
-        height = data_frame['total_oxidators_BTEXIIN'].values,
+        height = data_frame[names.name_total_oxidators_BTEXIIN].values,
         color = color_order[1],
     )
     electron_balance_bar_dict['BTEX'] = dict(
         # height = data_frame[names.name_total_oxidators_BTEX],
-        height = data_frame['total_oxidators_BTEX'].values,
+        height = data_frame[names.name_total_oxidators_BTEX].values,
         color = color_order[2],
     )
 
@@ -382,6 +381,7 @@ def electron_balance_bar(electron_balance_bar_dict,
                          ylabel = r'Electron capacity/needed [mmol e-/l]',
                          yscale = 'linear',
                          title_text = 'Electron balance per sample',
+                         xtick_autorotate = False,
                          save_fig = False,
                          **kwargs,
                          ):
@@ -420,6 +420,8 @@ def electron_balance_bar(electron_balance_bar_dict,
         title_text: str or False, default 'Total concentration of contaminants per sample'
             text displayed as figure title,
             in case of False, no title will be displayed
+        xtick_autorotate: Boolean, default 'False'
+            sample names at x-axis are rotated by 45 degrees
         save_fig: Boolean or string, optional, default is False.
             Flag to save figure to file with name provided as string.
         **kwargs: dict
@@ -463,7 +465,7 @@ def electron_balance_bar(electron_balance_bar_dict,
     plt.legend(loc =settings['loc'],fontsize = settings['textsize'])
     if title_text:
         plt.title(title_text,fontsize = settings['textsize'])
-    if settings['xtick_autorotate']:
+    if xtick_autorotate:
         fig.autofmt_xdate(bottom=0.2, rotation=30, ha='right', which='major')
 
 
