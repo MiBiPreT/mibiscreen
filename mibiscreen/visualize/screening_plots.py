@@ -11,6 +11,7 @@ import numpy as np
 import pandas as pd
 import mibiscreen.data.settings.standard_names as names
 from mibiscreen.data.check_data import check_data_frame
+from mibiscreen.data.set_data import determine_quantities
 
 DEF_settings = dict(
     figsize = [3.75,2.8],
@@ -21,7 +22,7 @@ DEF_settings = dict(
     loc = 'lower right',
     dpi = 300,
     save_fig=False,
-    xtick_autorotate = False,
+    # xtick_autorotate = False,
     )
 
 
@@ -29,11 +30,12 @@ def contaminants_bar(data_frame,
                      list_contaminants,
                      list_labels = False,
                      sort = False,
-                     sample_nr = False,
+                     name_sample = False,
                      xlabel = 'Samples',
                      ylabel = r'Total concentration [$\mu$g/l]',
                      yscale = 'linear',
                      title_text = 'Total concentration of contaminants per sample',
+                     xtick_autorotate = False,
                      save_fig = False,
                      **kwargs,
                      ):
@@ -58,7 +60,7 @@ def contaminants_bar(data_frame,
             weather to sort data and display concentrations bars
             in ascending order (based on values of first quantity in
             list_contaminants)
-        sample_nr: Boolean, default False
+        name_sample: Boolean, default False
             weather to display sample_nr on x-axis (True) or
             just number all samples starting from 1 (False)
         xlabel: str, default 'Samples'
@@ -86,24 +88,36 @@ def contaminants_bar(data_frame,
     settings = copy.copy(DEF_settings)
     settings.update(**kwargs)
 
-    ### Plotting data preparation
-    if isinstance(data_frame,pd.Series):
-        raise ValueError("Provide full data frame not only series.")
+    ### Plotting data check
 
+    data,cols= check_data_frame(data_frame,inplace = False)
+
+    ### sorting out which columns in data to use for summation of electrons available
+    quantities,_ = determine_quantities(cols,
+                                        name_list = list_contaminants
+                                        )
+
+    ### Plotting data preparation
     if sort:
         sort_args = np.argsort(data_frame[list_contaminants[0]].values)
     else:
         sort_args = np.arange(len(data_frame[list_contaminants[0]].values))
 
-    if sample_nr is False:
+    if name_sample is False:
         n_bars = np.arange(len(data_frame[list_contaminants[0]].values))
-    if sample_nr == 'sample_nr':
-        if sample_nr not in data_frame.columns():
-            raise ValueError("No sample number provided in data_frame frame.")
-        n_bars = data_frame[names.name_sample].values[sort_args]
+    else:
+        if names.name_sample not in cols:
+            raise ValueError("No {} provided in data_frame.".format(names.name_sample))
+        else:
+            n_bars = data_frame[names.name_sample].values[sort_args]
 
     if list_labels is False:
         list_labels = list_contaminants
+    else:
+        if not isinstance(list_labels, list):
+            raise ValueError("list_labels need to contain a list of string label names.")
+        if len(list_labels)!=len(list_contaminants):
+            raise ValueError("List of label names must be of same length of list of selected quantities.")
 
     ### plotting actual data
     fig, ax = plt.subplots(figsize=settings['figsize'])
@@ -119,7 +133,7 @@ def contaminants_bar(data_frame,
     plt.legend(loc =settings['loc'],fontsize = settings['textsize'])
     if title_text:
         plt.title(title_text,fontsize = settings['textsize'])
-    if settings['xtick_autorotate']:
+    if xtick_autorotate:
         fig.autofmt_xdate(bottom=0.2, rotation=30, ha='right', which='major')
 
     fig.tight_layout()
@@ -132,7 +146,6 @@ def contaminants_bar(data_frame,
             print("Save Figure to file:\n", save_fig)
         except OSError:
             print("WARNING: Figure could not be saved. Check provided file path and name: {}".format(save_fig))
-
 
     return fig, ax
 
@@ -216,13 +229,6 @@ def threshold_ratio_bar(data_threshold_ratios,
             Axes object of created activity plot.
 
     """
-    # Data preparation
-    # quantities, _ = determine_quantities(data_frame.columns.to_list(),
-    #                                       name_list = list_labels,
-    #                                       verbose = False)
-
-
-
     settings = copy.copy(DEF_settings)
     settings.update(**kwargs)
 
@@ -232,7 +238,10 @@ def threshold_ratio_bar(data_threshold_ratios,
     else:
         list_contaminants = data_threshold_ratios.columns.to_list()
 
-    if list_labels is False:
+    if list_labels:
+        if len(list_labels)<len(list_contaminants):
+            raise ValueError("Number of label names too short.")
+    else:
         list_labels = list_contaminants
 
     if list_samples:
@@ -245,9 +254,9 @@ def threshold_ratio_bar(data_threshold_ratios,
             raise ValueError("Number of subplots does not match selection of samples\n \
                              check keywords 'nrows' and 'ncols'.")
     elif ncols:
-        nrows = int(len(list_samples)/ncols)
+        nrows = int(np.ceil(len(list_samples)/ncols))
     elif nrows:
-        ncols = int(len(list_samples)/nrows)
+        ncols = int(np.ceil(len(list_samples)/nrows))
     else:
         ncols = len(list_samples)
         nrows = 1
@@ -294,7 +303,8 @@ def threshold_ratio_bar(data_threshold_ratios,
     # ax.minorticks_on()
     # ax.tick_params(axis="both", which="major", labelsize=settings['textsize'])
     # ax.tick_params(axis="both", which="minor", labelsize=settings['textsize'])
-    # plt.title(title_text,fontsize = settings['textsize'])
+    if title_text:
+        plt.title(title_text,fontsize = settings['textsize'])
     fig.tight_layout()
 
     ### ---------------------------------------------------------------------------
@@ -451,7 +461,8 @@ def electron_balance_bar(electron_balance_bar_dict,
     plt.ylabel(ylabel,fontsize = settings['textsize'])
     plt.yscale(yscale)
     plt.legend(loc =settings['loc'],fontsize = settings['textsize'])
-    plt.title(title_text,fontsize = settings['textsize'])
+    if title_text:
+        plt.title(title_text,fontsize = settings['textsize'])
     if settings['xtick_autorotate']:
         fig.autofmt_xdate(bottom=0.2, rotation=30, ha='right', which='major')
 
@@ -570,6 +581,7 @@ def activity_plot(
         xlabel = r"Concentration contaminants [$\mu$g/L]",
         ylabel = "Metabolite count",
         save_fig=False,
+        title_text = False,
         **kwargs,
         ):
     """Creating activity plot.
@@ -596,6 +608,9 @@ def activity_plot(
             y-axis label
         save_fig: Boolean or string, optional, default is False.
             Flag to save figure to file with name provided as string.
+        title_text: str or False, default False
+            text displayed as figure title,
+            in case of False, no title will be displayed
         **kwargs: dict
             dictionary with plot settings
 
@@ -666,6 +681,8 @@ def activity_plot(
     ax.tick_params(axis="both", which="major", labelsize=settings['textsize'])
     ax.tick_params(axis="both", which="minor", labelsize=settings['textsize'])
     plt.legend(title = 'Electron acceptors:',loc =settings['loc'], fontsize=settings['textsize'] )
+    if title_text:
+        plt.title(title_text,fontsize = settings['textsize'])
     fig.tight_layout()
 
     ### ---------------------------------------------------------------------------
