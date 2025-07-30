@@ -50,7 +50,13 @@ mbs.total_concentration(contaminants,
                         verbose = verbose,
                         )
 
-## the upper three are equivalent to:
+mbs.total_concentration(contaminants,
+                        name_list = ['benzene','toluene'],
+                        include_as = "concentration_BT",
+                        verbose = verbose,
+                        )
+
+## the first three are equivalent to:
 # mbs.total_contaminant_concentration(contaminants,
 #                                     contaminant_group = 'all_cont',
 #                                     include = True,
@@ -67,11 +73,6 @@ mbs.total_concentration(contaminants,
 #                                     verbose = verbose)
 
 
-mbs.total_concentration(contaminants,
-                        name_list = ['benzene','toluene'],
-                        include_as = "concentration_BT",
-                        verbose = verbose,
-                        )
 
 ###------------------------------------------------------------------------###
 ### Visualization of contaminant concentrations per sample
@@ -126,42 +127,33 @@ mbs.contaminants_bar(contaminants,
                      textsize = 12,
                      ylabel = 'Total count',
                      yscale = 'linear',
-                     save_fig = 'count_bar.png',
                      loc='upper left',
                      title_text = False,
+                     # save_fig = 'count_bar.png',
                      )
 
 
-# ###------------------------------------------------------------------------###
-# ### Evaluation of intervention threshold exceedance
+###------------------------------------------------------------------------###
+### Evaluation of threshold exceedance
 
-# threshold = mbs.thresholds_for_intervention_ratio(data,
-#                                 verbose = verbose,
-#                                 include = False,
-#                                 contaminant_group='BTEXIIN'
-#                                 )
+data_thresh_ratio = mbs.thresholds_for_intervention_ratio(contaminants)
 
-# quantities = ['naphthalene','indene','pm_xylene','o_xylene','ethylbenzene','toluene','benzene']
+quantities = ['toluene','naphthalene','indene','pm_xylene','ethylbenzene','o_xylene','benzene']
 
-# data_thresh = pd.DataFrame(index = data.index)
+fig,ax = mbs.threshold_ratio_bar(data_thresh_ratio,
+                                 list_samples =  [31,9,11],
+                                 figsize = [12,3],
+                                 list_colors = ['olive','lightblue','tomato'],
+                                 nrows=1,ncols=3,
+                                 sharey = True,
+                                 grid = True,
+                                )
 
-# for cont in quantities:
-#     th_value = properties[cont]['thresholds_for_intervention_NL']
-#     data_thresh[cont+'_thr_ratio'] = data[cont]/th_value
-
-# plt.figure(num=7)
-# plt.barh(quantities,data_thresh.iloc[9],color = 'lightblue')
-# plt.plot([1,1],[-0.5,6.5],'k--')
-# plt.xlabel(r'ratio to threshold concentration $sC/C_\mathrm{threshold}$')
-
-# plt.figure(num=8)
-# plt.barh(quantities,data_thresh.iloc[11],color = 'tomato')
-# plt.plot([1,1],[-0.5,6.5],'k--')
-# plt.xlabel(r'ratio to threshold concentration $C/C_\mathrm{threshold}$')
-
-# plt.figure(num=9)
-# plt.barh(quantities,data_thresh.iloc[31],color = 'olive')
-# plt.plot([1,1],[-0.5,6.5],'k--')
-# plt.xlabel(r'ratio to threshold concentration $C/C_\mathrm{threshold}$')
-
+mbs.threshold_ratio_bar(data_thresh_ratio,
+                        list_samples = [9],
+                        list_labels =  quantities,
+                        figsize = [6,3],
+                        unity_line = True,
+                        title_text= 'Evaluation of threshold exceedance for BTEXIIN',
+                        )
 

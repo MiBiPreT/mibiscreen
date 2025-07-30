@@ -8,8 +8,6 @@ Jupyter-Notebook.
 @author: Alraune Zech
 """
 
-import matplotlib.pyplot as plt
-import numpy as np
 import mibiscreen as mbs
 
 file_path = './amersfoort.xlsx'
@@ -42,45 +40,63 @@ metabolites_count = mbs.total_count(metabolites,
 
 mbs.total_metabolites_concentration(metabolites,
                                     include = True,
-                                    verbose = False)
+                                    verbose = True)
+
+mbs.total_metabolites_count(metabolites,
+                            include = True,
+                            verbose = True)
 
 ###------------------------------------------------------------------------###
 ### Visualization of metabolite concentrations per sample
 
-plt.figure(figsize = [18,5])
-plt.bar(np.arange(len(metabolites_total.values)),metabolites_total.values,label='all')
-plt.xlabel('Samples')
-plt.ylabel(r'Total metabolites concentration [$\mu$g/l]')
-plt.title('Total concentration of metabolites per sample')
+mbs.contaminants_bar(metabolites,
+                      list_contaminants = ['metabolites_concentration'],
+                      list_labels = ['all metabolites'],
+                      figsize = [18,5],
+                      textsize = 12,
+                      ylabel = r'Total metabolites concentration [$\mu$g/l]',
+                      loc='upper left',
+                      title_text = 'Total concentration of metabolites per sample',
+                      # save_fig = 'metabolites_bar.png',
+                      )
 
-fig = plt.figure(figsize = [18,5])
-sort_args = np.argsort(metabolites['metabolites_concentration'].values)
-plt.bar(metabolites.sample_nr.values[sort_args],metabolites['metabolites_concentration'].values[sort_args],label='all')
-plt.xlabel('Samples')
-plt.ylabel(r'Total metabolites concentration [$\mu$g/l]')
-plt.title('Total concentration of metabolites per sample')
-fig.autofmt_xdate(bottom=0.2, rotation=30, ha='right', which='major')
-
+mbs.contaminants_bar(metabolites,
+                     list_contaminants = ['metabolites_concentration'],
+                     list_labels = ['all metabolite'],
+                     sort = True,
+                     name_sample = True,
+                     figsize = [18,5],
+                     textsize = 12,
+                     ylabel = r'Total metabolites concentration [$\mu$g/l]',
+                     loc='upper left',
+                     title_text = 'Total concentration of metabolites per sample',
+                     xtick_autorotate = True,
+                      # save_fig = 'metabolites_bar.png',
+                     )
 ###------------------------------------------------------------------------###
 ### Visualization of metabolite count per sample
 
-plt.bar(np.arange(len(metabolites_count.values)),np.sort(metabolites_count.values))
-plt.xlabel('Samples')
-plt.ylabel('Total number')
-plt.title('Total number of metabolites per sample')
-# plt.legend()
-
-fig = plt.figure(figsize = [18,5])
-sort_args = np.argsort(metabolites_count.values)
-plt.bar(metabolites.sample_nr.values[sort_args],metabolites_count.values[sort_args],label='all')
-plt.xlabel('Samples')
-plt.ylabel(r'Total metabolites count')
-plt.title('Total counts of metabolites per sample')
-fig.autofmt_xdate(bottom=0.2, rotation=30, ha='right', which='major')
+mbs.contaminants_bar(metabolites,
+                     list_contaminants = ['metabolites_count'],
+                     list_labels = ['total metabolites count'],
+                     sort = True,
+                     name_sample = True,
+                     figsize = [18,5],
+                     textsize = 12,
+                     ylabel = r'Total metabolites count',
+                     loc='upper left',
+                     title_text = 'Total count of metabolites per sample',
+                     xtick_autorotate = True,
+                      # save_fig = 'metabolites_count_bar.png',
+                     )
 
 ###------------------------------------------------------------------------###
+###------------------------------------------------------------------------###
 ### Relating Metabolite activity to electron availability
+###------------------------------------------------------------------------###
+###------------------------------------------------------------------------###
 
+### Load and preprocess additional data needed
 contaminants_raw,_ = mbs.load_excel(file_path,
                                     sheet_name = 'contaminants',
                                     verbose = False)
@@ -90,15 +106,20 @@ environment_raw,_ = mbs.load_excel(file_path,
                                     verbose = False)
 environment,units = mbs.standardize(environment_raw,verbose = False)
 
+
+###------------------------------------------------------------------------###
+### Perform data analysis needed
 mbs.total_contaminant_concentration(contaminants,include = True)
 mbs.total_metabolites_count(metabolites,include = True)
 data_NA = mbs.merge_data([environment,contaminants,metabolites])
 mbs.sample_NA_traffic(data_NA,include = True)
 
-data_activity =  mbs.activity_data_prep(data_NA)
-data_activity['tot_cont'] = data_activity['tot_cont']*0.001
+###------------------------------------------------------------------------###
+### Data preparation for plot and plotting
 
-#fig, ax = mbs.activity_plot(data_activity)
+data_activity =  mbs.activity_data_prep(data_NA)
+data_activity['tot_cont'] = data_activity['tot_cont']*0.001 # rescale unit
+
 fig, ax = mbs.activity_plot(data_activity,
                         figsize = [6,4],
                         textsize = 12,

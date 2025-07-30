@@ -16,19 +16,6 @@ verbose = False #True
 file_path = './amersfoort.xlsx'
 
 ###------------------------------------------------------------------------###
-### specify quantities to include in the analysis
-
-#selected group of contaminant to analyse
-contaminant_group = ['benzene','toluene','ethylbenzene','pm_xylene','indene','naphthalene']
-
-#selected group of geochemical parameters to include to the analysis
-geochemicals_group = ['nitrate','sulfate','redoxpot','iron2','manganese2']
-
-#list of sequencing data to include to the analysis
-variables_dna = ['Total bacteria 16SRrna', 'Benzene carboxylase', 'NirS', 'NarG', 'BssA SRB',
-                 'BssA nitraat', 'Peptococcus']
-
-###------------------------------------------------------------------------###
 ### Load and standardize data of environmental quantities/chemicals
 environment_raw,units = mbs.load_excel(file_path,
                                     sheet_name = 'environment',
@@ -58,8 +45,22 @@ dna,units = mbs.standardize(dna_raw,
                         reduce = False,
                         verbose = verbose)
 
+
 ###------------------------------------------------------------------------###
-### Data preproocessing
+### specify quantities to include in the analysis
+
+#selected group of contaminant to analyse
+contaminant_group = ['benzene','toluene','ethylbenzene','pm_xylene','indene','naphthalene']
+
+#selected group of geochemical parameters to include to the analysis
+geochemicals_group = ['nitrate','sulfate','redoxpot','iron2','manganese2']
+
+#list of sequencing data to include to the analysis
+variables_dna = ['Total bacteria 16SRrna', 'Benzene carboxylase', 'NirS', 'NarG', 'BssA SRB',
+                 'BssA nitraat', 'Peptococcus']
+
+###------------------------------------------------------------------------###
+### Data selection and preproocessing
 
 #extract data of geochemical quantities of interest
 geochem_selected = environment[['sample_nr']+geochemicals_group]
@@ -83,11 +84,11 @@ data_ordination = mbs.merge_data([geochem_selected,cont_selected,dna],clean = Tr
 #data_ordination.to_excel('./ordination_data.xlsx')
 
 ###------------------------------------------------------------------------###
-# Data preprocessing (filtering and transformation) for RDA
+# Data preprocessing (filtering and transformation) for PCA
 
-data_pcr = data_ordination.copy()
+data_pca = data_ordination.copy()
 
-mbs.filter_values(data_pcr,
+mbs.filter_values(data_pca,
               replace_NaN = 'zero',
               inplace = True,
               verbose = True)
@@ -99,7 +100,7 @@ mbs.filter_values(data_pcr,
 #                  inplace = True,
 #                  )
 
-mbs.transform_values(data_pcr,
+mbs.transform_values(data_pca,
                  how = 'standardize',
                  inplace = True,
                  )
@@ -147,7 +148,7 @@ mbs.transform_values(data_rda,
 ###------------------------------------------------------------------------###
 ### perform PCA and plot results
 
-pca_output = mbs.pca(data_pcr,
+pca_output = mbs.pca(data_pca,
                         independent_variables = contaminant_group_analysis + geochemicals_group,
                         dependent_variables = variables_dna,
                         verbose = True)
