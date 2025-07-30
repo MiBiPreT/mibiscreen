@@ -22,6 +22,7 @@ DEF_settings = dict(
     loc = 'lower right',
     dpi = 300,
     save_fig=False,
+    grid = False,
     )
 
 
@@ -93,7 +94,7 @@ def contaminants_bar(data_frame,
 
     ### sorting out which columns in data to use for summation of electrons available
     quantities,_ = determine_quantities(cols,
-                                        name_list = list_contaminants
+                                        name_list = list_contaminants,
                                         )
 
     ### Plotting data preparation
@@ -162,7 +163,7 @@ def threshold_ratio_bar(data_threshold_ratios,
                         xlabel = r'ratio to threshold concentration $C/C_\mathrm{threshold}$',
                         ylabel = False,
                         xscale = False,
-                        title_text = 'Concentration treshold ratio',
+                        title_text = False,
                         save_fig = False,
                         **kwargs,
                         ):
@@ -212,7 +213,7 @@ def threshold_ratio_bar(data_threshold_ratios,
             y-axis label
         xscale: str or False, default 'False',
             scaling of y-axis, when False --> 'linear', typical other option: 'log'
-        title_text: str or False, default 'Concentration treshold ratio'
+        title_text: str or False, default 'False'
             text displayed as figure title,
             in case of False, no title will be displayed
         save_fig: Boolean or string, optional, default is False.
@@ -261,7 +262,7 @@ def threshold_ratio_bar(data_threshold_ratios,
         nrows = 1
 
     if list_colors:
-        if len(list_colors)<len(list_contaminants):
+        if len(list_colors)<len(list_samples):
             raise ValueError("Number of colors too short.")
     else:
         list_colors = ['C{}'.format(i) for i in range(len(list_contaminants))]
@@ -280,28 +281,33 @@ def threshold_ratio_bar(data_threshold_ratios,
                             sharex=sharex,
                             sharey=sharey,
                             )
-    axs = ax.flatten()
+    if len(list_samples)>1:
+        axs = ax.flatten()
 
     for i in range(len(list_samples)):
 
+        if len(list_samples)>1:
+            axi = axs[i]
+        else:
+            axi = ax
+
         # plt.bar(n_bars,value['height'][sort_args],color = value['color'],zorder = 1)
-        axs[i].barh(list_labels,data_threshold_ratios.iloc[i,:],color = list_colors[i])
+        axi.barh(list_labels,data_threshold_ratios.iloc[i,:],color = list_colors[i])
         if unity_line:
-            axs[i].plot([1,1],[-0.5,len(list_labels)-.5],'k--')
+            axi.plot([1,1],[-0.5,len(list_labels)-.5],'k--')
 
         ### ---------------------------------------------------------------------------
         ### Adapt plot optics
 
-        axs[i].set_xlabel(xlabel,fontsize=settings['textsize'])
+        axi.set_xlabel(xlabel,fontsize=settings['textsize'])
         if ylabel:
-            axs[i].set_ylabel(ylabel, fontsize=settings['textsize'])
+            axi.set_ylabel(ylabel, fontsize=settings['textsize'])
         if xscale:
-            axs[i].set_xscale(xscale)
+            axi.set_xscale(xscale)
 
-    # ax.grid(True)
-    # ax.minorticks_on()
-    # ax.tick_params(axis="both", which="major", labelsize=settings['textsize'])
-    # ax.tick_params(axis="both", which="minor", labelsize=settings['textsize'])
+        axi.grid(settings['grid'])
+        axi.tick_params(axis="both", which="major", labelsize=settings['textsize'])
+
     if title_text:
         plt.title(title_text,fontsize = settings['textsize'])
     fig.tight_layout()
