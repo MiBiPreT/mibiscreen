@@ -357,7 +357,6 @@ def electron_balance_bar_data_prep(data_frame,
         sample_nr = data_frame[names.name_sample],
     )
     electron_balance_bar_dict['BTEXIIN'] = dict(
-        # height = data_frame[names.name_total_oxidators_BTEXIIN],
         height = data_frame[names.name_total_oxidators_BTEXIIN].values,
         color = color_order[1],
     )

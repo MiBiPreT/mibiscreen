@@ -5,14 +5,9 @@
 @author: Alraune Zech
 """
 
-#import numpy as np
-#import pandas as pd
 import mibiscreen.data.settings.standard_names as names
 from mibiscreen.data.check_data import check_data_frame
 from mibiscreen.data.set_data import determine_quantities
-
-#from mibiscreen.data.set_data import extract_settings
-#from .properties import properties
 
 
 def total_concentration(

@@ -11,7 +11,6 @@ from mibiscreen.analysis.sample.intervention import thresholds_for_intervention_
 from mibiscreen.data.example_data.example_data import example_data
 
 data = example_data(with_units = False,data_type = 'contaminants')
-#intervention_ratio = thresholds_for_intervention_ratio(data)
 
 data_test = data.copy()
 thresholds_for_intervention_ratio(data_test,
@@ -22,12 +21,6 @@ thresholds_for_intervention_ratio(data_test,
 class TestThresholdsForInterventionRatio:
     """Class for testing thresholds_for_intervention_ratio() from module intervention of mibipret."""
 
-    # data = example_data(with_units = False)
-
-    # columns = ['sample_nr', 'sulfate', 'benzene']
-    # units = [' ','mg/L', 'ug/L']
-    # s01 = ['2000-001', 748, 263]
-    # s02b = ['2000-002', 548, ]
     data = example_data(with_units = False,data_type = 'contaminants')
     benzene_thr_ratio =  np.array([8.76667,5.96667,28.4333,41.8])
     intervention_ratio_cols = ['benzene_thr_ratio', 'o_xylene_thr_ratio',
