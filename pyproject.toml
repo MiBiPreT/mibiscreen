@@ -53,7 +53,7 @@ dev = [
     "pytest-cov",
     "ruff",
     "tox",
-    "nbconvert",
+    "nb-clean ==4.0.1",
 ]
 publishing = [
     "build",
