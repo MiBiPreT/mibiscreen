@@ -155,7 +155,8 @@ class TestOxidators:
         """
         data_test = self.data.copy()
         oxidators(data_test,include = True)
-        assert data_test.shape[1] == self.data.shape[1]+1 and "total_oxidators" in data_test.columns
+        # assert names.name_total_oxidators in data_test.columns
+        assert data_test.shape[1] == self.data.shape[1]+1 and "total_oxidators_BTEXIIN" in data_test.columns
 
 
     def test_oxidators_07(self,capsys):
@@ -296,5 +297,4 @@ class TestScreeningNA:
         out,err=capsys.readouterr()
 
         assert len(out)>0
-
 

@@ -17,7 +17,7 @@ properties_metabolites[names.name_metabolites_conc]=dict(
     standard_unit = names.unit_microgperl,
 )
 
-properties_metabolites[names.name_metabolites_variety]=dict(
+properties_metabolites[names.name_metabolites_count]=dict(
     other_names = ['metabolitevariety','metabolite variety','metabolite-variety',
                    'metabolite_variety','metabolitesvariety','metabolites variety',
                    'metabolites-variety','metabolites_variety',"number of detected metabolites"],

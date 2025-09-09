@@ -13,7 +13,9 @@ DEF_settings = dict(
     figsize = [3.75,2.8],
     fontsize = 10,
     marker = 'o',
-    markersize = 45,
+    marker_size = 45,
+    marker_color = 'C0',
+    marker_edgecolors = 'k',
     fit_color = 'red',
     intercept_color = 'forestgreen',
     loc = 'best',
@@ -90,7 +92,10 @@ def Lambda_plot(delta_C,
     settings.update(**kwargs)
 
     fig, ax = plt.subplots(figsize=settings['figsize'])
-    ax.scatter(delta_C, delta_H, marker=settings['marker'],zorder = 3,label= 'data')
+    ax.scatter(delta_C, delta_H, marker=settings['marker'],
+               color = settings['marker_color'],
+               edgecolors = settings['marker_edgecolors'],
+               zorder = 3,label= 'data')
 
     ### ---------------------------------------------------------------------------
     ### plot linear regression trend line

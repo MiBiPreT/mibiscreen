@@ -15,13 +15,7 @@ from different data files
 
 import matplotlib.pyplot as plt
 import numpy as np
-from mibiscreen.analysis.reduction.stable_isotope_regression import Lambda_regression
-from mibiscreen.analysis.reduction.stable_isotope_regression import extract_isotope_data
-from mibiscreen.data.check_data import standardize
-from mibiscreen.data.load_data import load_excel
-from mibiscreen.visualize.stable_isotope_plots import Lambda_plot
-
-plt.close('all')
+import mibiscreen as mbs
 
 ###------------------------------------------------------------------------###
 ### Script settings
@@ -39,31 +33,46 @@ file_path = './amersfoort.xlsx'
 # isotopes_raw,units = md.load_csv(file_path,
 #                                  verbose = verbose)
 
-isotopes_raw,units = load_excel(file_path,
+isotopes_raw,units = mbs.load_excel(file_path,
                                    sheet_name = 'isotopes',
                                    verbose = verbose)
 
-isotopes,units = standardize(isotopes_raw,
+isotopes,units = mbs.standardize(isotopes_raw,
                                 reduce = True,
                                 verbose=verbose)
+
+
+###------------------------------------------------------------------------###
+### Lambda regression and Lambda regression plot for single moleculeq
+
+C_data,H_data = mbs.extract_isotope_data(isotopes,'toluene')
+results = mbs.Lambda_regression(C_data,
+                                H_data,
+                                validate_indices = True,
+                                verbose = True,
+                                )
+mbs.Lambda_plot(**results,
+                title = 'toluene',
+               fit_color = 'k',
+               marker_color = 'C1',
+               # save_fig = 'Amersfoort_isotope_Lambda_toluene.pdf'
+               )
 
 ###------------------------------------------------------------------------###
 ### Lambda regression and Lambda regression plot for all molecules (separately)
 
 for j,molecule in enumerate(molecules):
 
-    C_data,H_data = extract_isotope_data(isotopes,molecule)
+    C_data,H_data = mbs.extract_isotope_data(isotopes,molecule)
 
-    results = Lambda_regression(C_data,
+    results = mbs.Lambda_regression(C_data,
                                 H_data,
                                 validate_indices = True,
                                 verbose = verbose,
                                 )
 
     molecules_analysis.append(results)
-
-    Lambda_plot(**results)#,save_fig = 'Amersfoort_isotope_Lambda_{}.pdf'.format(molecule))
-    # Lambda_plot(**results,save_fig = 'Amersfoort_isotope_Lambda_{}.png'.format(molecule),dpi = 300)
+    mbs.Lambda_plot(**results)
 
 ###------------------------------------------------------------------------###
 ### Lambda regression and plot of results of all molecules in one plot
@@ -99,4 +108,3 @@ for j,molecule in enumerate(molecules):
     ax[j].legend()
 
 fig.tight_layout()
-# plt.savefig("Amersfoort_isotope_Lambda.pdf")

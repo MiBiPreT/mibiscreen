@@ -89,5 +89,6 @@ fig, ax = mbs.ordination_plot(ordination_output=ordination_output,
                 title = "Unconstrained Ordination PCA",
                 # plot_scores = False,
                 # axis_ranges = [-0.6,0.8,-0.8,1.0],
-                # save_fig = 'save3.png',
+                # save_fig = 'Amersfoort_PCA.png',
                 )
+
