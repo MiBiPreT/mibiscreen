@@ -330,10 +330,12 @@ def check_units(data,
                          documentation.")
 
     # standardize column names (as it might not has happened for data yet)
-    check_columns(units,standardize = True, verbose = False)
+    # (column_names_known,column_names_unknown,column_names_standard) = check_columns(units,
+    check_columns(units,
+                  standardize = True,
+                  verbose = False)
     col_check_list= []
     col_not_checked  = []
-
 
     properties_all = {**properties_sample_settings,
                       **properties_geochemicals,
@@ -344,14 +346,14 @@ def check_units(data,
 
     ### run through all quantity columns and check their units
     for quantity in units.columns:
-        if quantity in properties_all.keys():
+        #quantity = unit.encode("utf-8")
+        if quantity in properties_all.keys():# test on standard names
             standard_unit = properties_all[quantity]['standard_unit']
-        elif quantity.split('-')[0] in properties_all.keys(): # test on isotope
+        elif quantity.split('-')[0] in properties_all.keys(): # test on isotopes
             standard_unit = properties_all[quantity.split('-')[0]]['standard_unit']
         else:
             col_not_checked.append(quantity)
             continue
-
         if standard_unit != names.unit_less:
             other_names_unit = properties_units[standard_unit]['other_names']
             if str(units[quantity][0]).lower() not in other_names_unit:
@@ -370,6 +372,88 @@ def check_units(data,
         print('================================================================')
 
     return col_check_list
+
+def check_detection_limit(data_frame,
+                          dl_factor = 0.1,
+                          inplace = False,
+                          verbose = True,
+                          ):
+    """Function for handling detection levels.
+
+    Often measured values come with uncertainty. Values of e.g. chemicals/contaminants
+    are reported in the data files with non-zero values, but below detection level.
+    Typically values are reported in the form "<0.x".
+    The detection limit values often differ between contaminants, but can also
+    differ per sample for the same contaminant.
+
+    Args:
+    -------
+        data_frame: pandas.DataFrames
+            dataframe with the measurements (without first row of units)
+        dl_factor: float, default 0.1
+            value between 0 and 1 to multiply given detection limit value with, options:
+                - 0.1 (default): if a value of <x.y is given, the
+                    entry is tranformed to a numerical value of 0.xy = 0.1*x.y
+                - 0: values given with detection limit are set to 0
+                - 1: values are transformed to detection limit value
+        inplace: Boolean, default False
+            Whether to modify the DataFrame rather than creating a new one.
+        verbose: Boolean
+            verbose statement (default True)
+
+    Returns:
+    -------
+        data: pandas.DataFrame
+            Tabular data with numerical values for entries given initially using
+            detection limit notation.
+
+    """
+    if verbose:
+        print('================================================================')
+        print(" Running function 'check_detection_limit()' on data")
+        print('================================================================')
+
+    data,cols= check_data_frame(data_frame, inplace = inplace)
+
+    ### testing if provided data frame contains first row with units
+    for u in data.iloc[0].to_list():
+        if u in all_units:
+            print("WARNING: First row identified as units, has been removed for value check")
+            print('________________________________________________________________')
+            data.drop(labels = 0,inplace = True)
+            break
+
+    if dl_factor>1 or dl_factor<0:
+        raise ValueError("Factor needs to be between 0 and 1")
+
+    quantities_detect = []
+    for quantity in cols:
+        series = data[quantity].astype('str').str.replace(',', '.').copy() # extract series
+        dec_which = series.str.contains('<') # identify elements that contain detection limit values
+
+        if np.any(dec_which):
+            quantities_detect.append(quantity)
+            if dl_factor in ['nan','NaN','na','NA',np.nan]:
+                series_4 = np.where(dec_which, np.nan, data[quantity])
+            else:
+                series_1 = series.str.replace("<", "").copy()
+                series_2 = pd.to_numeric(series_1)
+                series_3 = series_2.multiply(dl_factor)
+                series_4 = np.where(dec_which, series_3, data[quantity])
+
+            data[quantity] = series_4
+
+    if verbose:
+        print("Quantities with values given by detection limits:")
+        print('-----------------------------------------------------------')
+        for name in quantities_detect:
+            print(name)
+        print('-----------------------------------------------------------')
+        print("All values with detection limit, given by '<X' have been replaced")
+        print(" by the values multiuplied with the specified factor: {} * X ".format(dl_factor))
+        print('================================================================')
+
+    return data
 
 def check_values(data_frame,
                  inplace = False,
@@ -446,6 +530,7 @@ def standardize(data_frame,
                 reduce = True,
                 store_csv = False,
                 verbose=True,
+                **kwargs,
                 ):
     """Function providing condensed data frame with standardized names.
 
@@ -469,6 +554,9 @@ def standardize(data_frame,
             whether to save dataframe in standard format to csv-file
         verbose: Boolean, default True
             verbose statement
+        **kwargs: Optional keyword arguments.
+            dl_factor (float, optional): scaling factor for value given at detection limit.
+               Default is 0.1.
 
     Returns:
     -------
@@ -513,8 +601,13 @@ def standardize(data_frame,
     col_check_list = check_units(units,
                                  verbose = verbose)
 
-    # transform data to numeric values
-    data_numeric = check_values(data.drop(labels = 0),
+    data_clean = check_detection_limit(data.drop(labels = 0),
+                          inplace = False,
+                          verbose = verbose,
+                          **kwargs,
+                          )
+
+    data_numeric = check_values(data_clean,
                                 inplace = False,
                                 verbose = verbose)
 
