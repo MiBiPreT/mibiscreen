@@ -452,9 +452,9 @@ def check_values(data_frame,
                 #     return np.nan
                 if val.startswith('<'):
                     try:
+                        found_dl = True
                         number = float(val[1:])
                         if dl_factor is not None:
-                            found_dl = True
                             return number * dl_factor
                         else:
                             return np.nan
