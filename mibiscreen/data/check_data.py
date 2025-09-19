@@ -440,39 +440,33 @@ def check_values(data_frame,
     failed_conversion_columns = []
 
     def clean_quantity(quantity_series,quantity_name):
-        found_dl = False
-        found_failed = False
-
+        flags = {'found_dl': False, 'found_failed': False}
         def clean_value(val):
-            nonlocal found_dl, found_failed
             if isinstance(val, str):
                 val = val.strip().replace(',', '.')
-                # if val == '':
-                #     found_failed = True
-                #     return np.nan
                 if val.startswith('<'):
-                    found_dl = True                    
                     try:
                         number = float(val[1:])
+                        flags['found_dl'] = True
                         if dl_factor is not None:
                             return number * dl_factor
                         else:
                             return np.nan
                     except ValueError:
-                        found_failed = True
+                        flags['found_failed'] = True
                         return val
                 try:
                     return float(val)
                 except ValueError:
-                    found_failed = True
+                    flags['found_failed'] = True
                     return val
             return val
 
         cleaned = quantity_series.apply(clean_value)
 
-        if found_dl:
+        if flags['found_dl']:
             detection_limit_columns.append(quantity_name)
-        if found_failed:
+        if flags['found_failed']:
             failed_conversion_columns.append(quantity_name)
 
         return cleaned
