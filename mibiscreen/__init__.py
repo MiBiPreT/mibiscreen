@@ -11,7 +11,6 @@ from mibiscreen.data.check_data import (
     standard_names,
     check_columns,
     check_units,
-    check_detection_limit,
     check_values
 )
 from mibiscreen.data.set_data import  (

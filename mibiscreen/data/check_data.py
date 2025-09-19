@@ -373,158 +373,121 @@ def check_units(data,
 
     return col_check_list
 
-def check_detection_limit(data_frame,
-                          dl_factor = 0.1,
-                          inplace = False,
-                          verbose = True,
-                          ):
-    """Function for handling detection levels.
-
-    Often measured values come with uncertainty. Values of e.g. chemicals/contaminants
-    are reported in the data files with non-zero values, but below detection level.
-    Typically values are reported in the form "<0.x".
-    The detection limit values often differ between contaminants, but can also
-    differ per sample for the same contaminant.
-
-    Args:
-    -------
-        data_frame: pandas.DataFrames
-            dataframe with the measurements (without first row of units)
-        dl_factor: float, default 0.1
-            value between 0 and 1 to multiply given detection limit value with, options:
-                - 0.1 (default): if a value of <x.y is given, the
-                    entry is tranformed to a numerical value of 0.xy = 0.1*x.y
-                - 0: values given with detection limit are set to 0
-                - 1: values are transformed to detection limit value
-        inplace: Boolean, default False
-            Whether to modify the DataFrame rather than creating a new one.
-        verbose: Boolean
-            verbose statement (default True)
-
-    Returns:
-    -------
-        data: pandas.DataFrame
-            Tabular data with numerical values for entries given initially using
-            detection limit notation.
-
-    """
-    if verbose:
-        print('================================================================')
-        print(" Running function 'check_detection_limit()' on data")
-        print('================================================================')
-
-    data,cols= check_data_frame(data_frame, inplace = inplace)
-
-    ### testing if provided data frame contains first row with units
-    for u in data.iloc[0].to_list():
-        if u in all_units:
-            print("WARNING: First row identified as units, has been removed for value check")
-            print('________________________________________________________________')
-            data.drop(labels = 0,inplace = True)
-            break
-
-    if dl_factor>1 or dl_factor<0:
-        raise ValueError("Factor needs to be between 0 and 1")
-
-    quantities_detect = []
-    for quantity in cols:
-        series = data[quantity].astype('str').str.replace(',', '.').copy() # extract series
-        dec_which = series.str.contains('<') # identify elements that contain detection limit values
-
-        if np.any(dec_which):
-            quantities_detect.append(quantity)
-            if dl_factor in ['nan','NaN','na','NA',np.nan]:
-                series_4 = np.where(dec_which, np.nan, data[quantity])
-            else:
-                series_1 = series.str.replace("<", "").copy()
-                series_2 = pd.to_numeric(series_1)
-                series_3 = series_2.multiply(dl_factor)
-                series_4 = np.where(dec_which, series_3, data[quantity])
-
-            data[quantity] = series_4
-
-    if verbose:
-        print("Quantities with values given by detection limits:")
-        print('-----------------------------------------------------------')
-        for name in quantities_detect:
-            print(name)
-        print('-----------------------------------------------------------')
-        print("All values with detection limit, given by '<X' have been replaced")
-        print(" by the values multiuplied with the specified factor: {} * X ".format(dl_factor))
-        print('================================================================')
-
-    return data
 
 def check_values(data_frame,
-                 inplace = False,
+                 dl_factor=None,
+                 inplace=False,
                  verbose = True,
                  ):
-    """Function that checks on value types and replaces non-measured values.
+    """Function that cleans checks on values and cleans DataFrame.
+
+    Cleaning includes:
+            - fixing decimal commas
+            - converting strings to floats
+            - replacing empty strings with NaN
+            - and optionally replacing detection limits.
 
     Args:
     -------
         data_frame: pandas.DataFrames
-            dataframe with the measurements (without first row of units)
+            dataframe with the measurements
+        dl_factor: float or None, default None
+            if set, values with '<' are replaced by (value * dl_factor)
         inplace: Boolean, default False
-            Whether to modify the DataFrame rather than creating a new one.
+            if True modifies df in place, else returns a cleaned copy
         verbose: Boolean
             verbose statement (default True)
 
     Returns:
     -------
-        data_pure: pandas.DataFrame
-            Tabular data with standard column names and without units
+        cleaned: pandas.DataFrame
+            Cleaned dataframe without units
 
-    Raises:
-    -------
-        None (yet).
-
-    Example:
-    -------
-        To be added.
     """
     if verbose:
         print('================================================================')
         print(" Running function 'check_values()' on data")
         print('================================================================')
 
-    data,cols= check_data_frame(data_frame, inplace = inplace)
+    df,cols= check_data_frame(data_frame, inplace = inplace)
 
-    ### testing if provided data frame contains first row with units
-    for u in data.iloc[0].to_list():
+    if dl_factor is not None and (dl_factor>1 or dl_factor<0):
+        raise ValueError("Factor needs to be between 0 and 1 or 'nan'")
+
+    ## testing if provided data frame contains first row with units
+    for u in df.iloc[0].to_list():
         if u in all_units:
             print("WARNING: First row identified as units, has been removed for value check")
             print('________________________________________________________________')
-            data.drop(labels = 0,inplace = True)
+            df.drop(labels = 0,inplace = True)
             break
 
     for sign in to_replace_list:
-        data.iloc[:,:] = data.iloc[:,:].replace(to_replace=sign, value=to_replace_value)
+        df.iloc[:,:] = df.iloc[:,:].replace(to_replace=sign, value=to_replace_value)
 
-    # standardize column names (as it might not has happened for data yet)
-    # check_columns(data,
-    #               standardize = True,
-    #               check_metabolites=True,
-    #               verbose = False)
+    detection_limit_columns = []
+    failed_conversion_columns = []
 
-    # transform data to numeric values
-    quantities_transformed = []
-    for quantity in cols: #data.columns:
-        try:
-            # data_pure.loc[:,quantity] = pd.to_numeric(data_pure.loc[:,quantity])
-            data[quantity] = pd.to_numeric(data[quantity])
-            quantities_transformed.append(quantity)
-        except ValueError:
-            print("WARNING: Cound not transform '{}' to numerical values".format(quantity))
-            print('________________________________________________________________')
+    def clean_quantity(quantity_series,quantity_name):
+        found_dl = False
+        found_failed = False
+
+        def clean_value(val):
+            nonlocal found_dl, found_failed
+            if isinstance(val, str):
+                val = val.strip().replace(',', '.')
+                if val == '':
+                    found_failed = True
+                    return np.nan
+                if val.startswith('<'):
+                    try:
+                        number = float(val[1:])
+                        if dl_factor is not None:
+                            found_dl = True
+                            return number * dl_factor
+                        else:
+                            return np.nan
+                    except ValueError:
+                        found_failed = True
+                        return np.nan
+                try:
+                    return float(val)
+                except ValueError:
+                    found_failed = True
+                    return np.nan
+            return val
+
+        cleaned = quantity_series.apply(clean_value)
+
+        if found_dl:
+            detection_limit_columns.append(quantity_name)
+        if found_failed:
+            failed_conversion_columns.append(quantity_name)
+
+        return cleaned
+
+    for quantity in df.columns:
+        df[quantity] = clean_quantity(df[quantity], quantity)
+
+
     if verbose:
-        print("Quantities with values transformed to numerical (int/float):")
+        print("Quantities with values given by detection limits:")
         print('-----------------------------------------------------------')
-        for name in quantities_transformed:
+        for name in detection_limit_columns:
+            print(name)
+        print('-----------------------------------------------------------')
+        print("All values with detection limit, given by '<X' have been replaced")
+        print(" by the values multiuplied with the specified factor: {} * X ".format(dl_factor))
+        print('================================================================')
+
+        print("Quantities where not all values could be transformed to numerical (int/float):")
+        print('-----------------------------------------------------------')
+        for name in failed_conversion_columns:
             print(name)
         print('================================================================')
 
-    return data
+    return df
+
 
 def standardize(data_frame,
                 reduce = True,
@@ -545,8 +508,6 @@ def standardize(data_frame,
     -------
         data_frame: pandas.DataFrames
             dataframe with the measurements
-        check_metabolites: Boolean, default False
-            whether to check on metabolites' values
         reduce: Boolean, default True
             whether to reduce data to known quantities (default True),
             otherwise full dataframe with renamed columns (for those identifyable) is returned
@@ -556,25 +517,13 @@ def standardize(data_frame,
             verbose statement
         **kwargs: Optional keyword arguments.
             dl_factor (float, optional): scaling factor for value given at detection limit.
-               Default is 0.1.
+               Default is None, so detection limit values are replaced by nan.
 
     Returns:
     -------
         data_numeric, units: pandas.DataFrames
             Tabular data with standardized column names, values in numerics etc
             and table with units for standardized column names
-
-    Raises:
-    -------
-        None (yet).
-
-    Example:
-    -------
-    Todo's:
-        - complete list of potential contaminants, environmental factors
-        - add name check for metabolites?
-        - add key-word to specify which data to extract
-            (i.e. data columns to return)
 
     """
     if verbose:
@@ -584,7 +533,7 @@ def standardize(data_frame,
         print(' Function performing check of data including:')
         print('  * check of column names and standardizing them.')
         print('  * check of units and outlining which to adapt.')
-        print('  * check of values, replacing empty values by nan \n    and making them numeric')
+        print('  * check and cleaning of values')
 
     data,cols= check_data_frame(data_frame,
                                 sample_name_to_index = False,
@@ -601,15 +550,12 @@ def standardize(data_frame,
     col_check_list = check_units(units,
                                  verbose = verbose)
 
-    data_clean = check_detection_limit(data.drop(labels = 0),
-                          inplace = False,
-                          verbose = verbose,
-                          **kwargs,
-                          )
-
-    data_numeric = check_values(data_clean,
+    # transform data to numeric values
+    data_numeric = check_values(data.drop(labels = 0),
                                 inplace = False,
-                                verbose = verbose)
+                                verbose = verbose,
+                                **kwargs,
+                                )
 
     # store standard data to file
     if store_csv:
