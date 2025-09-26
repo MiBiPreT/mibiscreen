@@ -417,7 +417,7 @@ class TestCheckDataUnits:
 
     columns = ['sample_nr', 'obs_well', 'depth', 'pH', 'redoxpot', 'sulfate',\
                 'methane', 'iron2', 'benzene', 'naphthalene']
-    units =     [' ',' ', 'm',' ','mV', 'mg/l', 'mg/l', 'mg/l', 'ug/l', 'ug/l']
+    units =     [' ',' ', 'm',' ','mV', 'mg/l', 'mg/l', 'mg/l', 'µg/l', 'ug/l']
     units_mod = [' ',' ','cm',' ','',   'ug/L', 'mg/L', 'ppm', 'mg/L',  'ug/L']
     check_list = ['depth', 'redoxpot','sulfate', 'benzene']
     s01 = ['2000-001', 'B-MLS1-3-12',-12, 7.23, -208, 23, 748, 3,263,2207]
@@ -431,7 +431,7 @@ class TestCheckDataUnits:
 
         """
         data4units = pd.DataFrame([self.units_mod,self.s01],columns = self.columns)
-        col_check_list = check_units(data4units)
+        col_check_list,_ = check_units(data4units)
 
         assert col_check_list == self.check_list
 
@@ -443,7 +443,7 @@ class TestCheckDataUnits:
         the data frame with only the unit-row.
         """
         data4units = pd.DataFrame([self.units_mod],columns = self.columns)
-        col_check_list = check_units(data4units)
+        col_check_list,_ = check_units(data4units)
 
         assert col_check_list == self.check_list
 
@@ -455,7 +455,7 @@ class TestCheckDataUnits:
         the data frame with only the unit-row.
         """
         data4units = pd.DataFrame([self.units_mod+['-']],columns = self.columns+['Phenol'])
-        col_check_list = check_units(data4units)
+        col_check_list,_ = check_units(data4units)
 
         assert col_check_list == self.check_list+['phenol']
 
@@ -467,11 +467,24 @@ class TestCheckDataUnits:
         the data frame with only the unit-row.
         """
         data4units = pd.DataFrame([self.units_mod+['-']],columns = self.columns+['delta_13C-benzene'])
-        col_check_list = check_units(data4units)
+        col_check_list,_ = check_units(data4units)
 
         assert col_check_list == self.check_list+['delta_13C-benzene']
 
     def test_check_units_05(self):
+        """Testing check of units.
+
+        Testing routine check_units() with non-identifiable data.
+        Testing of quantities where units are not in expected format when input is
+        the data frame with only the unit-row.
+        """
+        data4units = pd.DataFrame([self.units_mod+['-']],columns = self.columns+['not_quantity'])
+        col_check_list,col_not_checked = check_units(data4units)
+
+        assert col_not_checked == ['not_quantity']
+
+
+    def test_check_units_06(self):
         """Testing check of units.
 
         Testing Error message that provided input is not a data frame.
@@ -479,7 +492,7 @@ class TestCheckDataUnits:
         with pytest.raises(ValueError, match="Provided data is not a data frame."):
             check_units(self.s01)
 
-    def test_check_units_06(self):
+    def test_check_units_07(self):
         """Testing check of units.
 
         Testing Error message that provided data frame does not contain units.
@@ -488,7 +501,7 @@ class TestCheckDataUnits:
             data4units = pd.DataFrame([self.s01],columns = self.columns)
             check_units(data4units)
 
-    def test_check_units_07(self,capsys):
+    def test_check_units_08(self,capsys):
         """Testing routine check of units.
 
         Testing verbose flag (When all units are correct).
@@ -500,7 +513,7 @@ class TestCheckDataUnits:
 
         assert len(out)>0
 
-    def test_check_units_08(self,capsys):
+    def test_check_units_09(self,capsys):
         """Testing routine check of units.
 
         Testing verbose flag  (When some units need correction).
@@ -518,20 +531,58 @@ class TestCheckDataValues:
 
     data_00 = example_data(with_units = True)
 
+    naphtalene = [2900, '<0.02', 3400, '0,08']
+    benzene = [50.0,'49,0','<<0.1','test']
+
+    data_01 =  pd.DataFrame(data = list(zip(naphtalene, benzene)), columns=['naphtalene', 'benzene'])
+
     def test_check_values_01(self,capsys):
         """Testing check_values() on complete example data.
 
         Testing that values in example data frame have been transformed to numerics.
-        Testing verbose flag.
+        Testing warning for first row being units.
         """
-        data = check_values(self.data_00,
-                            inplace = False,
-                            verbose = True)
+        data_clean = check_values(self.data_00,
+                            verbose = False)
         out,err=capsys.readouterr()
 
-        assert len(out)>0 and isinstance(data.iloc[-1,-1], (np.float64,np.int64))
+        assert len(out)>0 and isinstance(data_clean.iloc[-1,-1], (np.float64,np.int64))
 
-    def test_check_values_02(self):
+
+    def test_check_values_02(self,capsys):
+        """Testing check_values() on complete example data.
+
+        Testing transformation of values given with detection limit - multiplication
+        with a factor.
+        """
+        data_clean = check_values(self.data_01,
+                                  dl_factor = 0.1,
+                                  verbose = True)
+        out,err=capsys.readouterr()
+
+        assert len(out)>0 and data_clean.iloc[1,0] == 0.002
+
+    def test_check_values_03(self):
+        """Testing check_values() on complete example data.
+
+        Testing transformation of values given with detection limit, setting to nan.
+        """
+        data_clean = check_values(self.data_01)
+
+        assert np.isnan(data_clean.iloc[1,0])
+
+
+    def test_check_values_04(self):
+        """Testing check_values().
+
+        Testing Error when not suitable detection limit value given.
+        """
+        with pytest.raises(ValueError):
+            check_values(self.data_00,
+                         dl_factor = -2,
+                         )
+
+    def test_check_values_05(self):
         """Testing routine check_values().
 
         Testing that data frame is cut clean from units row.
@@ -542,7 +593,8 @@ class TestCheckDataValues:
 
         assert data.shape[0] == self.data_00.shape[0]-1
 
-    def test_check_values_03(self):
+
+    def test_check_values_06(self):
         """Testing routine check_values().
 
         Testing 'inplace' keyword.
@@ -553,6 +605,19 @@ class TestCheckDataValues:
                      verbose = False)
 
         assert data_01.shape[0] == self.data_00.shape[0]-1
+
+
+    def test_check_values_07(self,capsys):
+        """Testing check_values().
+
+        Testing verbose flag.
+        """
+        data_copy = self.data_00.drop(0).copy() # create df without unit row
+        check_values(data_copy,verbose = True)
+        out,err=capsys.readouterr()
+
+        assert len(out)>0
+
 
 class TestDataStandardize:
     """Class for testing data module of mibiscreen."""

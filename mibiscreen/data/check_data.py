@@ -16,8 +16,6 @@ from mibiscreen.data.settings.sample_settings import properties_sample_settings
 from mibiscreen.data.settings.unit_settings import all_units
 from mibiscreen.data.settings.unit_settings import properties_units
 
-to_replace_list = ["-",'--','',' ','  ']
-to_replace_value = np.nan
 
 def standard_names(name_list,
                    standardize = True,
@@ -295,6 +293,8 @@ def check_units(data,
     -------
         col_check_list: list
             quantities whose units need checking/correction
+        col_not_checked: list
+            quantities not identified, thus not checked on units
 
     Raises:
     -------
@@ -330,10 +330,12 @@ def check_units(data,
                          documentation.")
 
     # standardize column names (as it might not has happened for data yet)
-    check_columns(units,standardize = True, verbose = False)
+    # (column_names_known,column_names_unknown,column_names_standard) = check_columns(units,
+    check_columns(units,
+                  standardize = True,
+                  verbose = False)
     col_check_list= []
     col_not_checked  = []
-
 
     properties_all = {**properties_sample_settings,
                       **properties_geochemicals,
@@ -344,14 +346,14 @@ def check_units(data,
 
     ### run through all quantity columns and check their units
     for quantity in units.columns:
-        if quantity in properties_all.keys():
+        ### identify standard unit for each column idenfied:
+        if quantity in properties_all.keys():# test on standard column name
             standard_unit = properties_all[quantity]['standard_unit']
-        elif quantity.split('-')[0] in properties_all.keys(): # test on isotope
+        elif quantity.split('-')[0] in properties_all.keys(): # test on isotopes
             standard_unit = properties_all[quantity.split('-')[0]]['standard_unit']
         else:
             col_not_checked.append(quantity)
             continue
-
         if standard_unit != names.unit_less:
             other_names_unit = properties_units[standard_unit]['other_names']
             if str(units[quantity][0]).lower() not in other_names_unit:
@@ -365,87 +367,173 @@ def check_units(data,
         if len(col_check_list) == 0:
             print(" All identified quantities given in requested units.")
         else:
-            print(" All other identified quantities given in requested units.")
-        print(" Quantities not identified (and thus not checked on units:", col_not_checked)
-        print('================================================================')
+            print(" Quantities not in requested units:")
+            print(*col_check_list, sep='\n')
+        if len(col_not_checked) != 0:
+            print(" Quantities not identified (and thus not checked on units):")
+            print(*col_not_checked, sep='\n')
+            print('================================================================')
 
-    return col_check_list
+    return col_check_list,col_not_checked
+
 
 def check_values(data_frame,
-                 inplace = False,
+                 dl_factor=None,
+                 to_replace_list = ["-",'--','',' ','  '],
+                 to_replace_value = np.nan,
+                 inplace=False,
                  verbose = True,
                  ):
-    """Function that checks on value types and replaces non-measured values.
+    """Function that cleans checks on values and cleans DataFrame.
+
+    Cleaning includes:
+            - fixing decimal commas
+            - converting strings to floats
+            - replacing empty strings with NaN
+            - and optionally replacing detection limits.
 
     Args:
     -------
         data_frame: pandas.DataFrames
-            dataframe with the measurements (without first row of units)
+            dataframe with the measurements
+        dl_factor: float or None, default None
+            if set, values with '<' are replaced by (value * dl_factor)
+        to_replace_list: list, default ["-",'--','',' ','  ']
+            list of strings to replace before cleaning
+        to_replace_value: float or np.nan, default: np.nan
+            value to replace strings to_replace_list with
         inplace: Boolean, default False
-            Whether to modify the DataFrame rather than creating a new one.
+            if True modifies df in place, else returns a cleaned copy
         verbose: Boolean
             verbose statement (default True)
 
     Returns:
     -------
-        data_pure: pandas.DataFrame
-            Tabular data with standard column names and without units
+        cleaned: pandas.DataFrame
+            Cleaned dataframe without units
 
-    Raises:
-    -------
-        None (yet).
-
-    Example:
-    -------
-        To be added.
     """
     if verbose:
         print('================================================================')
         print(" Running function 'check_values()' on data")
         print('================================================================')
 
-    data,cols= check_data_frame(data_frame, inplace = inplace)
+    df,cols= check_data_frame(data_frame, inplace = inplace)
 
-    ### testing if provided data frame contains first row with units
-    for u in data.iloc[0].to_list():
+    if dl_factor is not None and (dl_factor>1 or dl_factor<0):
+        raise ValueError("Factor needs to be between 0 and 1 or 'nan'")
+
+    ## testing if provided data frame contains first row with units
+    for u in df.iloc[0].to_list():
         if u in all_units:
             print("WARNING: First row identified as units, has been removed for value check")
             print('________________________________________________________________')
-            data.drop(labels = 0,inplace = True)
+            df.drop(labels = 0,inplace = True)
             break
 
     for sign in to_replace_list:
-        data.iloc[:,:] = data.iloc[:,:].replace(to_replace=sign, value=to_replace_value)
+        df.iloc[:,:] = df.iloc[:,:].replace(to_replace=sign, value=to_replace_value)
 
-    # standardize column names (as it might not has happened for data yet)
-    # check_columns(data,
-    #               standardize = True,
-    #               check_metabolites=True,
-    #               verbose = False)
+    detection_limit_columns = []
+    failed_conversion_columns = []
 
-    # transform data to numeric values
-    quantities_transformed = []
-    for quantity in cols: #data.columns:
-        try:
-            # data_pure.loc[:,quantity] = pd.to_numeric(data_pure.loc[:,quantity])
-            data[quantity] = pd.to_numeric(data[quantity])
-            quantities_transformed.append(quantity)
-        except ValueError:
-            print("WARNING: Cound not transform '{}' to numerical values".format(quantity))
-            print('________________________________________________________________')
+    def clean_quantity(quantity_series,quantity_name):
+        """Cleans a pandas Series of quantity values.
+
+        Cleaning is by parsing strings, handling detection limits,
+        and converting to floats where possible.
+
+        Parameters:
+        ----------
+        quantity_series : pandas.Series
+            The input Series containing quantity values that may include strings, numbers, or
+            special characters (e.g., '<' for values below detection limits).
+
+        quantity_name : str
+            Column name of quantity being cleaned.
+
+        Returns:
+        -------
+        cleaned_series : pandas.Series
+            The cleaned version of the input series, where:
+                - Strings like '<0.05' are converted to floats and optionally adjusted by `dl_factor`
+                - Commas are replaced with periods for decimal conversion
+                - Non-convertible values are returned as-is
+                - Flags are set for values that are below detection limits or failed conversion
+
+        """
+        flags = {'found_dl': False, 'found_failed': False}
+        def clean_value(val):
+            """Detecting and cleaning special special values.
+
+            Parameters
+            ----------
+            val : str
+                values within a pandas.series
+
+            Returns
+            -------
+            val: str or float
+                either original string or float when conversion to number possible.
+
+            """
+            if isinstance(val, str):
+                val = val.strip().replace(',', '.')
+                if val.startswith('<'):
+                    try:
+                        number = float(val[1:])
+                        flags['found_dl'] = True
+                        if dl_factor is not None:
+                            return number * dl_factor
+                        else:
+                            return np.nan
+                    except ValueError:
+                        flags['found_failed'] = True
+                        return val
+                try:
+                    return float(val)
+                except ValueError:
+                    flags['found_failed'] = True
+                    return val
+            return val
+
+        cleaned = quantity_series.apply(clean_value)
+
+        if flags['found_dl']:
+            detection_limit_columns.append(quantity_name)
+        if flags['found_failed']:
+            failed_conversion_columns.append(quantity_name)
+
+        return cleaned
+
+    for quantity in cols:
+        df[quantity] = clean_quantity(df[quantity], quantity)
+
     if verbose:
-        print("Quantities with values transformed to numerical (int/float):")
-        print('-----------------------------------------------------------')
-        for name in quantities_transformed:
-            print(name)
-        print('================================================================')
+        if detection_limit_columns:
+            print("Quantities with values given by detection limits:")
+            print('-----------------------------------------------------------')
+            for name in detection_limit_columns:
+                print(name)
+            print('-----------------------------------------------------------')
+            print("All values with detection limit, given by '<X' have been replaced")
+            print(" by the values multiuplied with the specified factor: {} * X ".format(dl_factor))
+            print('================================================================')
 
-    return data
+        if failed_conversion_columns:
+            print("Quantities where not all values could be transformed to numerical (int/float):")
+            print('-----------------------------------------------------------')
+            for name in failed_conversion_columns:
+                print(name)
+            print('================================================================')
+    return df
+
 
 def standardize(data_frame,
                 reduce = True,
                 store_csv = False,
                 verbose=True,
+                **kwargs,
                 ):
     """Function providing condensed data frame with standardized names.
 
@@ -460,8 +548,6 @@ def standardize(data_frame,
     -------
         data_frame: pandas.DataFrames
             dataframe with the measurements
-        check_metabolites: Boolean, default False
-            whether to check on metabolites' values
         reduce: Boolean, default True
             whether to reduce data to known quantities (default True),
             otherwise full dataframe with renamed columns (for those identifyable) is returned
@@ -469,24 +555,15 @@ def standardize(data_frame,
             whether to save dataframe in standard format to csv-file
         verbose: Boolean, default True
             verbose statement
+        **kwargs: Optional keyword arguments.
+            dl_factor (float, optional): scaling factor for value given at detection limit.
+               Default is None, so detection limit values are replaced by nan.
 
     Returns:
     -------
         data_numeric, units: pandas.DataFrames
             Tabular data with standardized column names, values in numerics etc
             and table with units for standardized column names
-
-    Raises:
-    -------
-        None (yet).
-
-    Example:
-    -------
-    Todo's:
-        - complete list of potential contaminants, environmental factors
-        - add name check for metabolites?
-        - add key-word to specify which data to extract
-            (i.e. data columns to return)
 
     """
     if verbose:
@@ -496,7 +573,7 @@ def standardize(data_frame,
         print(' Function performing check of data including:')
         print('  * check of column names and standardizing them.')
         print('  * check of units and outlining which to adapt.')
-        print('  * check of values, replacing empty values by nan \n    and making them numeric')
+        print('  * check and cleaning of values')
 
     data,cols= check_data_frame(data_frame,
                                 sample_name_to_index = False,
@@ -510,19 +587,21 @@ def standardize(data_frame,
 
     # general unit check
     units = data.drop(labels = np.arange(1,data.shape[0]))
-    col_check_list = check_units(units,
+    col_check_list,_ = check_units(units,
                                  verbose = verbose)
 
     # transform data to numeric values
     data_numeric = check_values(data.drop(labels = 0),
                                 inplace = False,
-                                verbose = verbose)
+                                verbose = verbose,
+                                **kwargs,
+                                )
 
     # store standard data to file
     if store_csv:
         if len(col_check_list) != 0:
             print('________________________________________________________________')
-            print("Data could not be saved because not all identified \n quantities are given in requested units.")
+            print("Data not saved because not all identified \n quantities are given in requested units.")
         else:
             try:
                 data.to_csv(store_csv,index=False)

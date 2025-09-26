@@ -15,7 +15,7 @@ properties_units[names.unit_mgperl]=dict(
     )
 
 properties_units[names.unit_microgperl]=dict(
-    other_names = ["ug/l","micro g/l",r"$\mu$ g/l",],
+    other_names = ["ug/l","µg/l","\u00B5g/l","\u03BCg/l","micro g/l",r"$\mu$ g/l",],
     )
 
 properties_units[names.unit_millivolt]=dict(
