@@ -346,8 +346,6 @@ def check_units(data,
 
     ### run through all quantity columns and check their units
     for quantity in units.columns:
-        #quantity = unit.encode("utf-8")
-
         ### identify standard unit for each column idenfied:
         if quantity in properties_all.keys():# test on standard column name
             standard_unit = properties_all[quantity]['standard_unit']
@@ -440,8 +438,45 @@ def check_values(data_frame,
     failed_conversion_columns = []
 
     def clean_quantity(quantity_series,quantity_name):
+        """Cleans a pandas Series of quantity values.
+
+        Cleaning is by parsing strings, handling detection limits,
+        and converting to floats where possible.
+
+        Parameters:
+        ----------
+        quantity_series : pandas.Series
+            The input Series containing quantity values that may include strings, numbers, or
+            special characters (e.g., '<' for values below detection limits).
+
+        quantity_name : str
+            Column name of quantity being cleaned.
+
+        Returns:
+        -------
+        cleaned_series : pandas.Series
+            The cleaned version of the input series, where:
+                - Strings like '<0.05' are converted to floats and optionally adjusted by `dl_factor`
+                - Commas are replaced with periods for decimal conversion
+                - Non-convertible values are returned as-is
+                - Flags are set for values that are below detection limits or failed conversion
+
+        """
         flags = {'found_dl': False, 'found_failed': False}
         def clean_value(val):
+            """Detecting and cleaning special special values.
+
+            Parameters
+            ----------
+            val : str
+                values within a pandas.series
+
+            Returns
+            -------
+            val: str or float
+                either original string or float when conversion to number possible.
+
+            """
             if isinstance(val, str):
                 val = val.strip().replace(',', '.')
                 if val.startswith('<'):
