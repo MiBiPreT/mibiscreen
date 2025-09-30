@@ -13,6 +13,7 @@ from mibiscreen.data.check_data import check_values
 from mibiscreen.data.check_data import standard_names
 from mibiscreen.data.check_data import standardize
 from mibiscreen.data.example_data.example_data import example_data
+from mibiscreen.data.load_data import _check_duplicates
 from mibiscreen.data.load_data import load_csv
 from mibiscreen.data.load_data import load_excel
 from mibiscreen.data.set_data import compare_lists
@@ -96,6 +97,34 @@ class TestLoadData:
 
         assert len(out)>0
 
+    def test_check_duplicates_01(self,capsys):
+        """Testing routine _check_duplicates().
+
+        Testing Warning in case of duplicates in dataframe.
+        """
+        # Create a DataFrame with duplicate column names (simulated by manually renaming)
+        data = pd.DataFrame({
+            'Name': [1, 2],
+            'Age': [30, 40],
+            'Name.1': [3, 4],  # Simulate pandas auto-renamed column
+            'Age.1': [50, 60]
+        })
+
+        # Call the function
+        _check_duplicates(data)
+
+        # Capture printed output
+        captured = capsys.readouterr().out
+
+        # Check the warning is in the output
+        assert "WARNING: Duplicate column names detected" in captured
+
+        # Check that the renamed columns are listed
+        assert " - 'Name.1'" in captured
+        assert " - 'Age.1'" in captured
+
+        # Check verbose messages appear
+        assert "Consider renaming them." in captured
 
 class TestExampleData:
     """Class for testing example data of data module of mibiscreen."""
