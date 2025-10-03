@@ -146,9 +146,28 @@ name_23_dimethylnaphthalene = '23_dimethylnaphthalene'
 name_26_dimethylnaphthalene = '26_dimethylnaphthalene'
 name_27_dimethylnaphthalene = '27_dimethylnaphthalene'
 
+### Standard names for alkylphenols
+name_phenol = "phenol"
+name_thymol = "thymol"
+name_cresol = "cresol"
+name_m_cresol = "m_cresol"
+name_o_cresol = "o_cresol"
+name_p_cresol = "p_cresol"
+name_2_ethylphenol = "2_ethylphenol"
+name_3_ethylphenol = "3_ethylphenol"
+name_23_dimethylphenol = "23_dimethylphenol"
+name_24_dimethylphenol = "24_dimethylphenol"
+name_25_dimethylphenol = "25_dimethylphenol"
+name_26_dimethylphenol26 = "26_dimethylphenol"
+name_34_dimethylphenol = "34_dimethylphenol"
+name_35_dimethylphenol = "35_dimethylphenol"
+name_235_trimethylphenol = "235_trimethylphenol"
+name_345_trimethylphenol = "345_trimethylphenol"
+name_4_ethylphenol = "4_ethylphenol"
+name_2_isopropylphenol = "2_isopropylphenol"
+name_ptertbutylphenol = "p_[tert]butylphenol"
 
 ### Standard names for a selection of metabolites
-name_phenol = "phenol"
 name_cinnamic_acid = "cinnamic_acid"
 name_benzoic_acid = "benzoic_acid"
 name_dimethyl_benzoic_acid = 'dimethyl_benzoic_acid'
@@ -177,6 +196,11 @@ name_fraction_C12_C22 = 'fraction_C12-C22'
 name_fraction_C22_C30 = 'fraction_C22-C30'
 name_fraction_C30_C40 = 'fraction_C30-C40'
 name_total_C10_C40 = 'total_C10-C40'
+
+name_total_c2_alkylphenols = "c2_alkylphenols_total"
+name_total_c3_alkylphenols = "c3_alkylphenols_total"
+name_total_c4_alkylphenols = "c4_alkylphenols_total"
+
 ### Standard names for metabolite related quantities
 name_metabolites_conc = "metabolites_concentration"
 # name_metabolites_variety = 'metabolites_count'

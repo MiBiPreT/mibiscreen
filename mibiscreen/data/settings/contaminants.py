@@ -788,6 +788,224 @@ properties_contaminants[names.name_27_dimethylnaphthalene]=dict(
     standard_unit = names.unit_microgperl,
 )
 
+### Alkylphenols
+properties_contaminants[names.name_phenol] = dict(
+    chemical_formula = "C6H6O",
+    molecular_mass = 94.11,
+    carbon_atoms = 6,
+    hydrogen_atoms = 6,
+    other_names = ['phenol', 'hydroxybenzene', 'benzenol'],
+    standard_unit = names.unit_microgperl,
+)
+
+properties_contaminants[names.name_thymol] = dict(
+    chemical_formula = "C10H14O",
+    molecular_mass = 150.22,
+    carbon_atoms = 10,
+    hydrogen_atoms = 14,
+    other_names = ['thymol', '2_isopropyl_5_methylphenol', '5_methyl_2_isopropylphenol'],
+    standard_unit = names.unit_microgperl,
+)
+
+properties_contaminants[names.name_cresol] = dict(
+    chemical_formula = None,
+    molecular_mass = None,
+    carbon_atoms = None,
+    hydrogen_atoms = None,
+    other_names = ['cresol', 'methylphenol', 'hydroxytoluene'],
+    standard_unit = names.unit_microgperl,
+)
+
+properties_contaminants[names.name_m_cresol] = dict(
+    chemical_formula = "C7H8O",
+    molecular_mass = 108.14,
+    carbon_atoms = 7,
+    hydrogen_atoms = 8,
+    other_names = ['m-cresol','m cresol','mcresol','m_cresol', 'methylphenol', '3_methylphenol', '3-methylphenol'],
+    standard_unit = names.unit_microgperl,
+)
+
+properties_contaminants[names.name_o_cresol] = dict(
+    chemical_formula = "C7H8O",
+    molecular_mass = 108.14,
+    carbon_atoms = 7,
+    hydrogen_atoms = 8,
+    other_names = ['o-cresol','o cresol','ocresol''o_cresol', '2_methylphenol', '2-methylphenol'],
+    standard_unit = names.unit_microgperl,
+)
+
+properties_contaminants[names.name_p_cresol] = dict(
+    chemical_formula = "C7H8O",
+    molecular_mass = 108.14,
+    carbon_atoms = 7,
+    hydrogen_atoms = 8,
+    other_names = ['p-cresol','p cresol','pcresol','p_cresol', '4_methylphenol', '4-methylphenol'],
+    standard_unit = names.unit_microgperl,
+)
+
+properties_contaminants[names.name_2_ethylphenol] = dict(
+    chemical_formula = "C8H10O",
+    molecular_mass = 122.16,
+    carbon_atoms = 8,
+    hydrogen_atoms = 10,
+    other_names = ['2_ethylphenol', '2-ethylphenol'],
+    standard_unit = names.unit_microgperl,
+)
+
+properties_contaminants[names.name_3_ethylphenol] = dict(
+    chemical_formula = "C8H10O",
+    molecular_mass = 122.16,
+    carbon_atoms = 8,
+    hydrogen_atoms = 10,
+    other_names = ['3_ethylphenol', '3-ethylphenol'],
+    standard_unit = names.unit_microgperl,
+)
+
+properties_contaminants[names.name_23_dimethylphenol] = dict(
+    chemical_formula = "C8H10O",
+    molecular_mass = 122.16,
+    carbon_atoms = 8,
+    hydrogen_atoms = 10,
+    other_names = [
+        '23_dimethylphenol','23-dimethylphenol','23 dimethylphenol','23dimethylphenol',
+        '2,3_dimethylphenol','2,3-dimethylphenol','2,3 dimethylphenol','2,3dimethylphenol',
+        '23_dimethylphenol','23-dimethylphenol','23 dimethylphenol','23dimethylphenol',
+        '2,3_dimethylphenol','2,3-dimethylphenol','2,3 dimethylphenol','2,3dimethylphenol'
+    ],
+    standard_unit = names.unit_microgperl,
+)
+
+properties_contaminants[names.name_24_dimethylphenol] = dict(
+    chemical_formula = "C8H10O",
+    molecular_mass = 122.16,
+    carbon_atoms = 8,
+    hydrogen_atoms = 10,
+    other_names = [
+        '24_dimethylphenol','24-dimethylphenol','24 dimethylphenol','24dimethylphenol',
+        '2,4_dimethylphenol','2,4-dimethylphenol','2,4 dimethylphenol','2,4dimethylphenol',
+        '24_dimethylphenol','24-dimethylphenol','24 dimethylphenol','24dimethylphenol',
+        '2,4_dimethylphenol','2,4-dimethylphenol','2,4 dimethylphenol','2,4dimethylphenol'
+    ],
+    standard_unit = names.unit_microgperl,
+)
+
+properties_contaminants[names.name_25_dimethylphenol] = dict(
+    chemical_formula = "C8H10O",
+    molecular_mass = 122.16,
+    carbon_atoms = 8,
+    hydrogen_atoms = 10,
+    other_names = [
+        '25_dimethylphenol','25-dimethylphenol','25 dimethylphenol','25dimethylphenol',
+        '2,5_dimethylphenol','2,5-dimethylphenol','2,5 dimethylphenol','2,5dimethylphenol',
+        '25_dimethylphenol','25-dimethylphenol','25 dimethylphenol','25dimethylphenol',
+        '2,5_dimethylphenol','2,5-dimethylphenol','2,5 dimethylphenol','2,5dimethylphenol'
+    ],
+    standard_unit = names.unit_microgperl,
+)
+
+properties_contaminants[names.name_26_dimethylphenol26] = dict(
+    chemical_formula = "C8H10O",
+    molecular_mass = 122.16,
+    carbon_atoms = 8,
+    hydrogen_atoms = 10,
+    other_names = [
+        '26_dimethylphenol','26-dimethylphenol','26 dimethylphenol','26dimethylphenol',
+        '2,6_dimethylphenol','2,6-dimethylphenol','2,6 dimethylphenol','2,6dimethylphenol',
+        '26_dimethylphenol','26-dimethylphenol','26 dimethylphenol','26dimethylphenol',
+        '2,6_dimethylphenol','2,6-dimethylphenol','2,6 dimethylphenol','2,6dimethylphenol'
+    ],
+    standard_unit = names.unit_microgperl,
+)
+
+properties_contaminants[names.name_34_dimethylphenol] = dict(
+    chemical_formula = "C8H10O",
+    molecular_mass = 122.16,
+    carbon_atoms = 8,
+    hydrogen_atoms = 10,
+    other_names = [
+        '34_dimethylphenol','34-dimethylphenol','34 dimethylphenol','34dimethylphenol',
+        '3,4_dimethylphenol','3,4-dimethylphenol','3,4 dimethylphenol','3,4dimethylphenol',
+        '34_dimethylphenol','34-dimethylphenol','34 dimethylphenol','34dimethylphenol',
+        '3,4_dimethylphenol','3,4-dimethylphenol','3,4 dimethylphenol','3,4dimethylphenol'
+    ],
+    standard_unit = names.unit_microgperl,
+)
+
+properties_contaminants[names.name_35_dimethylphenol] = dict(
+    chemical_formula = "C8H10O",
+    molecular_mass = 122.16,
+    carbon_atoms = 8,
+    hydrogen_atoms = 10,
+    other_names = [
+        '35_dimethylphenol','35-dimethylphenol','35 dimethylphenol','35dimethylphenol',
+        '3,5_dimethylphenol','3,5-dimethylphenol','3,5 dimethylphenol','3,5dimethylphenol',
+        '35_dimethylphenol','35-dimethylphenol','35 dimethylphenol','35dimethylphenol',
+        '3,5_dimethylphenol','3,5-dimethylphenol','3,5 dimethylphenol','3,5dimethylphenol'
+    ],
+    standard_unit = names.unit_microgperl,
+)
+
+
+properties_contaminants[names.name_235_trimethylphenol] = dict(
+    chemical_formula = "C9H12O",
+    molecular_mass = 138.19,
+    carbon_atoms = 9,
+    hydrogen_atoms = 12,
+    other_names = [
+        '235_trimethylphenol', '235-trimethylphenol', '235 trimethylphenol', '235trimethylphenol',
+        '2,3,5_trimethylphenol', '2,3,5-trimethylphenol', '2,3,5 trimethylphenol', '2,3,5trimethylphenol'
+    ],
+    standard_unit = names.unit_microgperl,
+)
+
+properties_contaminants[names.name_345_trimethylphenol] = dict(
+    chemical_formula = "C9H12O",
+    molecular_mass = 138.19,
+    carbon_atoms = 9,
+    hydrogen_atoms = 12,
+    other_names = [
+        '345_trimethylphenol', '345-trimethylphenol', '345 trimethylphenol', '345trimethylphenol',
+        '3,4,5_trimethylphenol', '3,4,5-trimethylphenol', '3,4,5 trimethylphenol', '3,4,5trimethylphenol'
+    ],
+    standard_unit = names.unit_microgperl,
+)
+
+properties_contaminants[names.name_4_ethylphenol] = dict(
+    chemical_formula = "C8H10O",
+    molecular_mass = 122.16,
+    carbon_atoms = 8,
+    hydrogen_atoms = 10,
+    other_names = [
+        '4_ethylphenol', '4-ethylphenol', '4 ethylphenol', '4ethylphenol',
+        'p_ethylphenol', 'p-ethylphenol', 'p ethylphenol', 'pethylphenol'
+    ],
+    standard_unit = names.unit_microgperl,
+)
+
+properties_contaminants[names.name_2_isopropylphenol] = dict(
+    chemical_formula = "C9H12O",
+    molecular_mass = 136.19,
+    carbon_atoms = 9,
+    hydrogen_atoms = 12,
+    other_names = [
+        '2_isopropylphenol', '2-isopropylphenol', '2 isopropylphenol', '2isopropylphenol',
+        'o_isopropylphenol', 'o-isopropylphenol', 'o isopropylphenol', 'oisopropylphenol'
+    ],
+    standard_unit = names.unit_microgperl,
+)
+
+properties_contaminants[names.name_ptertbutylphenol] = dict(
+    chemical_formula = "C10H14O",
+    molecular_mass = 150.22,
+    carbon_atoms = 10,
+    hydrogen_atoms = 14,
+    other_names = [
+        'p_[tert]butylphenol', 'p-(tert)butylphenol', 'p tert butyl phenol', 'ptertbutylphenol',
+        'para_tert_butyl_phenol', 'para-(tert)-butyl-phenol', 'para tert butyl phenol'
+    ],
+    standard_unit = names.unit_microgperl,
+)
+
 
 ###############################################################################
 ###############################################################################
@@ -867,6 +1085,50 @@ contaminants_analysis[names.name_total_C10_C40] = dict(
         'c10-c40 total','c10_c40 total',
         'c10 to c40','c10_c40','c10–c40','c10–c40 total',
         'c10-c40','c10_c40',
+    ],
+    standard_unit = names.unit_microgperl,
+)
+
+contaminants_analysis[names.name_total_c2_alkylphenols] = dict(
+    other_names = [
+        'c2-alkylphenols_total',"c2_alkylphenols_total","c2alkylphenols_total", "c2 alkylphenols_total",
+        "c2-alkylphenols-total","c2_alkylphenols-total","c2alkylphenols-total", "c2 alkylphenols-total",
+        "c2 alkylphenols total","c2_alkylphenols total","c2alkylphenols total", "c2 alkylphenols total",
+        "c2alkylphenolstotal","c2_alkylphenolstotal","c2alkylphenolstotal", "c2 alkylphenolstotal",
+        "total_c2_alkylphenols", "total-c2-alkylphenols", "total c2 alkylphenols", "totalc2alkylphenols",
+        "alkylphenols_c2_total", "alkylphenols-c2-total", "alkylphenols c2 total", "alkylphenolsc2total",
+        "c2_alkylphenols", "c2-alkylphenols", "c2 alkylphenols", "c2alkylphenols",
+        "alkylphenols_c2", "alkylphenols-c2", "alkylphenols c2", "alkylphenolsc2"
+    ],
+    standard_unit = names.unit_microgperl,
+)
+
+contaminants_analysis[names.name_total_c3_alkylphenols] = dict(
+    other_names = [
+        'c3-alkylphenols_total',"c3_alkylphenols_total","c3alkylphenols_total", "c3 alkylphenols_total",
+        "c3-alkylphenols-total","c3_alkylphenols-total","c3alkylphenols-total", "c3 alkylphenols-total",
+        "c3 alkylphenols total","c3_alkylphenols total","c3alkylphenols total", "c3 alkylphenols total",
+        "c3alkylphenolstotal","c3_alkylphenolstotal","c3alkylphenolstotal", "c3 alkylphenolstotal",
+        "c3_alkylphenols_total", "c3-alkylphenols-total", "c3 alkylphenols total", "c3alkylphenolstotal",
+        "total_c3_alkylphenols", "total-c3-alkylphenols", "total c3 alkylphenols", "totalc3alkylphenols",
+        "alkylphenols_c3_total", "alkylphenols-c3-total", "alkylphenols c3 total", "alkylphenolsc3total",
+        "c3_alkylphenols", "c3-alkylphenols", "c3 alkylphenols", "c3alkylphenols",
+        "alkylphenols_c3", "alkylphenols-c3", "alkylphenols c3", "alkylphenolsc3"
+    ],
+    standard_unit = names.unit_microgperl,
+)
+
+contaminants_analysis[names.name_total_c4_alkylphenols] = dict(
+    other_names = [
+        'c4-alkylphenols_total',"c4_alkylphenols_total","c4alkylphenols_total", "c4 alkylphenols_total",
+        "c4-alkylphenols-total","c4_alkylphenols-total","c4alkylphenols-total", "c4 alkylphenols-total",
+        "c4 alkylphenols total","c4_alkylphenols total","c4alkylphenols total", "c4 alkylphenols total",
+        "c4alkylphenolstotal","c4_alkylphenolstotal","c4alkylphenolstotal", "c4 alkylphenolstotal",
+        "c4_alkylphenols_total", "c4-alkylphenols-total", "c4 alkylphenols total", "c4alkylphenolstotal",
+        "total_c4_alkylphenols", "total-c4-alkylphenols", "total c4 alkylphenols", "totalc4alkylphenols",
+        "alkylphenols_c4_total", "alkylphenols-c4-total", "alkylphenols c4 total", "alkylphenolsc4total",
+        "c4_alkylphenols", "c4-alkylphenols", "c4 alkylphenols", "c4alkylphenols",
+        "alkylphenols_c4", "alkylphenols-c4", "alkylphenols c4", "alkylphenolsc4"
     ],
     standard_unit = names.unit_microgperl,
 )

@@ -97,7 +97,7 @@ class TestTotalContaminantConcentration:
 
         Correct calculation of total amount of contaminants (total concentration).
         """
-        tot_conc_test = 27046.0
+        tot_conc_test = 27046.5
         tot_conc = np.sum(total_contaminant_concentration(self.data))
 
         assert (tot_conc - tot_conc_test)<1e-5
