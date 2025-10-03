@@ -262,7 +262,7 @@ properties_geochemicals[names.name_cyanide]=dict(
                    'total cyanides','total-cyanides','totalcyanides','total_cyanides',
                    'cyanides total','cyanides-total', 'cyanidestotal','cyanides_total',
                    ],
-    standard_unit = names.unit_mgperl,
+    standard_unit = names.unit_microgperl,
     )
 
 

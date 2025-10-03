@@ -59,7 +59,7 @@ properties_sample_settings[names.name_aquifer]=dict(
 
 properties_sample_settings[names.name_date]=dict(
     other_names = ["date",'time'],
-    standard_unit = names.unit_date,
+    standard_unit = names.unit_less,
 )
 
 

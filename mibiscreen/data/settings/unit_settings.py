@@ -15,11 +15,11 @@ properties_units[names.unit_mgperl]=dict(
     )
 
 properties_units[names.unit_mgNperl]=dict(
-    other_names = ["mg/l", 'ppm', "mgN/l",'ppm N','ppmN','ppm-N','ppm_N',"mg/l as N","ppm as N"],
+    other_names = ["mg/l", 'ppm', "mgn/l",'ppm n','ppmn','ppm-n','ppm_n',"mg/l as n","ppm as n"],
     )
 
 properties_units[names.unit_mgPperl]=dict(
-    other_names = ["mg/l", 'ppm', "mgP/l",'ppm P','ppmP','ppm-P','ppm_P',"mg/l as P","ppm as P"],
+    other_names = ["mg/l", 'ppm', "mgp/l",'ppm p','ppmp','ppm-p','ppm_p',"mg/l as p","ppm as p"],
     )
 
 properties_units[names.unit_microgperl]=dict(
@@ -53,9 +53,9 @@ properties_units[names.unit_count]=dict(
     other_names =['nr','number','count'],
     )
 
-properties_units[names.unit_date]=dict(
-    other_names = ['date','time','hr'],
-    )
+# properties_units[names.unit_date]=dict(
+#     other_names = ['date','time','hr'],
+#     )
 
 properties_units[names.unit_less]=dict(
     other_names = ['',' ','  ','-',np.nan],
@@ -66,3 +66,4 @@ for key in properties_units.keys():
     if key != names.unit_less:
         all_units = all_units + properties_units[key]['other_names']
 
+properties_units

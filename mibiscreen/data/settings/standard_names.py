@@ -16,8 +16,8 @@ unit_permil = 'permil'
 unit_count = 'nr'
 unit_date = 'date'
 unit_less = ''
-unit_mgNperl = "mg/l"
-unit_mgPperl = "mg/l"
+unit_mgNperl = "mg/l-N"
+unit_mgPperl = "mg/l-P"
 unit_celsius = 'C'
 unit_date = 'date'
 
