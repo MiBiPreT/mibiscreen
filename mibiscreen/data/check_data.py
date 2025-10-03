@@ -76,7 +76,7 @@ def standard_names(name_list,
                       **contaminants_analysis,
     }
     dict_names=_generate_dict_other_names(properties_all)
-
+#    print(dict_names)
     other_names_contaminants = _generate_dict_other_names(properties_contaminants)
     other_names_isotopes = _generate_dict_other_names(properties_isotopes)
 
@@ -86,7 +86,6 @@ def standard_names(name_list,
         y = dict_names.get(x, False)
         x_isotope = x.split('-')[0]
         y_isotopes = other_names_isotopes.get(x_isotope.lower(), False)
-
         if y_isotopes is not False:
             x_molecule = x.removeprefix(x_isotope+'-')
             y_molecule = other_names_contaminants.get(x_molecule.lower(), False)

@@ -57,5 +57,11 @@ properties_sample_settings[names.name_aquifer]=dict(
     standard_unit = names.unit_less,
 )
 
+properties_sample_settings[names.name_date]=dict(
+    other_names = ["date",'time'],
+    standard_unit = names.unit_date,
+)
+
+
 ### List with all quantities of particular data type in standard names:
 sample_settings = list(properties_sample_settings.keys())
