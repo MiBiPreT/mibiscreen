@@ -65,5 +65,3 @@ all_units = []
 for key in properties_units.keys():
     if key != names.unit_less:
         all_units = all_units + properties_units[key]['other_names']
-
-properties_units

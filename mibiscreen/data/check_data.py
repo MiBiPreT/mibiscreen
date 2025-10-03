@@ -341,6 +341,7 @@ def check_units(data,
                       **properties_contaminants,
                       **properties_metabolites,
                       **properties_isotopes,
+                      **contaminants_analysis,
     }
 
     ### run through all quantity columns and check their units
@@ -353,6 +354,8 @@ def check_units(data,
         else:
             col_not_checked.append(quantity)
             continue
+
+        ### check on given unit (also considering alternative unit names)
         if standard_unit != names.unit_less:
             other_names_unit = properties_units[standard_unit]['other_names']
             if str(units[quantity][0]).lower() not in other_names_unit:
@@ -369,6 +372,7 @@ def check_units(data,
             print(" Quantities not in requested units:")
             print(*col_check_list, sep='\n')
         if len(col_not_checked) != 0:
+            print('________________________________________________________________')
             print(" Quantities not identified (and thus not checked on units):")
             print(*col_not_checked, sep='\n')
             print('================================================================')
