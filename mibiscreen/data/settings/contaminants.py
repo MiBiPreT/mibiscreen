@@ -9,6 +9,10 @@ for biodegredation and bioremediation analysis
 import mibiscreen.data.settings.standard_names as names
 
 properties_contaminants = dict()
+
+###############################################################################
+### MAHs
+
 properties_contaminants[names.name_benzene]=dict(
     chemical_formula = 'c6h6',
     molecular_mass = 78.,
@@ -49,7 +53,7 @@ properties_contaminants[names.name_xylene]=dict(
     hydrogen_atoms = 10,
     # factor_stoichiometry = 42.,
     # thresholds_for_intervention_NL = 70.,
-    other_names = ["xylene",
+    other_names = ["xylene","xyleen",
                    "c6h4ch3ch3"],
     standard_unit = names.unit_microgperl,
     )
@@ -84,41 +88,8 @@ properties_contaminants[names.name_o_xylene]=dict(
     hydrogen_atoms = 10,
     # factor_stoichiometry = 42.,
     # thresholds_for_intervention_NL = 70.,
-    other_names =  ["o-xylene","o xylene","o_xylene","oxylene"],
-    standard_unit = names.unit_microgperl,
-    )
-
-properties_contaminants[names.name_indene]=dict(
-    chemical_formula = "c9h8",
-    molecular_mass = 116.,
-    carbon_atoms = 9,
-    hydrogen_atoms = 8,
-    # factor_stoichiometry = 44.,
-    # thresholds_for_intervention_NL = 70.,
-    other_names = ["indene","indeen","c9h8"],
-    standard_unit = names.unit_microgperl,
-    )
-
-properties_contaminants[names.name_indane]=dict(
-    chemical_formula = "c9h10",
-    molecular_mass = 118.,
-    carbon_atoms = 9,
-    hydrogen_atoms = 10,
-    # factor_stoichiometry = 46.,
-    # thresholds_for_intervention_NL = 70.,
-    other_names = ["indane","c9h10"],
-    standard_unit = names.unit_microgperl,
-    )
-
-properties_contaminants[names.name_naphthalene]=dict(
-    chemical_formula = "c10h8",
-    molecular_mass = 128.,
-    carbon_atoms = 10,
-    hydrogen_atoms = 8,
-    # factor_stoichiometry = 48.,
-    # thresholds_for_intervention_NL = 70.,
-    other_names = ["naphthalene","naphthaleen","naphthaline",
-                   "naphtaline","naphtalene","naphtaleen","c10h8"],
+    other_names =  ["o-xylene","o xylene","o_xylene","oxylene",
+                    "o-xyleen","o xyleen","o_xyleen","oxyleen"],
     standard_unit = names.unit_microgperl,
     )
 
@@ -334,7 +305,231 @@ properties_contaminants[names.name_1235_tetramethylbenzene]=dict(
                    '1,2,3,5 tetramethylbenzene','1,2,3,5tetramethylbenzene','isodurene'],
     standard_unit = names.unit_microgperl,
 )
+###############################################################################
+### PAHs
 
+properties_contaminants[names.name_indene]=dict(
+    chemical_formula = "c9h8",
+    molecular_mass = 116.,
+    carbon_atoms = 9,
+    hydrogen_atoms = 8,
+    # factor_stoichiometry = 44.,
+    # thresholds_for_intervention_NL = 70.,
+    other_names = ["indene","indeen","c9h8"],
+    standard_unit = names.unit_microgperl,
+    )
+
+properties_contaminants[names.name_indane]=dict(
+    chemical_formula = "c9h10",
+    molecular_mass = 118.,
+    carbon_atoms = 9,
+    hydrogen_atoms = 10,
+    # factor_stoichiometry = 46.,
+    # thresholds_for_intervention_NL = 70.,
+    other_names = ["indane","c9h10"],
+    standard_unit = names.unit_microgperl,
+    )
+
+properties_contaminants[names.name_naphthalene]=dict(
+    chemical_formula = "c10h8",
+    molecular_mass = 128.,
+    carbon_atoms = 10,
+    hydrogen_atoms = 8,
+    # factor_stoichiometry = 48.,
+    # thresholds_for_intervention_NL = 70.,
+    other_names = ["naphthalene","naphthaleen","naphthaline",
+                   "naphtaline","naphtalene","naphtaleen","c10h8"],
+    standard_unit = names.unit_microgperl,
+    )
+
+properties_contaminants[names.name_naphthalene_VOC]=dict(
+    chemical_formula = "c10h8",
+    molecular_mass = 128.,
+    carbon_atoms = 10,
+    hydrogen_atoms = 8,
+    # factor_stoichiometry = 48.,
+    # thresholds_for_intervention_NL = 70.,
+    other_names = ['naphthalene_voc',"naphthalene_voc","naphthalenevoc","naphthalene-voc","naphthalene voc",
+                   "naphtalene_voc","naphtalenevoc","naphtalene-voc","naphtalenevoc",
+                   "naphthaline_voc","naphthalinevoc","naphthaline-voc","naphthaline voc",
+                   "naphtaline_voc","naphtalinevoc","naphtaline-voc","naphtaline voc",
+                   "naphthaleen_voc","naphthaleenvoc","naphthaleen-voc","naphthaleen voc",
+                   "naphtaleen_voc","naphtaleenvoc","naphtaleen-voc","naphtaleen voc",
+                   "c10h8_voc"],
+    standard_unit = names.unit_microgperl,
+    )
+
+properties_contaminants[names.name_naphthalene_PAH]=dict(
+    chemical_formula = "c10h8",
+    molecular_mass = 128.,
+    carbon_atoms = 10,
+    hydrogen_atoms = 8,
+    # factor_stoichiometry = 48.,
+    # thresholds_for_intervention_NL = 70.,
+    other_names = ["naphthalene_pah","naphthalenepah","naphthalene-pah","naphthalene pah",
+                   "naphtalene_pah","naphtalenepah","naphtalene-pah","naphtalenepah",
+                   "naphthaline_pah","naphthalinepah","naphthaline-pah","naphthaline pah",
+                   "naphtaline_pah","naphtalinepah","naphtaline-pah","naphtaline pah",
+                   "naphthaleen_pah","naphthaleenpah","naphthaleen-pah","naphthaleen pah",
+                   "naphtaleen_pah","naphtaleenpah","naphtaleen-pah","naphtaleen pah",
+                   "c10h8_pah"],
+    standard_unit = names.unit_microgperl,
+    )
+
+properties_contaminants[names.name_naphthalene] = dict(
+    chemical_formula = "C10H8",
+    molecular_mass = 128.0,
+    carbon_atoms = 10,
+    hydrogen_atoms = 8,
+    other_names = ["naphthalene","naphthaleen","naphthaline",
+                   "naphtaline","naphtalene","naphtaleen","C10H8"],
+    standard_unit = names.unit_microgperl,
+)
+
+# New ones:
+
+properties_contaminants[names.name_acenaphthylene] = dict(
+    chemical_formula = "C12H8",
+    molecular_mass = 152.192,
+    carbon_atoms = 12,
+    hydrogen_atoms = 8,
+    other_names = ["acenaphthylene","cyclopenta[de]naphthalene","C12H8"],
+    standard_unit = names.unit_microgperl,
+)
+
+properties_contaminants[names.name_acenaphthene] = dict(
+    chemical_formula = "C12H10",
+    molecular_mass = 154.212,  # approximate
+    carbon_atoms = 12,
+    hydrogen_atoms = 10,
+    other_names = ["acenaphthene","acenaphthene (C12H10)","C12H10"],
+    standard_unit = names.unit_microgperl,
+)
+
+properties_contaminants[names.name_fluorene] = dict(
+    chemical_formula = "C13H10",
+    molecular_mass = 166.22,
+    carbon_atoms = 13,
+    hydrogen_atoms = 10,
+    other_names = ["fluorene","C13H10"],
+    standard_unit = names.unit_microgperl,
+)
+
+properties_contaminants[names.name_phenanthrene] = dict(
+    chemical_formula = "C14H10",
+    molecular_mass = 178.226,
+    carbon_atoms = 14,
+    hydrogen_atoms = 10,
+    other_names = ["phenanthrene","C14H10"],
+    standard_unit = names.unit_microgperl,
+)
+
+properties_contaminants[names.name_anthracene] = dict(
+    chemical_formula = "C14H10",
+    molecular_mass = 178.226,
+    carbon_atoms = 14,
+    hydrogen_atoms = 10,
+    other_names = ["anthracene","C14H10"],
+    standard_unit = names.unit_microgperl,
+)
+
+properties_contaminants[names.name_fluoranthene] = dict(
+    chemical_formula = "C16H10",
+    molecular_mass = 202.26,
+    carbon_atoms = 16,
+    hydrogen_atoms = 10,
+    other_names = ["fluoranthene","C16H10"],
+    standard_unit = names.unit_microgperl,
+)
+
+properties_contaminants[names.name_pyrene] = dict(
+    chemical_formula = "C16H10",
+    molecular_mass = 202.26,
+    carbon_atoms = 16,
+    hydrogen_atoms = 10,
+    other_names = ["pyrene","C16H10"],
+    standard_unit = names.unit_microgperl,
+)
+
+properties_contaminants[names.name_chrysene] = dict(
+    chemical_formula = "C18H12",
+    molecular_mass = 228.29,
+    carbon_atoms = 18,
+    hydrogen_atoms = 12,
+    other_names = ["chrysene","C18H12"],
+    standard_unit = names.unit_microgperl,
+)
+
+properties_contaminants[names.name_benzo_a_anthracene] = dict(
+    chemical_formula = "C18H12",
+    molecular_mass = 228.29,
+    carbon_atoms = 18,
+    hydrogen_atoms = 12,
+    other_names = ["benzo[a]anthracene","benzo(a)anthracene","benzoaanthracene",
+                   "benzo-a-anthracene","C18H12","BaA"],
+    standard_unit = names.unit_microgperl,
+)
+
+properties_contaminants[names.name_benzo_b_fluoranthene] = dict(
+    chemical_formula = "C20H12",
+    molecular_mass = 252.31,
+    carbon_atoms = 20,
+    hydrogen_atoms = 12,
+    other_names = ["benzo[b]fluoranthene","benzo(b)fluoranthene",
+                   "benzobfluoranthene","benzo-b-fluoranthene","BbF","C20H12"],
+    standard_unit = names.unit_microgperl,
+)
+
+properties_contaminants[names.name_benzo_k_fluoranthene] = dict(
+    chemical_formula = "C20H12",
+    molecular_mass = 252.31,
+    carbon_atoms = 20,
+    hydrogen_atoms = 12,
+    other_names = ["benzo[k]fluoranthene","benzo(k)fluoranthene"
+                   "benzokfluoranthene","benzo-k-fluoranthene","BkF","C20H12"],
+    standard_unit = names.unit_microgperl,
+)
+
+properties_contaminants[names.name_benzo_a_pyrene] = dict(
+    chemical_formula = "C20H12",
+    molecular_mass = 252.31,
+    carbon_atoms = 20,
+    hydrogen_atoms = 12,
+    other_names = ["benzo[a]pyrene","benzo(a)pyrene","benzoapyrene",
+                   "benzo-a-pyrene","BaP","C20H12"],
+    standard_unit = names.unit_microgperl,
+)
+
+properties_contaminants[names.name_dibenz_ah_anthracene] = dict(
+    chemical_formula = "C22H14",
+    molecular_mass = 278.33,
+    carbon_atoms = 22,
+    hydrogen_atoms = 14,
+    other_names = ["dibenz[a,h]anthracene","dibenz(a,h)anthracene","dibenzahanthracene","dibenz-a,h-anthracene",
+                   "dibenz-a-h-anthracene","DBahA","C22H14"],
+    standard_unit = names.unit_microgperl,
+)
+
+properties_contaminants[names.name_benzo_ghi_perylene] = dict(
+    chemical_formula = "C22H12",
+    molecular_mass = 276.33,
+    carbon_atoms = 22,
+    hydrogen_atoms = 12,
+    other_names = ["benzo[ghi]perylene","benzo(ghi)perylene","benzoghiperylene","benzo-ghi-perylene",
+                   "C22H12","BghiP"],
+    standard_unit = names.unit_microgperl,
+)
+
+properties_contaminants[names.name_indeno_123cd_pyrene] = dict(
+    chemical_formula = "C22H12",
+    molecular_mass = 276.33,  # from data: 276.33 :contentReference[oaicite:0]{index=0}
+    carbon_atoms = 22,
+    hydrogen_atoms = 12,
+    other_names = ["indeno[1,2,3-cd]pyrene","indeno(1,2,3‑cd)pyrene",
+                   "indeno1,2,3‑cdpyrene","indeno-1,2,3‑cd-pyrene",
+                   "C22H12"],
+    standard_unit = names.unit_microgperl,
+)
 
 properties_contaminants[names.name_methylindene]=dict(
     chemical_formula = "c9h7ch3",
@@ -593,12 +788,351 @@ properties_contaminants[names.name_27_dimethylnaphthalene]=dict(
     standard_unit = names.unit_microgperl,
 )
 
+### Alkylphenols
+properties_contaminants[names.name_phenol] = dict(
+    chemical_formula = "C6H6O",
+    molecular_mass = 94.11,
+    carbon_atoms = 6,
+    hydrogen_atoms = 6,
+    other_names = ['phenol', 'hydroxybenzene', 'benzenol'],
+    standard_unit = names.unit_microgperl,
+)
+
+properties_contaminants[names.name_thymol] = dict(
+    chemical_formula = "C10H14O",
+    molecular_mass = 150.22,
+    carbon_atoms = 10,
+    hydrogen_atoms = 14,
+    other_names = ['thymol', '2_isopropyl_5_methylphenol', '5_methyl_2_isopropylphenol'],
+    standard_unit = names.unit_microgperl,
+)
+
+properties_contaminants[names.name_cresol] = dict(
+    chemical_formula = None,
+    molecular_mass = None,
+    carbon_atoms = None,
+    hydrogen_atoms = None,
+    other_names = ['cresol', 'methylphenol', 'hydroxytoluene'],
+    standard_unit = names.unit_microgperl,
+)
+
+properties_contaminants[names.name_m_cresol] = dict(
+    chemical_formula = "C7H8O",
+    molecular_mass = 108.14,
+    carbon_atoms = 7,
+    hydrogen_atoms = 8,
+    other_names = ['m-cresol','m cresol','mcresol','m_cresol', 'methylphenol', '3_methylphenol', '3-methylphenol'],
+    standard_unit = names.unit_microgperl,
+)
+
+properties_contaminants[names.name_o_cresol] = dict(
+    chemical_formula = "C7H8O",
+    molecular_mass = 108.14,
+    carbon_atoms = 7,
+    hydrogen_atoms = 8,
+    other_names = ['o-cresol','o cresol','ocresol''o_cresol', '2_methylphenol', '2-methylphenol'],
+    standard_unit = names.unit_microgperl,
+)
+
+properties_contaminants[names.name_p_cresol] = dict(
+    chemical_formula = "C7H8O",
+    molecular_mass = 108.14,
+    carbon_atoms = 7,
+    hydrogen_atoms = 8,
+    other_names = ['p-cresol','p cresol','pcresol','p_cresol', '4_methylphenol', '4-methylphenol'],
+    standard_unit = names.unit_microgperl,
+)
+
+properties_contaminants[names.name_2_ethylphenol] = dict(
+    chemical_formula = "C8H10O",
+    molecular_mass = 122.16,
+    carbon_atoms = 8,
+    hydrogen_atoms = 10,
+    other_names = ['2_ethylphenol', '2-ethylphenol'],
+    standard_unit = names.unit_microgperl,
+)
+
+properties_contaminants[names.name_3_ethylphenol] = dict(
+    chemical_formula = "C8H10O",
+    molecular_mass = 122.16,
+    carbon_atoms = 8,
+    hydrogen_atoms = 10,
+    other_names = ['3_ethylphenol', '3-ethylphenol'],
+    standard_unit = names.unit_microgperl,
+)
+
+properties_contaminants[names.name_23_dimethylphenol] = dict(
+    chemical_formula = "C8H10O",
+    molecular_mass = 122.16,
+    carbon_atoms = 8,
+    hydrogen_atoms = 10,
+    other_names = [
+        '23_dimethylphenol','23-dimethylphenol','23 dimethylphenol','23dimethylphenol',
+        '2,3_dimethylphenol','2,3-dimethylphenol','2,3 dimethylphenol','2,3dimethylphenol',
+        '23_dimethylphenol','23-dimethylphenol','23 dimethylphenol','23dimethylphenol',
+        '2,3_dimethylphenol','2,3-dimethylphenol','2,3 dimethylphenol','2,3dimethylphenol'
+    ],
+    standard_unit = names.unit_microgperl,
+)
+
+properties_contaminants[names.name_24_dimethylphenol] = dict(
+    chemical_formula = "C8H10O",
+    molecular_mass = 122.16,
+    carbon_atoms = 8,
+    hydrogen_atoms = 10,
+    other_names = [
+        '24_dimethylphenol','24-dimethylphenol','24 dimethylphenol','24dimethylphenol',
+        '2,4_dimethylphenol','2,4-dimethylphenol','2,4 dimethylphenol','2,4dimethylphenol',
+        '24_dimethylphenol','24-dimethylphenol','24 dimethylphenol','24dimethylphenol',
+        '2,4_dimethylphenol','2,4-dimethylphenol','2,4 dimethylphenol','2,4dimethylphenol'
+    ],
+    standard_unit = names.unit_microgperl,
+)
+
+properties_contaminants[names.name_25_dimethylphenol] = dict(
+    chemical_formula = "C8H10O",
+    molecular_mass = 122.16,
+    carbon_atoms = 8,
+    hydrogen_atoms = 10,
+    other_names = [
+        '25_dimethylphenol','25-dimethylphenol','25 dimethylphenol','25dimethylphenol',
+        '2,5_dimethylphenol','2,5-dimethylphenol','2,5 dimethylphenol','2,5dimethylphenol',
+        '25_dimethylphenol','25-dimethylphenol','25 dimethylphenol','25dimethylphenol',
+        '2,5_dimethylphenol','2,5-dimethylphenol','2,5 dimethylphenol','2,5dimethylphenol'
+    ],
+    standard_unit = names.unit_microgperl,
+)
+
+properties_contaminants[names.name_26_dimethylphenol26] = dict(
+    chemical_formula = "C8H10O",
+    molecular_mass = 122.16,
+    carbon_atoms = 8,
+    hydrogen_atoms = 10,
+    other_names = [
+        '26_dimethylphenol','26-dimethylphenol','26 dimethylphenol','26dimethylphenol',
+        '2,6_dimethylphenol','2,6-dimethylphenol','2,6 dimethylphenol','2,6dimethylphenol',
+        '26_dimethylphenol','26-dimethylphenol','26 dimethylphenol','26dimethylphenol',
+        '2,6_dimethylphenol','2,6-dimethylphenol','2,6 dimethylphenol','2,6dimethylphenol'
+    ],
+    standard_unit = names.unit_microgperl,
+)
+
+properties_contaminants[names.name_34_dimethylphenol] = dict(
+    chemical_formula = "C8H10O",
+    molecular_mass = 122.16,
+    carbon_atoms = 8,
+    hydrogen_atoms = 10,
+    other_names = [
+        '34_dimethylphenol','34-dimethylphenol','34 dimethylphenol','34dimethylphenol',
+        '3,4_dimethylphenol','3,4-dimethylphenol','3,4 dimethylphenol','3,4dimethylphenol',
+        '34_dimethylphenol','34-dimethylphenol','34 dimethylphenol','34dimethylphenol',
+        '3,4_dimethylphenol','3,4-dimethylphenol','3,4 dimethylphenol','3,4dimethylphenol'
+    ],
+    standard_unit = names.unit_microgperl,
+)
+
+properties_contaminants[names.name_35_dimethylphenol] = dict(
+    chemical_formula = "C8H10O",
+    molecular_mass = 122.16,
+    carbon_atoms = 8,
+    hydrogen_atoms = 10,
+    other_names = [
+        '35_dimethylphenol','35-dimethylphenol','35 dimethylphenol','35dimethylphenol',
+        '3,5_dimethylphenol','3,5-dimethylphenol','3,5 dimethylphenol','3,5dimethylphenol',
+        '35_dimethylphenol','35-dimethylphenol','35 dimethylphenol','35dimethylphenol',
+        '3,5_dimethylphenol','3,5-dimethylphenol','3,5 dimethylphenol','3,5dimethylphenol'
+    ],
+    standard_unit = names.unit_microgperl,
+)
+
+
+properties_contaminants[names.name_235_trimethylphenol] = dict(
+    chemical_formula = "C9H12O",
+    molecular_mass = 138.19,
+    carbon_atoms = 9,
+    hydrogen_atoms = 12,
+    other_names = [
+        '235_trimethylphenol', '235-trimethylphenol', '235 trimethylphenol', '235trimethylphenol',
+        '2,3,5_trimethylphenol', '2,3,5-trimethylphenol', '2,3,5 trimethylphenol', '2,3,5trimethylphenol'
+    ],
+    standard_unit = names.unit_microgperl,
+)
+
+properties_contaminants[names.name_345_trimethylphenol] = dict(
+    chemical_formula = "C9H12O",
+    molecular_mass = 138.19,
+    carbon_atoms = 9,
+    hydrogen_atoms = 12,
+    other_names = [
+        '345_trimethylphenol', '345-trimethylphenol', '345 trimethylphenol', '345trimethylphenol',
+        '3,4,5_trimethylphenol', '3,4,5-trimethylphenol', '3,4,5 trimethylphenol', '3,4,5trimethylphenol'
+    ],
+    standard_unit = names.unit_microgperl,
+)
+
+properties_contaminants[names.name_4_ethylphenol] = dict(
+    chemical_formula = "C8H10O",
+    molecular_mass = 122.16,
+    carbon_atoms = 8,
+    hydrogen_atoms = 10,
+    other_names = [
+        '4_ethylphenol', '4-ethylphenol', '4 ethylphenol', '4ethylphenol',
+        'p_ethylphenol', 'p-ethylphenol', 'p ethylphenol', 'pethylphenol'
+    ],
+    standard_unit = names.unit_microgperl,
+)
+
+properties_contaminants[names.name_2_isopropylphenol] = dict(
+    chemical_formula = "C9H12O",
+    molecular_mass = 136.19,
+    carbon_atoms = 9,
+    hydrogen_atoms = 12,
+    other_names = [
+        '2_isopropylphenol', '2-isopropylphenol', '2 isopropylphenol', '2isopropylphenol',
+        'o_isopropylphenol', 'o-isopropylphenol', 'o isopropylphenol', 'oisopropylphenol'
+    ],
+    standard_unit = names.unit_microgperl,
+)
+
+properties_contaminants[names.name_ptertbutylphenol] = dict(
+    chemical_formula = "C10H14O",
+    molecular_mass = 150.22,
+    carbon_atoms = 10,
+    hydrogen_atoms = 14,
+    other_names = [
+        'p_[tert]butylphenol', 'p-(tert)butylphenol', 'p tert butyl phenol', 'ptertbutylphenol',
+        'para_tert_butyl_phenol', 'para-(tert)-butyl-phenol', 'para tert butyl phenol'
+    ],
+    standard_unit = names.unit_microgperl,
+)
+
 
 ###############################################################################
 ###############################################################################
 ###############################################################################
+
 
 contaminants_analysis = dict()
+
+contaminants_analysis[names.name_PAH_total_16] = dict(
+    other_names = ['pah_total_16','pah_total 16','pah_total16','pah_total-16',
+                   'pah total_16','pah total 16','pah total16','pah total-16',
+                   'pahtotal_16','pahtotal 16','pahtotal16','pahtotal-16'
+                   'pah-total_16','pah-total 16','pah-total16','pah-total-16',
+                   'pah_16','pah 16','pah16','pah-16',
+                   'total_pah_16','total_pah 16','total_pah16','total_pah-16',
+                   'total pah_16','total pah 16','total pah16','total pah-16',
+                   'totalpah_16','totalpah 16','totalpah16','totalpah-16',
+                   'total-pah_16','total-pah 16','total-pah16','total-pah-16',
+                   ],
+    standard_unit = names.unit_microgperl,
+    )
+
+contaminants_analysis[names.name_PAH_total_10] = dict(
+    other_names = ['pah_total_10','pah_total 10','pah_total10','pah_total-10',
+                   'pah total_10','pah total 10','pah total10','pah total-10',
+                   'pahtotal_10','pahtotal 10','pahtotal10','pahtotal-10'
+                   'pah-total_10','pah-total 10','pah-total10','pah-total-10',
+                   'pah_10','pah 10','pah10','pah-10',
+                   'total_pah_10','total_pah 10','total_pah10','total_pah-10',
+                   'total pah_10','total pah 10','total pah10','total pah-10',
+                   'totalpah_10','totalpah 10','totalpah10','totalpah-10',
+                   'total-pah_10','total-pah 10','total-pah10','total-pah-10',
+                   ],
+    standard_unit = names.unit_microgperl,
+    )
+
+contaminants_analysis[names.name_fraction_C10_C12] = dict(
+    other_names = [
+        'fraction_c10-c12','fraction c10-c12','fraction c10_c12',
+        'c10-c12 fraction','c10_c12 fraction',
+        'c10 to c12','c10_c12','c10–c12','c10–c12 fraction',
+    ],
+    standard_unit = names.unit_microgperl,
+)
+
+contaminants_analysis[names.name_fraction_C12_C22] = dict(
+    other_names = [
+        'fraction_c12-c22','fraction c12-c22','fraction c12_c22',
+        'c12-c22 fraction','c12_c22 fraction',
+        'c12 to c22','c12_c22','c12–c22','c12–c22 fraction',
+    ],
+    standard_unit = names.unit_microgperl,
+)
+
+contaminants_analysis[names.name_fraction_C22_C30] = dict(
+    other_names = [
+        'fraction_c22-c30','fraction c22-c30','fraction c22_c30',
+        'c22-c30 fraction','c22_c30 fraction',
+        'c22 to c30','c22_c30','c22–c30','c22–c30 fraction',
+    ],
+    standard_unit = names.unit_microgperl,
+)
+
+
+contaminants_analysis[names.name_fraction_C30_C40] = dict(
+    other_names = [
+        'fraction_c30-c40','fraction c30-c40','fraction c30_c40',
+        'c30-c40 fraction','c30_c40 fraction',
+        'c30 to c40','c30_c40','c30–c40','c30–c40 fraction',
+    ],
+    standard_unit = names.unit_microgperl,
+)
+
+contaminants_analysis[names.name_total_C10_C40] = dict(
+    other_names = [
+        'total_c10-c40','total c10-c40','total c10_c40',
+        'c10-c40 total','c10_c40 total',
+        'c10 to c40','c10_c40','c10–c40','c10–c40 total',
+        'c10-c40','c10_c40',
+    ],
+    standard_unit = names.unit_microgperl,
+)
+
+contaminants_analysis[names.name_total_c2_alkylphenols] = dict(
+    other_names = [
+        'c2-alkylphenols_total',"c2_alkylphenols_total","c2alkylphenols_total", "c2 alkylphenols_total",
+        "c2-alkylphenols-total","c2_alkylphenols-total","c2alkylphenols-total", "c2 alkylphenols-total",
+        "c2 alkylphenols total","c2_alkylphenols total","c2alkylphenols total", "c2 alkylphenols total",
+        "c2alkylphenolstotal","c2_alkylphenolstotal","c2alkylphenolstotal", "c2 alkylphenolstotal",
+        "total_c2_alkylphenols", "total-c2-alkylphenols", "total c2 alkylphenols", "totalc2alkylphenols",
+        "alkylphenols_c2_total", "alkylphenols-c2-total", "alkylphenols c2 total", "alkylphenolsc2total",
+        "c2_alkylphenols", "c2-alkylphenols", "c2 alkylphenols", "c2alkylphenols",
+        "alkylphenols_c2", "alkylphenols-c2", "alkylphenols c2", "alkylphenolsc2"
+    ],
+    standard_unit = names.unit_microgperl,
+)
+
+contaminants_analysis[names.name_total_c3_alkylphenols] = dict(
+    other_names = [
+        'c3-alkylphenols_total',"c3_alkylphenols_total","c3alkylphenols_total", "c3 alkylphenols_total",
+        "c3-alkylphenols-total","c3_alkylphenols-total","c3alkylphenols-total", "c3 alkylphenols-total",
+        "c3 alkylphenols total","c3_alkylphenols total","c3alkylphenols total", "c3 alkylphenols total",
+        "c3alkylphenolstotal","c3_alkylphenolstotal","c3alkylphenolstotal", "c3 alkylphenolstotal",
+        "c3_alkylphenols_total", "c3-alkylphenols-total", "c3 alkylphenols total", "c3alkylphenolstotal",
+        "total_c3_alkylphenols", "total-c3-alkylphenols", "total c3 alkylphenols", "totalc3alkylphenols",
+        "alkylphenols_c3_total", "alkylphenols-c3-total", "alkylphenols c3 total", "alkylphenolsc3total",
+        "c3_alkylphenols", "c3-alkylphenols", "c3 alkylphenols", "c3alkylphenols",
+        "alkylphenols_c3", "alkylphenols-c3", "alkylphenols c3", "alkylphenolsc3"
+    ],
+    standard_unit = names.unit_microgperl,
+)
+
+contaminants_analysis[names.name_total_c4_alkylphenols] = dict(
+    other_names = [
+        'c4-alkylphenols_total',"c4_alkylphenols_total","c4alkylphenols_total", "c4 alkylphenols_total",
+        "c4-alkylphenols-total","c4_alkylphenols-total","c4alkylphenols-total", "c4 alkylphenols-total",
+        "c4 alkylphenols total","c4_alkylphenols total","c4alkylphenols total", "c4 alkylphenols total",
+        "c4alkylphenolstotal","c4_alkylphenolstotal","c4alkylphenolstotal", "c4 alkylphenolstotal",
+        "c4_alkylphenols_total", "c4-alkylphenols-total", "c4 alkylphenols total", "c4alkylphenolstotal",
+        "total_c4_alkylphenols", "total-c4-alkylphenols", "total c4 alkylphenols", "totalc4alkylphenols",
+        "alkylphenols_c4_total", "alkylphenols-c4-total", "alkylphenols c4 total", "alkylphenolsc4total",
+        "c4_alkylphenols", "c4-alkylphenols", "c4 alkylphenols", "c4alkylphenols",
+        "alkylphenols_c4", "alkylphenols-c4", "alkylphenols c4", "alkylphenolsc4"
+    ],
+    standard_unit = names.unit_microgperl,
+)
+
 contaminants_analysis[names.name_total_contaminants] = dict(
     other_names = ["sum_contaminants","sum-contaminants","sum contaminants","sumcontaminants",
                    "total_contaminants","total-contaminants","total contaminants","totalcontaminants",
@@ -607,17 +1141,18 @@ contaminants_analysis[names.name_total_contaminants] = dict(
     standard_unit = names.unit_microgperl,
     )
 contaminants_analysis[names.name_total_BTEX] = dict(
-    other_names = ["sum_BTEX","sum-BTEX","sum BTEX","sumBTEX",
-                   "total_BTEX","total-BTEX","total BTEX","totalBTEX",
-                   "concentration -BTEX","concentration-BTEX","concentration BTEX",
-                   "concentrationBTEX"],
+    other_names = ["sum_btex","sum-btex","sum btex","sumbtex",
+                   "total_btex","total-btex","total btex","totalbtex",
+                   "btex_total","btex-total","btex total","btextotal",
+                   "concentration -btex","concentration-btex","concentration btex",
+                   "concentrationbtex"],
     standard_unit = names.unit_microgperl,
     )
 contaminants_analysis[names.name_total_BTEXIIN] = dict(
-    other_names = ["sum_BTEXIIN","sum-BTEXIIN","sum BTEXIIN","sumBTEXIIN",
-                   "total_BTEXIIN","total-BTEXIIN","total BTEXIIN","totalBTEXIIN",
-                   "concentration -BTEXIIN","concentration-BTEXIIN","concentration BTEXIIN",
-                   "concentrationBTEXIIN"],
+    other_names = ["sum_btexiin","sum-btexiin","sum btexiin","sumbtexiin",
+                   "total_btexiin","total-btexiin","total btexiin","totalbtexiin",
+                   "concentration -btexiin","concentration-btexiin","concentration btexiin",
+                   "concentrationbtexiin"],
     standard_unit = names.unit_microgperl,
     )
 contaminants_analysis[names.name_total_oxidators] = dict(
@@ -647,7 +1182,7 @@ contaminants_analysis[names.name_intervention_contaminants] = dict(
     )
 
 contaminants_analysis[names.name_NP_avail] = dict(
-    other_names = ["NP_avail"]
+    other_names = ["np_avail"]
     )
 
 ### List with all quantities of particular data type in standard names:
@@ -672,6 +1207,106 @@ contaminant_groups = dict(
                names.name_xylene,
                names.name_indane,
                names.name_indene,
-               names.name_naphthalene],
+               names.name_naphthalene,
+               # names.name_naphthalene_VOC,
+               # names.name_naphthalene_PAC,
+               ],
+    MAH = [names.name_benzene,
+           names.name_toluene,
+           names.name_ethylbenzene,
+           names.name_pm_xylene,
+           names.name_o_xylene,
+           names.name_xylene,
+           names.name_styrene,
+           names.name_isopropylbenzene,
+           names.name_n_propylbenzene,
+           names.name_ethyltoluene,
+           names.name_2_ethyltoluene,
+           names.name_3_ethyltoluene,
+           names.name_4_ethyltoluene,
+           names.name_trimethylbenzene,
+           names.name_123_trimethylbenzene,
+           names.name_124_trimethylbenzene,
+           names.name_135_trimethylbenzene,
+           names.name_4_isopropyltouene,
+           names.name_diethylbenzene,
+           names.name_12_diethylbenzene,
+           names.name_13_diethylbenzene,
+           names.name_14_diethylbenzene,
+           names.name_tetramethylbenzene,
+           names.name_1234_tetramethylbenzene,
+           names.name_1245_tetramethylbenzene,
+           names.name_1235_tetramethylbenzene,
+           ],
+    PAH = [names.name_indane,
+           names.name_indene,
+           names.name_naphthalene,
+           names.name_naphthalene_VOC,
+           names.name_naphthalene_PAH,
+           names.name_acenaphthylene,
+           names.name_acenaphthene,
+           names.name_fluorene,
+           names.name_phenanthrene,
+           names.name_anthracene,
+           names.name_fluoranthene,
+           names.name_pyrene,
+           names.name_chrysene,
+           names.name_benzo_a_anthracene,
+           names.name_benzo_b_fluoranthene,
+           names.name_benzo_k_fluoranthene,
+           names.name_benzo_a_pyrene,
+           names.name_dibenz_ah_anthracene,
+           names.name_benzo_ghi_perylene,
+           names.name_indeno_123cd_pyrene,
+           names.name_methylindene,
+           names.name_1_methylindene,
+           names.name_2_methylindene,
+           names.name_methylnaphthalene,
+           names.name_1_methylnaphthalene,
+           names.name_2_methylnaphthalene,
+           names.name_ethylnaphthalene,
+           names.name_1_ethylnaphthalene,
+           names.name_2_ethylnaphthalene,
+           names.name_dimethylnaphthalene,
+           names.name_12_dimethylnaphthalene,
+           names.name_13_dimethylnaphthalene,
+           names.name_14_dimethylnaphthalene,
+           names.name_15_dimethylnaphthalene,
+           names.name_16_dimethylnaphthalene,
+           names.name_17_dimethylnaphthalene,
+           names.name_18_dimethylnaphthalene,
+           names.name_23_dimethylnaphthalene,
+           names.name_26_dimethylnaphthalene,
+           names.name_27_dimethylnaphthalene,
+           ],
+    PAH_total_10 = [#Dutch RIVM defines environmental quality objectives for 10 PAHs
+                    names.name_naphthalene,
+                    names.name_anthracene,
+                    names.name_benzo_a_anthracene,
+                    names.name_benzo_a_pyrene,
+                    names.name_benzo_b_fluoranthene,
+                    names.name_benzo_k_fluoranthene,
+                    names.name_chrysene,
+                    names.name_dibenz_ah_anthracene,
+                    names.name_fluoranthene,
+                    names.name_pyrene,
+                    ],
+    PAH_total_16 = [names.name_naphthalene, #the 16 EPA priority PAHs
+                    names.name_acenaphthylene,
+                    names.name_acenaphthene,
+                    names.name_fluorene,
+                    names.name_phenanthrene,
+                    names.name_anthracene,
+                    names.name_fluoranthene,
+                    names.name_pyrene,
+                    names.name_benzo_a_anthracene,
+                    names.name_chrysene,
+                    names.name_benzo_b_fluoranthene,
+                    names.name_benzo_k_fluoranthene,
+                    names.name_benzo_a_pyrene,
+                    names.name_indeno_123cd_pyrene,
+                    names.name_dibenz_ah_anthracene,
+                    names.name_benzo_ghi_perylene,
+                    ],
     all_cont = list(properties_contaminants.keys())
 )

@@ -22,6 +22,11 @@ properties_geochemicals[names.name_pH]=dict(
     standard_unit = names.unit_less,
     )
 
+properties_geochemicals[names.name_temperature]=dict(
+    other_names = ["temperature","T","temp"],
+    standard_unit = names.unit_celsius,
+    )
+
 properties_geochemicals[names.name_EC]=dict(
     other_names = ["ec"],
     standard_unit = names.unit_microsimpercm,
@@ -66,12 +71,38 @@ properties_geochemicals[names.name_nitrate]=dict(
     standard_unit = names.unit_mgperl,
     )
 
+properties_geochemicals[names.name_nitrateN]=dict(
+    chemical_formula = 'N',
+    molecular_mass = 14.01,
+    other_names = ["nitraten","nitrate-n","nitrate n","nitrate_n",
+                   "no3n","no3-n","no3 n","no3_n",
+                   "no_3n","no_3-n","no_3 n","no_3_n",
+                   "no 3n","no 3-n","no 3 n","no 3_n",
+                   "no3-n","no3--n","no3- n","no3-_n",
+                   "no_3-n","no_3--n","no_3- n","no_3-_n",
+                   "no 3-n","no 3--n","no 3- n","no 3-_n"],
+    standard_unit = names.unit_mgNperl,
+    )
+
 properties_geochemicals[names.name_nitrite]=dict(
     chemical_formula = 'no2',
     molecular_mass = 46.,
     # factor_stoichiometry = 0.,
     other_names = ["nitrite","no2","no_2","no 2","no2-","no_2-","no 2-"],
     standard_unit = names.unit_mgperl,
+    )
+
+properties_geochemicals[names.name_nitriteN]=dict(
+    chemical_formula = 'N',
+    molecular_mass = 14.01,
+    other_names = ["nitriten","nitrite n","nitrite-n","nitrite_n",
+                   "no2n","no2 n","no2-n","no2_n",
+                   "no_2n","no_2 n","no_2-n","no_2_n",
+                   "no 2n","no 2 n","no 2-n","no 2_n",
+                   "no2-n","no2- n","no2--n","no2-_n",
+                   "no_2-n","no_2- n","no_2--n","no_2-_n"
+                   "no 2-n","no 2- n","no 2--n","no 2-_n"],
+    standard_unit = names.unit_mgNperl,
     )
 
 properties_geochemicals[names.name_sulfate]=dict(
@@ -168,6 +199,15 @@ properties_geochemicals[names.name_phosphate]=dict(
     standard_unit = names.unit_mgperl,
     )
 
+properties_geochemicals[names.name_phosphorus]=dict(
+    chemical_formula = "P",
+    other_names = ["phosphorus","P","TP","PT",
+                   "phosphorustotal","phosphorus_total","phosphorus total","phosphorus-total",
+                   "totalphosphorus","total_phosphorus","total phosphorus","total-phosphorus"],
+    standard_unit = names.unit_mgPperl,
+    )
+
+
 properties_geochemicals[names.name_chloride]=dict(
     chemical_formula = "cl-",
     other_names = ['chloride','cl','cl-'],
@@ -216,12 +256,23 @@ properties_geochemicals[names.name_acetate]=dict(
     standard_unit = names.unit_mgperl,
     )
 
+properties_geochemicals[names.name_cyanide]=dict(
+    chemical_formula = 'cn-',
+    other_names = ['cyanides','cn-','total cyanides',
+                   'total cyanides','total-cyanides','totalcyanides','total_cyanides',
+                   'cyanides total','cyanides-total', 'cyanidestotal','cyanides_total',
+                   ],
+    standard_unit = names.unit_microgperl,
+    )
+
+
 ### List with all quantities of particular data type in standard names:
 environment = list(properties_geochemicals.keys())
 
 environment_groups = dict(
     environmental_conditions = [names.name_redox,
                                 names.name_pH,
+                                names.name_temperature,
                                 names.name_EC,
                                 names.name_pE,
                                 ],
@@ -234,9 +285,12 @@ environment_groups = dict(
                             names.name_manganese4,
                             names.name_methane,
                             names.name_nitrite,
+                            names.name_nitriteN,
+                            names.name_nitrateN,
                             names.name_sulfide,
                             names.name_ammonium,
                             names.name_phosphate,
+                            names.name_phosphorus,
                             names.name_chloride,
                             names.name_bromide,
                             names.name_fluoride,
@@ -245,6 +299,7 @@ environment_groups = dict(
                             names.name_potassium,
                             names.name_calcium,
                             names.name_acetate,
+                            names.name_cyanide,
                             names.name_DOC,
                             names.name_NPOC,
                             names.name_TOC,

@@ -14,12 +14,26 @@ properties_units[names.unit_mgperl]=dict(
     other_names = ["mg/l",'ppm'],
     )
 
+properties_units[names.unit_mgNperl]=dict(
+    other_names = ["mg/l", 'ppm', "mgn/l",'ppm n','ppmn','ppm-n','ppm_n',"mg/l as n","ppm as n"],
+    )
+
+properties_units[names.unit_mgPperl]=dict(
+    other_names = ["mg/l", 'ppm', "mgp/l",'ppm p','ppmp','ppm-p','ppm_p',"mg/l as p","ppm as p"],
+    )
+
 properties_units[names.unit_microgperl]=dict(
     other_names = ["ug/l","µg/l","\u00B5g/l","\u03BCg/l","micro g/l",r"$\mu$ g/l",],
     )
 
 properties_units[names.unit_millivolt]=dict(
     other_names = ["mV","mv"],
+    )
+
+properties_units[names.unit_celsius]=dict(
+    other_names = ["C","c","Celsius","celsius",
+                   "\u00B0C","\u00B0c","\u00B0Celsius","\u00B0celsius",
+                   "\u00B0 C","\u00B0 c","\u00B0 Celsius","\u00B0 celsius"],
     )
 
 properties_units[names.unit_meter]=dict(
@@ -39,13 +53,15 @@ properties_units[names.unit_count]=dict(
     other_names =['nr','number','count'],
     )
 
+# properties_units[names.unit_date]=dict(
+#     other_names = ['date','time','hr'],
+#     )
+
 properties_units[names.unit_less]=dict(
     other_names = ['',' ','  ','-',np.nan],
     )
-
 
 all_units = []
 for key in properties_units.keys():
     if key != names.unit_less:
         all_units = all_units + properties_units[key]['other_names']
-

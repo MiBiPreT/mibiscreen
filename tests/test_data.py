@@ -5,6 +5,7 @@
 import numpy as np
 import pandas as pd
 import pytest
+from mibiscreen.data.check_data import _check_duplicates_in_list  # Replace with the actual module name
 from mibiscreen.data.check_data import _generate_dict_other_names
 from mibiscreen.data.check_data import check_columns
 from mibiscreen.data.check_data import check_data_frame
@@ -13,6 +14,7 @@ from mibiscreen.data.check_data import check_values
 from mibiscreen.data.check_data import standard_names
 from mibiscreen.data.check_data import standardize
 from mibiscreen.data.example_data.example_data import example_data
+from mibiscreen.data.load_data import _check_duplicates_in_df
 from mibiscreen.data.load_data import load_csv
 from mibiscreen.data.load_data import load_excel
 from mibiscreen.data.set_data import compare_lists
@@ -96,6 +98,44 @@ class TestLoadData:
 
         assert len(out)>0
 
+    def test_load_excel_05(self,capsys):
+        """Testing routine load_excel().
+
+        Testing handling of duplicate column names from real excel file.
+        """
+        data_t3= load_excel("{}/example_duplicate.xlsx".format(path_data),sheet_name= 'contaminants')[0]
+        captured = capsys.readouterr().out
+
+        assert data_t3.shape == (5,12)
+        assert "WARNING: Looks like duplicate column names detected." in captured
+        assert " - 'naphthalene.1'" in captured
+
+    def test_check_duplicates_in_df_01(self,capsys):
+        """Testing routine _check_duplicates_in_df().
+
+        Testing Warning in case of duplicates in dataframe.
+        """
+        # Create a DataFrame with duplicate column names (simulated by manually renaming)
+        data = pd.DataFrame({
+            'Name': [1, 2],
+            'Age': [30, 40],
+            'Name.1': [3, 4],  # Simulate pandas auto-renamed column
+            'Age.1': [50, 60]
+        })
+
+        # Call the function
+        _check_duplicates_in_df(data)
+
+        # Capture printed output
+        captured = capsys.readouterr().out
+
+        # Check the warning is in the output
+        assert "WARNING: Looks like duplicate column names detected." in captured
+        # Check that the renamed columns are listed
+        assert " - 'Name.1'" in captured
+        assert " - 'Age.1'" in captured
+        # Check verbose messages appear
+        assert "Consider renaming them." in captured
 
 class TestExampleData:
     """Class for testing example data of data module of mibiscreen."""
@@ -368,6 +408,9 @@ class TestCheckDataColumns:
 
     data4check = pd.DataFrame([units,s01],columns = columns_mod)
 
+    columns_dup = ["sample","well","Depth",'pH', 'redox' , 'Sulfate', 'CH4','ironII','c6h6', 'benzene']
+    data_dup = pd.DataFrame([units,s01],columns = columns_dup)
+
     def test_check_columns_01(self):
         """Testing check_column() on complete example data.
 
@@ -410,6 +453,54 @@ class TestCheckDataColumns:
         out,err=capsys.readouterr()
 
         assert len(out)>0
+
+    def test_check_columns_05(self,capsys):
+        """Testing routine check_column() on check and standardization of column names.
+
+        Testing Warning if duplicate column names in identified standard names.
+        """
+        check_columns(self.data_dup)
+        captured = capsys.readouterr().out
+
+        # Check the warning is in the output
+        assert "WARNING: Duplicates found in list of standard names:" in captured
+        assert " - 'c6h6' (index 8)" in captured
+        assert " - 'benzene' (index 9)" in captured
+        assert "Remove or rename duplicate quantities in data." in captured
+
+    def test_no_duplicates(self):
+        """Testing routine _check_duplicates_in_list().
+
+        Checking if there are no identical strings in a list.
+        """
+        data = ['a', 'b', 'c', 'd']
+        assert _check_duplicates_in_list(data) == {}
+
+    def test_with_duplicates(self):
+        """Testing routine _check_duplicates_in_list().
+
+        Checking if there are identical strings in a list.
+        """
+        data = ['a', 'b', 'a', 'c', 'b']
+        expected = {'a': [0, 2], 'b': [1, 4]}
+        assert _check_duplicates_in_list(data) == expected
+
+    def test_all_duplicates(self):
+        """Testing routine _check_duplicates_in_list().
+
+        Checking if there are only identical strings in a list.
+        """
+        data = ['x', 'x', 'x', 'x']
+        expected = {'x': [0, 1, 2, 3]}
+        assert _check_duplicates_in_list(data) == expected
+
+    def test_empty_list(self):
+        """Testing routine _check_duplicates_in_list().
+
+        Checking if it works for an empty list.
+        """
+        data = []
+        assert _check_duplicates_in_list(data) == {}
 
 
 class TestCheckDataUnits:
@@ -726,6 +817,8 @@ class TestGenerateDictOtherNames:
                                                  selection = ['name_01','name_02'])
 
         assert set(other_names.keys()) == set(self.other_names_1+self.other_names_2)
+
+
 
 
 class TestDataCompareLists:
