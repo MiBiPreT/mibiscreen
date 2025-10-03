@@ -40,10 +40,12 @@ def standard_names(name_list,
 
     Returns:
     -------
-        tuple: three list containing names of
+        tuple: three lists containing names of
                 list with identitied quantities in data (but not standardized names)
                 list with unknown quantities in data (not in list of standardized names)
                 list with standard names of identified quantities
+               + one dictionary mapping identified quantities to their
+                   standard values for fast name transformation
 
     Raises:
     -------
@@ -60,7 +62,6 @@ def standard_names(name_list,
     names_unknown = []
     names_transform = {}
 
-
     if isinstance(name_list, str):
         name_list = [name_list]
     elif isinstance(name_list, list):
@@ -76,11 +77,8 @@ def standard_names(name_list,
                       **contaminants_analysis,
     }
     dict_names=_generate_dict_other_names(properties_all)
-#    print(dict_names)
     other_names_contaminants = _generate_dict_other_names(properties_contaminants)
     other_names_isotopes = _generate_dict_other_names(properties_isotopes)
-
-     # dict_names= other_names_all.copy()
 
     for x in name_list:
         y = dict_names.get(x, False)
@@ -245,6 +243,21 @@ def check_columns(data_frame,
     column_names_unknown = results[2]
     column_names_transform = results[3]
 
+    ### check on duplicates in column names after name standardization
+    ### (i.e. in case the same quantity has been provided with different non-standard names
+    duplicates_indices = _check_duplicates_in_list(column_names_standard)
+
+    if duplicates_indices:
+    # duplicates_indices is NOT empty — do something here
+        print("WARNING: Duplicates found in list of standard names:")
+        for name, indices in duplicates_indices.items():
+            print(f"'{name}' occur has been provided as:")
+            for i in indices:
+                # Print the entry from other_list at index i
+                print(f" - '{column_names_known[i]}' (index {i})")
+        print('Remove or rename duplicate quantities in data.')
+        print('________________________________________________________________')
+
     if standardize:
         data.columns = [column_names_transform.get(x, x) for x in data.columns]
 
@@ -257,7 +270,7 @@ def check_columns(data_frame,
         print('----------------------------------')
         for i,name in enumerate(column_names_known):
             print(name," --> ",column_names_standard[i])
-        print('----------------------------------')
+        print('---------------------------------------------------------')
         if standardize:
             print("Identified column names have been standardized")
         else:
@@ -648,3 +661,35 @@ def _generate_dict_other_names(name_dict,
             other_names_dict[other_name] = key
 
     return other_names_dict
+
+def _check_duplicates_in_list(name_list):
+    """Finds duplicate strings in a list and returns their indices.
+
+    Parameters:
+    -----------
+    name_list : list of str
+        The list of strings to check for duplicates.
+
+    Returns:
+    --------
+    dict
+        A dictionary where keys are duplicated strings and values are lists
+        of indices where these duplicates occur in the input list.
+
+    Example:
+    --------
+    >>> find_duplicates_with_indices(['a', 'b', 'a', 'c', 'b'])
+    {'a': [0, 2], 'b': [1, 4]}
+    """
+    duplicates_indices = {}
+
+    for index, name in enumerate(name_list):
+        if name not in duplicates_indices:
+            duplicates_indices[name] = [index]
+        else:
+            duplicates_indices[name].append(index)
+
+    # Filter to keep only duplicates (more than one occurrence)
+    duplicates_indices = {name: indices for name, indices in duplicates_indices.items() if len(indices) > 1}
+
+    return duplicates_indices

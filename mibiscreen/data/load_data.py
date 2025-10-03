@@ -70,7 +70,7 @@ def load_excel(
         print("Reading data from file: {}".format(file_path))
         print('------------------------------------------------------------------')
 
-    _check_duplicates(data)
+    _check_duplicates_in_df(data)
 
     units = data.drop(labels = np.arange(1,data.shape[0]))
 
@@ -140,7 +140,7 @@ def load_csv(
     if ";" in data.iloc[1].iloc[0]:
         data = pd.read_csv(file_path, sep=";", encoding="unicode_escape")
 
-    _check_duplicates(data)
+    _check_duplicates_in_df(data)
 
     units = data.drop(labels = np.arange(1,data.shape[0]))
 
@@ -156,12 +156,12 @@ def load_csv(
 
     return data, units
 
-def _check_duplicates(data):
+def _check_duplicates_in_df(data):
     """Detects duplicate column names in a pandas DataFrame.
 
     When a DataFrame contains identical column names they are automatically
     renamed by pandas (e.g., 'Column', 'Column.1', 'Column.2'). This function
-    identifies if such column names exists and prints a warning message.
+    identifies if such column names exist and prints a warning message.
 
     This function checks for column names that match the pandas auto-renaming pattern (`.1`, `.2`, etc.)
     indicating that duplicate column names were present in the original data source (e.g., an Excel file).
@@ -182,7 +182,8 @@ def _check_duplicates(data):
             base = match.group(1)
             duplicate_columns.setdefault(base, []).append(col)
     if duplicate_columns:
-        print("WARNING: Duplicate column names detected. \n        They were automatically renamed by pandas into:")
+        print("WARNING: Looks like duplicate column names detected.")
+        print("         They were automatically renamed by pandas into:")
         for base, renamed_list in duplicate_columns.items():
             for renamed in renamed_list:
                 print(f" - '{renamed}'")
