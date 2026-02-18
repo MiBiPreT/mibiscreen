@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+         <loc>https://MiBiPreT.github.io/mibiscreen/v0.3/</loc>
+         <lastmod>2026-02-18</lastmod>
+    </url>
+    <url>
+         <loc>https://MiBiPreT.github.io/mibiscreen/v0.3/development/development/</loc>
+         <lastmod>2026-02-18</lastmod>
+    </url>
+    <url>
+         <loc>https://MiBiPreT.github.io/mibiscreen/v0.3/introduction/introduction/</loc>
+         <lastmod>2026-02-18</lastmod>
+    </url>
+    <url>
+         <loc>https://MiBiPreT.github.io/mibiscreen/v0.3/methods/ordination/</loc>
+         <lastmod>2026-02-18</lastmod>
+    </url>
+    <url>
+         <loc>https://MiBiPreT.github.io/mibiscreen/v0.3/reference/reference_analysis/</loc>
+         <lastmod>2026-02-18</lastmod>
+    </url>
+    <url>
+         <loc>https://MiBiPreT.github.io/mibiscreen/v0.3/reference/reference_data/</loc>
+         <lastmod>2026-02-18</lastmod>
+    </url>
+    <url>
+         <loc>https://MiBiPreT.github.io/mibiscreen/v0.3/reference/reference_visualize/</loc>
+         <lastmod>2026-02-18</lastmod>
+    </url>
+</urlset>
