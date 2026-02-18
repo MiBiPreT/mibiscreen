@@ -158,3 +158,20 @@ This will create the release on github and automatically trigger:
 
 1. The `.github/workflows/publish.yml` workflow which will build the package and publish it on PyPI
 1. The Zenodo-Github integration into making a snapshot of your repository and sticking a DOI on it and adding the new version to the main Zenodo entry for your software at [10.5281/zenodo.10878799](https://doi.org/10.5281/zenodo.10878799)
+
+
+## Getting a new `SONAR_TOKEN`
+If the Sonar pipeline does not run for 60 days, the `SONAR_TOKEN` expires.
+You can see the original announcement [in this thread](https://community.sonarsource.com/t/removing-inactive-tokens-after-60-days/142451/6).
+
+The expiry happens silently, so any github action workflows using Sonar will appear to suddenly fail with cryptic errors such as `"ERROR Failed to query JRE metadata: . Please check the property sonar.token or the environment variable SONAR_TOKEN. "`. If you see this, it means you need to recreate the `SONAR_TOKEN` for this repository. You will need some admin privileges to carry out the following steps:
+
+1. Go to 'My Account' on the sonarcloud.io site after logging in (or try following this URL: <https://sonarcloud.io/account>)
+1. Click on the 'Security' tab (<https://sonarcloud.io/account/security>)
+1. Enter a token name in the field under "Generate Tokens" and click "Generate Token"
+1. Copy the text for the generated token (you will not be able to see this text again)
+1. Go to the "Actions secrets and variables" section of the `mibiscreen` repository on GitHub (<https://github.com/MiBiPreT/mibiscreen/settings/secrets/actions>)
+1. Edit the existing `SONAR_TOKEN` (or create it, if it does not exist). Paste in the token text you copied from sonarcloud earlier
+1. Click "Update Secret"
+
+This should result in the newly created `SONAR_TOKEN` being used in any new github workflow runs. You may also choose to rerun some previously failed workflows (these should now succeed).
