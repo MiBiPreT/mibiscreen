@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../assets/icon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.2">
     
     
       
@@ -976,6 +976,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#getting-a-new-sonar_token" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Getting a new SONAR_TOKEN
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1283,6 +1294,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#getting-a-new-sonar_token" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Getting a new SONAR_TOKEN
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1413,6 +1435,20 @@ In general it should not be necessary to test this, but if necessary, use <a hre
 <li>The <code>.github/workflows/publish.yml</code> workflow which will build the package and publish it on PyPI</li>
 <li>The Zenodo-Github integration into making a snapshot of your repository and sticking a DOI on it and adding the new version to the main Zenodo entry for your software at <a href="https://doi.org/10.5281/zenodo.10878799">10.5281/zenodo.10878799</a></li>
 </ol>
+<h2 id="getting-a-new-sonar_token">Getting a new <code>SONAR_TOKEN</code></h2>
+<p>If the Sonar pipeline does not run for 60 days, the <code>SONAR_TOKEN</code> expires.
+You can see the original announcement <a href="https://community.sonarsource.com/t/removing-inactive-tokens-after-60-days/142451/6">in this thread</a>.</p>
+<p>The expiry happens silently, so any github action workflows using Sonar will appear to suddenly fail with cryptic errors such as <code>"ERROR Failed to query JRE metadata: . Please check the property sonar.token or the environment variable SONAR_TOKEN. "</code>. If you see this, it means you need to recreate the <code>SONAR_TOKEN</code> for this repository. You will need some admin privileges to carry out the following steps:</p>
+<ol>
+<li>Go to &lsquo;My Account&rsquo; on the sonarcloud.io site after logging in (or try following this URL: <a href="https://sonarcloud.io/account">https://sonarcloud.io/account</a>)</li>
+<li>Click on the &lsquo;Security&rsquo; tab (<a href="https://sonarcloud.io/account/security">https://sonarcloud.io/account/security</a>)</li>
+<li>Enter a token name in the field under &ldquo;Generate Tokens&rdquo; and click &ldquo;Generate Token&rdquo;</li>
+<li>Copy the text for the generated token (you will not be able to see this text again)</li>
+<li>Go to the &ldquo;Actions secrets and variables&rdquo; section of the <code>mibiscreen</code> repository on GitHub (<a href="https://github.com/MiBiPreT/mibiscreen/settings/secrets/actions">https://github.com/MiBiPreT/mibiscreen/settings/secrets/actions</a>)</li>
+<li>Edit the existing <code>SONAR_TOKEN</code> (or create it, if it does not exist). Paste in the token text you copied from sonarcloud earlier</li>
+<li>Click &ldquo;Update Secret&rdquo;</li>
+</ol>
+<p>This should result in the newly created <code>SONAR_TOKEN</code> being used in any new github workflow runs. You may also choose to rerun some previously failed workflows (these should now succeed).</p>
 
 
 
