@@ -101,3 +101,7 @@ extra:
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/MiBiPreT/mibiscreen
+  version:
+    provider: mike
+    default: latest
+    alias: true
