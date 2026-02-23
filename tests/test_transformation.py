@@ -105,11 +105,9 @@ class Test_Filtering:
     def test_filter_07(self):
         """Testing routine filter_values().
 
-        Check that routine provides filtered data frame for default settings:
-            - inplace True
-            - replace_NaN = 'remove'
-            - verbose = False
+        Check keyword option 'inplace = True'
         """
+
         data_filter = self.data.copy()
         filter_values(data_filter,
                       inplace = True)
@@ -143,6 +141,19 @@ class Test_Filtering:
         out,err=capsys.readouterr()
 
         assert len(out)>0
+
+    def test_filter_10(self):
+        """Testing routine filter_values().
+
+        Check handling of values being `infinite`
+        """
+
+        data_mod = self.data.copy()
+        data_mod.iloc[2,25]=np.inf
+        data_filter = filter_values(data_mod,
+                      replace_NaN = 'remove')
+
+        assert data_filter.shape[0] == self.data.shape[0]-2
 
 
 class Test_Transformation:
