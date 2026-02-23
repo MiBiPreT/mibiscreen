@@ -6,17 +6,16 @@
 """
 
 import numpy as np
-import pandas as pd
 from scipy.stats import zscore
 from mibiscreen.data.check_data import check_data_frame
 from mibiscreen.data.set_data import determine_quantities
+
 
 def filter_values(data_frame,
                   replace_NaN = 'remove',
                   drop_rows = [],
                   inplace = False,
                   verbose = False):
-    
     """Filtering values of dataframes for ordination to assure all are numeric.
 
     Ordination methods require all cells to be filled. This method checks the

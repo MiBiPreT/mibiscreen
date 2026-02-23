@@ -90,7 +90,6 @@ class Test_Filtering:
         assert np.all(test)
 
 
-
     def test_filter_06(self):
         """Testing routine filter_values().
 
@@ -107,7 +106,6 @@ class Test_Filtering:
 
         Check keyword option 'inplace = True'
         """
-
         data_filter = self.data.copy()
         filter_values(data_filter,
                       inplace = True)
@@ -147,7 +145,6 @@ class Test_Filtering:
 
         Check handling of values being `infinite`
         """
-
         data_mod = self.data.copy()
         data_mod.iloc[2,25]=np.inf
         data_filter = filter_values(data_mod,
