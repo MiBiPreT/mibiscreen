@@ -11,13 +11,14 @@ from scipy.stats import zscore
 from mibiscreen.data.check_data import check_data_frame
 from mibiscreen.data.set_data import determine_quantities
 
-pd.set_option('mode.use_inf_as_na', True)
+#pd.set_option('mode.use_inf_as_na', True)
 
 def filter_values(data_frame,
                   replace_NaN = 'remove',
                   drop_rows = [],
                   inplace = False,
                   verbose = False):
+    
     """Filtering values of dataframes for ordination to assure all are numeric.
 
     Ordination methods require all cells to be filled. This method checks the
@@ -65,6 +66,8 @@ def filter_values(data_frame,
             print('The samples of rows {} have been removed'.format(drop_rows))
 
     # Identifying which rows and columns contain any amount of NULL cells and putting them in a list.
+    
+    data = data.replace([np.inf, -np.inf], np.nan)   
     NaN_rows = data[data.isna().any(axis=1)].index.tolist()
     NaN_cols = data.columns[data.isna().any()].tolist()
 
