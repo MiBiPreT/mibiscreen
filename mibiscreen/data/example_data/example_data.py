@@ -6,13 +6,9 @@ used for biodegredation and bioremediation analysis.
 @author: Alraune Zech
 """
 
-#import mibiscreen.data.settings.standard_names as names
-import sys
 import numpy as np
 import pandas as pd
-
-sys.path.append("/home/alraune/GitHub/MiBiPreT/mibiscreen/mibiscreen/data/settings")
-import standard_names as names
+import mibiscreen.data.settings.standard_names as names
 
 
 def example_data(data_type = 'all',
