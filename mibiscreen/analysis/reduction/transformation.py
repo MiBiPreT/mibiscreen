@@ -63,9 +63,9 @@ def filter_values(data_frame,
             print('The samples of rows {} have been removed'.format(drop_rows))
 
     # Identifying which rows and columns contain any amount of NULL cells and putting them in a list.
-    mask = data.isna() | data.eq(np.inf) | data.eq(-np.inf)
-    NaN_rows = data.index[mask.any(axis=1)].tolist()
-    NaN_cols = data.columns[mask.any(axis = 0)].tolist()
+    data.replace({np.inf : np.nan, -np.inf : np.nan},inplace = True)
+    NaN_rows = data[data.isna().any(axis=1)].index.tolist()
+    NaN_cols = data.columns[data.isna().any()].tolist()
 
     # If there are any rows containing NULL cells, the NULL values will be filtered
     if len(NaN_rows)>0:
