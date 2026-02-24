@@ -6,9 +6,13 @@ used for biodegredation and bioremediation analysis.
 @author: Alraune Zech
 """
 
+#import mibiscreen.data.settings.standard_names as names
+import sys
 import numpy as np
 import pandas as pd
-import mibiscreen.data.settings.standard_names as names
+
+sys.path.append("/home/alraune/GitHub/MiBiPreT/mibiscreen/mibiscreen/data/settings")
+import standard_names as names
 
 
 def example_data(data_type = 'all',
@@ -99,7 +103,8 @@ def example_data(data_type = 'all',
     metabolites_units = [microgl,microgl,microgl]
     metabolites_s01 = [0.2, 0.4, 1.4]
     metabolites_s02 = [np.nan, 0.1, 0.]
-    metabolites_s03 = [0., 11.4, 5.4]
+#    metabolites_s03 = [0., 11.4, 5.4]
+    metabolites_s03 = [11.4,np.inf, 5.4]
     metabolites_s04 = [0.3, 0.5, 0.7]
 
     # isotopes = ['delta_13C-benzene','delta_2H-benzene']
@@ -195,3 +200,4 @@ def example_data(data_type = 'all',
             data[quantity] = pd.to_numeric(data[quantity])
 
     return data
+
