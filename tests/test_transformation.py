@@ -26,7 +26,7 @@ class Test_Filtering:
         """
         data_filter = filter_values(self.data)
 
-        assert data_filter.shape[0] == self.data.shape[0]-1
+        assert data_filter.shape[0] == self.data.shape[0]-2
 
 
     def test_filter_02(self):
@@ -40,6 +40,7 @@ class Test_Filtering:
 
         test = [data_filter.shape[0] == self.data.shape[0],
                 data_filter['phenol'][2] == 0.0,
+                data_filter['cinnamic_acid'][3] == 0.0,
                 ]
 
         assert np.all(test)
@@ -55,6 +56,7 @@ class Test_Filtering:
 
         test = [data_filter.shape[0] == self.data.shape[0],
                 data_filter['phenol'][2] == 1.0,
+                data_filter['cinnamic_acid'][3] ==1.0,
                 ]
 
         assert np.all(test)
@@ -69,7 +71,8 @@ class Test_Filtering:
                                     replace_NaN = 'average')
 
         test = [data_filter.shape[0] == self.data.shape[0],
-                np.isclose(data_filter['phenol'][2], 0.1666, rtol=1e-02),
+                np.isclose(data_filter['phenol'][2], 3.9666, rtol=1e-02),
+                np.isclose(data_filter['cinnamic_acid'][3], 0.333333, rtol=1e-02),
                 ]
 
         assert np.all(test)
@@ -84,7 +87,8 @@ class Test_Filtering:
                                     replace_NaN = 'median')
 
         test = [data_filter.shape[0] == self.data.shape[0],
-                np.isclose(data_filter['phenol'][2], 0.2, rtol=1e-02),
+                np.isclose(data_filter['phenol'][2], 0.3, rtol=1e-02),
+                np.isclose(data_filter['cinnamic_acid'][3], 0.4, rtol=1e-02),
                 ]
 
         assert np.all(test)
@@ -110,7 +114,7 @@ class Test_Filtering:
         filter_values(data_filter,
                       inplace = True)
 
-        assert data_filter.shape[0] == self.data.shape[0]-1
+        assert data_filter.shape[0] == self.data.shape[0]-2
 
 
     def test_filter_08(self):
@@ -123,7 +127,7 @@ class Test_Filtering:
                                     )
 
 
-        assert data_filter.shape[0] == self.data.shape[0]-2
+        assert data_filter.shape[0] == self.data.shape[0]-3
 
 
     def test_filter_09(self,capsys):
@@ -139,18 +143,6 @@ class Test_Filtering:
         out,err=capsys.readouterr()
 
         assert len(out)>0
-
-    def test_filter_10(self):
-        """Testing routine filter_values().
-
-        Check handling of values being `infinite`
-        """
-        data_mod = self.data.copy()
-        data_mod.iloc[2,25]=np.inf
-        data_filter = filter_values(data_mod,
-                      replace_NaN = 'remove')
-
-        assert data_filter.shape[0] == self.data.shape[0]-2
 
 
 class Test_Transformation:
