@@ -395,17 +395,18 @@ def check_units(data,
 
 def check_values(data_frame,
                  dl_factor=None,
-                 to_replace_list = ["-",'--','',' ','  '],
+                 to_replace_list = ["-",'--','',' ','  ',np.inf,-np.inf],
                  to_replace_value = np.nan,
                  inplace=False,
                  verbose = True,
                  ):
-    """Function that cleans checks on values and cleans DataFrame.
+    """Function that checks on values and cleans DataFrame.
 
     Cleaning includes:
             - fixing decimal commas
             - converting strings to floats
             - replacing empty strings with NaN
+            - replacing 'inf' (infinity) with NaN
             - and optionally replacing detection limits.
 
     Args:
