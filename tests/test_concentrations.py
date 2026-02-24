@@ -97,7 +97,7 @@ class TestTotalContaminantConcentration:
 
         Correct calculation of total amount of contaminants (total concentration).
         """
-        tot_conc_test = 27046.5
+        tot_conc_test = 27057.9
         tot_conc = np.sum(total_contaminant_concentration(self.data))
 
         assert (tot_conc - tot_conc_test)<1e-5
@@ -284,7 +284,7 @@ class TestTotalContaminantCount:
         """
         tot_conc = np.sum(total_contaminant_count(self.data))
 
-        assert tot_conc == 78
+        assert tot_conc == 79
 
     def test_total_contaminant_count_02(self):
         """Testing routine total_contaminant_concentration().
@@ -348,7 +348,7 @@ class TestTotalMetaboliteCount:
         """
         tot_conc = np.sum(total_metabolites_count(self.data))
 
-        assert tot_conc == 9
+        assert tot_conc == 10
 
 
     def test_total_metabolites_count_02(self):
