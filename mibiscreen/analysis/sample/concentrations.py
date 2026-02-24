@@ -5,6 +5,7 @@
 @author: Alraune Zech
 """
 
+import numpy as np
 import mibiscreen.data.settings.standard_names as names
 from mibiscreen.data.check_data import check_data_frame
 from mibiscreen.data.set_data import determine_quantities
@@ -52,6 +53,12 @@ def total_concentration(
 
     ### sorting out which columns in data to use for summation of concentrations
     quantities, _ = determine_quantities(cols,name_list = name_list, verbose = verbose)
+
+    if data.eq(np.inf).to_numpy().any() or data.eq(-np.inf).to_numpy().any():
+        print("Warning: DataFrame contains 'inf'. These values are treated like NaN for concentration summation")
+        if include_as:
+            print("Warning: 'inf'-values are replaced in DataFrame with NaN")
+        data.replace({np.inf : np.nan, -np.inf : np.nan},inplace = True)
 
     ### actually performing summation
     # try:
@@ -218,6 +225,9 @@ def total_count(
 
     ### sorting out which column in data to use for summation of concentrations
     quantities, _ = determine_quantities(cols,name_list = name_list, verbose = verbose)
+
+    if data.eq(np.inf).to_numpy().any() or data.eq(-np.inf).to_numpy().any():
+        print("Warning: DataFrame contains 'inf'. These values are considered as non-zero concentration and count.")
 
     ### actually performing count of values above threshold:
     try:
