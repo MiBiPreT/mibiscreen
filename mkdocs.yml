@@ -17,7 +17,6 @@ nav:
     - Concentrations: methods/concentrations.md
     - Ordination: methods/ordination.md
     - Stable Isotope Analysis: methods/stable_isotopes.md
-  - Application: 
   - Development: development/development.md
   - API Reference:
     - Data: reference/reference_data.md
