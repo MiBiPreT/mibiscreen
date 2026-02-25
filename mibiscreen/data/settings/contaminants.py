@@ -274,7 +274,7 @@ properties_contaminants[names.name_tetramethylbenzene]=dict(
 )
 
 properties_contaminants[names.name_1234_tetramethylbenzene]=dict(
-    chemical_formula = "",
+    chemical_formula = "c6h2ch3ch3ch3ch3",
     molecular_mass = 134.22,
     carbon_atoms = 10,
     hydrogen_atoms = 14,
@@ -285,7 +285,7 @@ properties_contaminants[names.name_1234_tetramethylbenzene]=dict(
 )
 
 properties_contaminants[names.name_1245_tetramethylbenzene]=dict(
-    chemical_formula = "",
+    chemical_formula = "c6h2ch3ch3ch3ch3",
     molecular_mass = 134.22,
     carbon_atoms = 10,
     hydrogen_atoms = 14,
@@ -296,7 +296,7 @@ properties_contaminants[names.name_1245_tetramethylbenzene]=dict(
 )
 
 properties_contaminants[names.name_1235_tetramethylbenzene]=dict(
-    chemical_formula = "",
+    chemical_formula = "c6h2ch3ch3ch3ch3",
     molecular_mass = 134.22,
     carbon_atoms = 10,
     hydrogen_atoms = 14,
