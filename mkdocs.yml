@@ -17,6 +17,13 @@ nav:
     - Concentrations: methods/concentrations.md
     - Ordination: methods/ordination.md
     - Stable Isotope Analysis: methods/stable_isotopes.md
+  - Examples:
+    - Amersfoort Concentrations: examples/ex02_Amersfoort/example_02_amersfoort_concentrations.ipynb 
+    - Amersfoort NA Screening: examples/ex02_Amersfoort/example_02_amersfoort_NAscreening.ipynb
+    - Amersfoort Metabolites: examples/ex02_Amersfoort/example_02_amersfoort_metabolites.ipynb
+    - Amersfoort Isotopes: examples/ex02_Amersfoort/example_02_amersfoort_isotopes_lambda.ipynb
+    - Amersfoort Ordination: examples/ex02_Amersfoort/example_02_amersfoort_ordination.ipynb
+    - Amersfoort Ordination GQ: examples/ex02_Amersfoort/example_02_amersfoort_ordination_GQ.ipynb
   - Development: development/development.md
   - API Reference:
     - Data: reference/reference_data.md
@@ -71,6 +78,10 @@ plugins:
           show_source: true
         options:
           show_submodules: true
+- mkdocs-jupyter:
+    execute: true
+    include_source: true
+    custom_mathjax_url: "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS_CHTML-full,Safe"
 
 # Styled blocks: https://squidfunk.github.io/mkdocs-material/reference/admonitions/#supported-types
 markdown_extensions:
