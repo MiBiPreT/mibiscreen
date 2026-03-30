@@ -1236,7 +1236,7 @@ contaminant_groups = dict(
            names.name_tetramethylbenzene,
            names.name_1234_tetramethylbenzene,
            names.name_1245_tetramethylbenzene,
-           names.name_1235_tetramethylbenzene,
+           names.["1,2,3,5_tetramethylbenzene"],
            ],
     PAH = [names.name_indane,
            names.name_indene,

@@ -32,6 +32,8 @@ dependencies = [
 	"adjustText",
 	"scikit-learn",
 	"scikit-bio",
+    "cirpy",
+    "pikachu-chem",
 ]
 description = "A collection of analytical and semi-semianalytical solutions for hydrogeological transport phenomena"
 keywords = [
